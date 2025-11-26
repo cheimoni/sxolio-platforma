@@ -1,0 +1,84 @@
+/* ========================================
+   VARIABLES - Χρώματα, Μεγέθη, Spacing
+   ======================================== */
+
+:root {
+  /* === ΧΡΩΜΑΤΑ === */
+  /* Default theme: Blue 3 (#93c5fd) - θα αντικατασταθούν από JS */
+
+  /* Primary */
+  --primary: #93c5fd;
+  --primary-dark: #60a5fa;
+  --primary-light: #bfdbfe;
+  --primary-rgb: 147, 197, 253;
+
+  /* Backgrounds - ΟΛΑ με theme color */
+  --bg-primary: #f0f6ff;
+  --bg-secondary: #dbeafe;
+
+  /* Sidebar - theme colored */
+  --sidebar-bg: #dbeafe;
+  --sidebar-text: #000000;
+  --sidebar-hover: #bfdbfe;
+  --sidebar-active: #93c5fd;
+
+  /* Header - theme colored */
+  --header-bg: #93c5fd;
+  --header-text: #000000;
+
+  /* Cards - light theme color */
+  --card-bg: #f0f6ff;
+  --card-border: #bfdbfe;
+
+  /* Borders */
+  --border-color: #bfdbfe;
+
+  /* Chat */
+  --chat-mine: #93c5fd;
+  --chat-mine-text: #000000;
+  --chat-other: #dbeafe;
+  --chat-other-text: #000000;
+
+  /* Text - ΠΑΝΤΑ ΜΑΥΡΑ */
+  --text-primary: #000000;
+  --text-secondary: #1a1a1a;
+  --text-muted: #333333;
+  --text-inverse: #000000;
+
+  /* Status */
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+
+  /* Border Radius */
+  --border-radius: 8px;
+
+  /* === ΜΕΓΕΘΗ ΓΡΑΜΜΑΤΟΣΕΙΡΩΝ === */
+  --font-h1: 16px;
+  --font-h2: 16px;
+  --font-base: 15px;
+  --font-small: 14px;
+  --font-button: 15px;
+
+  /* === SPACING === */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 12px;
+  --space-lg: 16px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+
+  /* === LAYOUT === */
+  --sidebar-width: 240px;
+  --header-height: 40px;
+
+  /* === SHADOWS === */
+  --shadow-sm: none;
+  --shadow: none;
+  --shadow-md: none;
+
+  /* === TRANSITIONS === */
+  --transition-fast: 150ms ease;
+  --transition: 200ms ease;
+}

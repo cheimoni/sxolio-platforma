@@ -1,0 +1,552 @@
+.new-window {
+  background: var(--window-bg-color, rgba(248, 249, 250, 0.96)) !important;
+  border: var(--border-width, 2px) var(--border-style, solid) var(--border-color, rgba(102, 126, 234, 0.25)) !important;
+  border-radius: 8px;
+  padding: 3px;
+  margin: 0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  font-size: 12px;
+  width: 420px;
+  max-width: none;
+  min-width: 280px;
+  height: calc(100vh - 421px);
+  min-height: 200px;
+  position: fixed;
+  left: 216px;
+  top: 421px;
+  z-index: 5001;
+  overflow: hidden;
+  cursor: default;
+  box-sizing: border-box;
+  transition: none;
+  display: flex;
+  flex-direction: column;
+  opacity: 1;
+}
+
+.new-window.dragging {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
+  z-index: 9999 !important;
+  cursor: move !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.new-window.dragging * {
+  pointer-events: none !important;
+}
+
+.new-window.dragging .draggable-header {
+  pointer-events: auto !important;
+}
+
+.new-window.active {
+  /* z-index controlled by inline style from useWindowLayer hook */
+}
+
+.new-window.resizing {
+  user-select: none;
+}
+
+.new-window.resizing * {
+  pointer-events: none;
+}
+
+.new-window.resizing .resize-handle {
+  pointer-events: auto;
+}
+
+/* Resize Handles */
+.new-window .resize-handle {
+  position: absolute;
+  background: transparent;
+  z-index: 10;
+}
+
+.new-window .resize-handle-n {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  cursor: n-resize;
+}
+
+.new-window .resize-handle-s {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  cursor: s-resize;
+}
+
+.new-window .resize-handle-e {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: e-resize;
+}
+
+.new-window .resize-handle-w {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: w-resize;
+}
+
+.new-window .resize-handle-ne {
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  cursor: ne-resize;
+}
+
+.new-window .resize-handle-nw {
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  cursor: nw-resize;
+}
+
+.new-window .resize-handle-se {
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  cursor: se-resize;
+  background: rgba(74, 144, 226, 0.3);
+  border-radius: 0 0 8px 0;
+}
+
+.new-window .resize-handle-se::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-bottom: 4px solid #4a90e2;
+}
+
+.new-window .resize-handle-sw {
+  bottom: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  cursor: sw-resize;
+}
+
+.new-window .resize-handle:hover {
+  background: rgba(74, 144, 226, 0.2);
+}
+
+/* Expanded state - removed left property since inline styles take precedence */
+.new-window.expanded {
+  /* No position override - inline styles control position */
+}
+
+.new-window .window-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 4px;
+  background: linear-gradient(135deg, var(--primary-color, #667eea) 0%, var(--primary-dark, #764ba2) 100%);
+  border-bottom: 1px solid var(--primary-dark, #2c5aa0);
+  cursor: default;
+  flex-shrink: 0;
+  margin-bottom: 0;
+}
+
+.new-window .window-header h3 {
+  margin: 0;
+  font-size: 14px !important;
+  font-weight: 700;
+  color: #000;
+}
+
+.window-id {
+  background: #4a90e2;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.new-window .reset-position-btn {
+  background: #28a745;
+  border: 2px solid #28a745;
+  color: #000;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  min-height: 26px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.new-window .reset-position-btn:hover {
+  background: #155724;
+  border-color: #155724;
+  transform: scale(1.1);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+.window-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 2px;
+  scroll-behavior: smooth;
+  min-height: 0;
+  max-height: calc(100vh - 500px);
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  background: var(--window-bg-color, rgba(248, 249, 250, 0.96)) !important;
+}
+
+.content-placeholder {
+  padding: 10px;
+  background: var(--window-bg-color, rgba(248, 249, 250, 0.96)) !important;
+  border-radius: 6px;
+  margin-top: 10px;
+  border: var(--border-width, 2px) var(--border-style, solid) var(--border-color, rgba(102, 126, 234, 0.25)) !important;
+}
+
+.content-placeholder p {
+  margin: 5px 0;
+  color: #000;
+  font-size: 11px;
+  line-height: 1.4;
+  font-weight: bold;
+}
+
+.content-placeholder ul {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.content-placeholder li {
+  margin: 4px 0;
+  color: #000;
+  font-size: 10px;
+}
+
+/* Schedule Display */
+.schedule-display {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0;
+}
+
+.new-window .period-row {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 10px 2px;
+  border-radius: 4px;
+  min-height: 70px;
+  max-height: none;
+  height: auto;
+  border: 1px solid #e0e0e0;
+  transition: all 0.2s ease;
+  margin-bottom: 1px;
+}
+
+.new-window .period-row:hover {
+  transform: translateX(2px);
+  box-shadow: 0 2px 4px rgba(74, 144, 226, 0.2);
+}
+
+.new-window .period-row.has-subject {
+  background: var(--primary-light, #e6f4ff);
+  border-color: var(--primary-color, #4a90e2);
+}
+
+/* Κόκκινο για συνδιδασκαλίες */
+.new-window .period-row.coteaching-subject {
+  background: #ffe6e6 !important;
+  border-color: #dc3545 !important;
+  border-width: 2px !important;
+  min-height: 98px !important;
+  padding: 12px 2px !important;
+}
+
+.new-window .period-row.coteaching-subject .period-subject {
+  color: #dc3545 !important;
+  font-weight: 900 !important;
+  font-size: 10px !important;
+}
+
+/* Πράσινο για κανονικά μαθήματα */
+.new-window .period-row.normal-subject {
+  background: #e6ffe6 !important;
+  border-color: #28a745 !important;
+  border-width: 2px !important;
+}
+
+.new-window .period-row.normal-subject .period-subject {
+  color: #155724 !important;
+}
+
+/* Μεγαλύτερο ύψος για Γυμναστική */
+.new-window .period-row.gym-subject {
+  min-height: 91px !important;
+  padding: 12px 2px !important;
+}
+
+.new-window .period-row.empty {
+  background: #f5f5f5;
+  border-color: #ddd;
+  opacity: 0.6;
+}
+
+.new-window .period-number {
+  font-weight: bold;
+  color: #2c5aa0;
+  font-size: 12px;
+  min-width: 18px;
+  margin-right: 2px;
+  text-align: center;
+  flex-shrink: 0;
+  line-height: 1.8;
+}
+
+.new-window .period-subject {
+  color: #333;
+  font-size: 12px;
+  line-height: 1.8;
+  white-space: pre-line;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: normal;
+  hyphens: auto;
+  text-align: left;
+  flex: 1;
+  font-weight: 600;
+  display: block;
+  max-width: 100%;
+}
+
+.no-schedule {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  font-size: 11px;
+}
+
+.loading-message {
+  padding: 20px;
+  text-align: center;
+  color: var(--primary-color, #4a90e2);
+  font-size: 11px;
+  background: var(--primary-light, #f0f8ff);
+}
+
+.error-message {
+  padding: 15px;
+  background: #ffe6e6;
+  border: 2px solid #dc3545;
+  border-radius: 4px;
+  color: #dc3545;
+  font-size: 11px;
+  margin: 10px;
+  font-weight: bold;
+}
+
+.header-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.current-day {
+  font-size: 12px;
+  color: #000;
+  font-weight: 600;
+  background: var(--primary-color, #4a90e2);
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+
+
+/* Hide scrollbar but keep scroll functionality */
+.window-content::-webkit-scrollbar {
+  display: none;
+}
+
+/* Coteaching Message */
+.coteaching-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 20px;
+  text-align: center;
+}
+
+.coteaching-icon {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
+
+.coteaching-text {
+  font-size: 16px;
+  font-weight: bold;
+  color: #2c5aa0;
+}
+
+/* Responsive για μικρές οθόνες */
+@media screen and (max-width: 1400px) {
+  .new-window {
+    left: 176px;
+    width: 380px;
+    min-width: 280px;
+    top: 380px;
+    height: calc(100vh - 380px);
+  }
+
+  .new-window.expanded {
+    left: 206px;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .new-window {
+    left: 176px;
+    width: 320px;
+    min-width: 280px;
+    top: 350px;
+    height: calc(100vh - 350px);
+  }
+
+  .new-window.expanded {
+    left: 206px;
+  }
+
+  .window-header h3 {
+    font-size: 12px;
+    max-width: 220px;
+  }
+
+  .new-window .period-number {
+    font-size: 10px;
+  }
+
+  .new-window .period-subject {
+    font-size: 10px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .new-window {
+    left: 125px;
+    width: 250px;
+    height: 350px;
+  }
+  
+  .window-header h3 {
+    font-size: 12px;
+  }
+  
+  .new-window .period-number {
+    font-size: 6px;
+    min-width: 12px;
+  }
+  
+  .new-window .period-subject {
+    font-size: 6px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .new-window {
+    left: 105px;
+    width: 210px;
+    height: 300px;
+    padding: 3px;
+  }
+  
+  .window-header h3 {
+    font-size: 12px;
+  }
+  
+  .window-id {
+    font-size: 8px;
+    padding: 2px 6px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .new-window {
+    left: 95px;
+    width: 180px;
+    height: 280px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .new-window {
+    left: 85px;
+    width: 150px;
+    height: 250px;
+    padding: 2px;
+  }
+  
+  .window-header {
+    padding: 1px;
+  }
+  
+  .window-header h3 {
+    font-size: 12px;
+  }
+}
+
+/* Group Tabs for Coteaching */
+.group-tabs {
+  display: flex;
+  gap: 4px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.group-tab {
+  background: var(--primary-light, #e6f4ff);
+  border: 2px solid var(--primary-color, #4a90e2);
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #000;
+}
+
+.group-tab:hover {
+  background: var(--primary-color, #4a90e2);
+  transform: scale(1.05);
+  color: #000;
+}
+
+.group-tab.active {
+  background: var(--primary-dark, #2c5aa0);
+  color: #fff;
+  border-color: var(--primary-dark, #2c5aa0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}

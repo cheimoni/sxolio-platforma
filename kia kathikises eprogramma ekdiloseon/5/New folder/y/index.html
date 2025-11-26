@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Διαχείριση Υπευθύνων Τμημάτων</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #F1F5F1;
+            --bg-header: #EBF0EB;
+            --border-color: #D1D8D1;
+            --text-primary: #1F2937;
+            --text-secondary: #4B5563;
+            --accent-color: #3B82F6;
+            --accent-hover: #2563EB;
+            --danger-color: #EF4444;
+            --danger-hover: #DC2626;
+            --warning-color: #F97316;
+            --warning-hover: #EA580C;
+            --grade-a-bg: rgba(59, 130, 246, 0.1);
+            --grade-b-bg: rgba(34, 197, 94, 0.1);
+            --grade-c-bg: rgba(249, 115, 22, 0.1);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+        }
+        .header-input {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+            width: 100%;
+            transition: border-color 0.2s;
+        }
+        .header-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+        .styled-table {
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .styled-table th, .styled-table td {
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.75rem 1rem;
+            text-align: left;
+            vertical-align: top;
+        }
+        .styled-table th {
+            background-color: var(--bg-header);
+            font-weight: 600;
+        }
+        .styled-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+        .styled-table tr[data-grade="Α"] { background-color: var(--grade-a-bg); }
+        .styled-table tr[data-grade="Β"] { background-color: var(--grade-b-bg); }
+        .styled-table tr[data-grade="Γ"] { background-color: var(--grade-c-bg); }
+        .custom-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-primary { background-color: var(--accent-color); color: white; }
+        .btn-primary:hover { background-color: var(--accent-hover); }
+        .btn-primary:disabled { background-color: #9CA3AF; cursor: not-allowed; }
+        .btn-warning { background-color: var(--warning-color); color: white; }
+        .btn-warning:hover { background-color: var(--warning-hover); }
+        .btn-secondary { background-color: #6B7280; color: white; }
+        .btn-secondary:hover { background-color: #4B5563; }
+        .btn-danger { background-color: var(--danger-color); color: white; }
+        .btn-danger:hover { background-color: var(--danger-hover); }
+        .btn-danger-small {
+            background-color: var(--danger-color); color: white; font-size: 0.75rem;
+            padding: 0.125rem 0.5rem; border-radius: 9999px; margin-left: 0.5rem;
+        }
+        .btn-danger-small:hover { background-color: var(--danger-hover); }
+        .available-teacher-list, .substitutes-list {
+            max-height: 400px; overflow-y: auto; background-color: white;
+            border: 1px solid var(--border-color); border-radius: 0.5rem;
+        }
+        .available-teacher-item { padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--border-color); }
+        .available-teacher-item:last-child { border-bottom: none; }
+        .substitute-item {
+            display: flex; align-items: center; padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .substitute-item:last-child { border-bottom: none; }
+        .substitute-item input { margin-right: 0.75rem; }
+        .hidden { display: none !important; }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000;
+        }
+        .modal-content {
+            background-color: white; padding: 2rem; border-radius: 0.5rem;
+            width: 90%; max-width: 400px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 lg:p-8">
+
+    <div id="login-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h2 class="text-2xl font-bold mb-4 text-center">Σύνδεση Διαχειριστή</h2>
+            <div class="mb-4">
+                <label for="login-email" class="block font-semibold mb-1">Email:</label>
+                <input type="email" id="login-email" class="header-input">
+            </div>
+            <div class="mb-4">
+                <label for="login-password" class="block font-semibold mb-1">Κωδικός:</label>
+                <input type="password" id="login-password" class="header-input">
+            </div>
+            <p id="login-error" class="text-red-500 text-sm mb-4 h-4"></p>
+            <div class="flex justify-between gap-4">
+                <button id="login-btn" class="custom-btn btn-primary w-full">Σύνδεση</button>
+                <button id="close-modal-btn" class="custom-btn btn-secondary w-full">Ακύρωση</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-container" class="max-w-7xl mx-auto opacity-0 transition-opacity duration-500">
+        <header class="bg-white p-4 rounded-lg shadow-sm border border-[var(--border-color)] mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-center">
+                <input type="text" id="school-name" class="header-input text-xl font-bold col-span-1 md:col-span-2" value="ΛΥΚΕΙΟ ΑΓΙΟΥ ΣΠΥΡΙΔΩΝΑ">
+                <input type="text" id="school-year" class="header-input" value="ΣΧΟΛΙΚΗ ΧΡΟΝΙΑ 2025-2026">
+                <input type="text" id="period" class="header-input" value="ΠΕΡΙΟΔΟΣ: ΣΕΠΤΕΜΒΡΙΟΣ 2025">
+                 <div id="auth-controls" class="flex items-center justify-end gap-2">
+                    <span id="user-status" class="text-sm font-medium hidden"></span>
+                    <button id="show-login-btn" class="custom-btn btn-primary">Σύνδεση</button>
+                    <button id="logout-btn" class="custom-btn btn-danger hidden">Αποσύνδεση</button>
+                </div>
+            </div>
+        </header>
+        <div class="bg-white p-4 rounded-lg shadow-sm border border-[var(--border-color)] mb-6">
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <h2 class="text-2xl font-bold text-gray-700">Διαχείριση Τμημάτων</h2>
+                <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <button id="auto-assign-btn" class="custom-btn btn-primary w-full sm:w-auto editable-control">Επαναφορά στην Πρόταση Υ.Τ.</button>
+                    <button id="reset-btn" class="custom-btn btn-warning w-full sm:w-auto editable-control">Επαναφορά</button>
+                </div>
+            </div>
+        </div>
+        <main class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 bg-white p-4 rounded-lg shadow-sm border border-[var(--border-color)] overflow-x-auto">
+                <div class="styled-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Τμήμα</th>
+                                <th>Υπεύθυνος Καθηγητής</th>
+                                <th>Βοηθοί Καθηγητές</th>
+                                <th>Βοηθός Διευθυντής</th>
+                            </tr>
+                        </thead>
+                        <tbody id="departments-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+            <aside class="lg:col-span-1">
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-[var(--border-color)]">
+                    <h3 class="text-xl font-bold mb-4 border-b pb-2">Διαθέσιμοι Καθηγητές</h3>
+                    <div id="available-teachers-list" class="available-teacher-list"></div>
+                </div>
+            </aside>
+        </main>
+        <section class="mt-8 bg-white p-4 sm:p-6 rounded-lg shadow-sm border border-[var(--border-color)]">
+            <h2 class="text-2xl font-bold text-gray-700 mb-4 border-b pb-2">Δραστηριότητα & Αναπληρωτές</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <div class="mb-4">
+                        <label for="activity-name" class="block font-semibold mb-1">Όνομα Δραστηριότητας:</label>
+                        <input type="text" id="activity-name" class="header-input text-lg editable-control" placeholder="π.χ. Επίβλεψη εξετάσεων...">
+                    </div>
+                    <div>
+                        <label for="activity-goal" class="block font-semibold mb-1">Σκοπός / Τέλος:</label>
+                        <input type="text" id="activity-goal" class="header-input text-lg editable-control" placeholder="π.χ. Αίθουσες 101-105...">
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-semibold mb-1">Επιλογή Αναπληρωτών:</h3>
+                    <div id="substitutes-list" class="substitutes-list"></div>
+                </div>
+            </div>
+        </section>
+        <footer class="text-center mt-8 text-sm text-[var(--text-secondary)]">
+            <p>&copy; 2025 Georgios Cheimonides. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <script type="module" src="./app.js"></script>
+</body>
+</html>

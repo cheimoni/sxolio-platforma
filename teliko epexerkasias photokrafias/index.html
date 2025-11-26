@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Επεξεργαστής Εικόνας v8.7 (UI Themes)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- ΟΡΙΣΜΟΣ ΜΕΤΑΒΛΗΤΩΝ ΧΡΩΜΑΤΩΝ (THEME) --- */
+        :root {
+            --bg-primary: #f3f4f6;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f9fafb;
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --text-accent: #166534;
+            --border-color: #e5e7eb;
+            --accent-color: #16a34a;
+            --accent-hover-color: #15803d;
+            --accent-text-color: #ffffff;
+            --danger-bg: #fee2e2;
+            --danger-text: #b91c1c;
+            --danger-hover-bg: #ef4444;
+            --danger-hover-text: #ffffff;
+        }
+
+        body.dark-theme {
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --bg-tertiary: #374151;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-accent: #6ee7b7;
+            --border-color: #4b5563;
+            --accent-color: #22c55e;
+            --accent-hover-color: #16a34a;
+            --accent-text-color: #1f2937;
+            --danger-bg: #450a0a;
+            --danger-text: #fca5a5;
+            --danger-hover-bg: #dc2626;
+            --danger-hover-text: #ffffff;
+        }
+
+        /* --- ΕΦΑΡΜΟΓΗ ΜΕΤΑΒΛΗΤΩΝ ΣΤΑ ΣΤΟΙΧΕΙΑ --- */
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-primary); margin: 0; color: var(--text-primary); }
+        .top-bar-button { background-color: var(--bg-secondary); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.5rem 1rem; border-radius: 0.375rem; font-weight: 500; cursor: pointer; transition: all 0.2s ease; text-decoration: none; }
+        .top-bar-button:hover, .top-bar-button.active { background-color: var(--accent-color); color: var(--accent-text-color); border-color: var(--accent-hover-color); }
+        .floating-panel { position: fixed; top: 75px; right: 1rem; width: 340px; background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: 0.75rem; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); padding: 1.5rem; transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out; transform: translateX(110%); opacity: 0; pointer-events: none; z-index: 50; }
+        .floating-panel.visible { transform: translateX(0); opacity: 1; pointer-events: auto; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 0.75rem; margin-bottom: 1rem; }
+        .panel-header h3 { font-size: 1.125rem; font-weight: 600; }
+        .close-button { background-color: var(--bg-primary); border-radius: 9999px; width: 1.75rem; height: 1.75rem; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .close-button:hover { background-color: var(--border-color); }
+        .control-group { margin-bottom: 1.25rem; }
+        .control-group label { display: block; font-size: 0.875rem; font-weight: 500; color: var(--text-secondary); margin-bottom: 0.25rem; }
+        .control-group input, .control-group select { width: 100%; padding: 0.5rem; border: 1px solid var(--border-color); border-radius: 0.375rem; background-color: var(--bg-primary); color: var(--text-primary); }
+        .control-group input:disabled { background-color: var(--bg-tertiary); cursor: not-allowed; }
+        details > summary { cursor: pointer; font-weight: 500; }
+        input[type="range"] { accent-color: var(--accent-color); }
+        input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        .tool-button { width: 100%; padding: 1rem 0; border: 1px solid var(--border-color); border-radius: 0.375rem; cursor: pointer; color: var(--text-primary); background-color: var(--bg-secondary); }
+        .tool-button.active, .tool-button:hover { background-color: var(--accent-color); color: var(--accent-text-color); border-left: 4px solid var(--accent-hover-color); }
+        #imageCanvas.tool-pan { cursor: grab; } #imageCanvas.tool-pan.is-dragging { cursor: grabbing; } #imageCanvas.tool-select { cursor: default; } #imageCanvas.can-drag { cursor: move; } #imageCanvas.cursor-nwse-resize { cursor: nwse-resize; } #imageCanvas.cursor-nesw-resize { cursor: nesw-resize; }
+        .layer-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.75rem; border: 1px solid var(--border-color); border-radius: 0.375rem; margin-bottom: 0.5rem; user-select: none; background-color: var(--bg-tertiary); }
+        .layer-item.active { background-color: var(--accent-color); border-color: var(--accent-hover-color); font-weight: 600; color: var(--accent-text-color); }
+        .layer-name { flex-grow: 1; cursor: pointer; }
+        .layer-item:not(.active):hover { background-color: var(--bg-primary); }
+        .layer-controls { display: flex; align-items: center; }
+        .layer-vis-button, .layer-delete-button, .layer-move-button { border: none; width: 1.25rem; height: 1.25rem; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1; margin-left: 0.25rem; flex-shrink: 0; }
+        .layer-move-button { background-color: var(--border-color); color: var(--text-secondary); border-radius: 0.25rem; }
+        .layer-move-button:hover:not(:disabled) { background-color: var(--bg-tertiary); }
+        .layer-move-button:disabled { opacity: 0.4; cursor: not-allowed; }
+        .layer-vis-button { background-color: var(--border-color); color: var(--text-primary); border-radius: 9999px; }
+        .layer-vis-button.is-hidden { background-color: #fca5a5; color: #7f1d1d; }
+        .layer-vis-button:hover { background-color: #9ca3af; }
+        body.dark-theme .layer-vis-button.is-hidden { background-color: #450a0a; color: #fca5a5; }
+        .layer-delete-button { background-color: var(--danger-bg); color: var(--danger-text); font-weight: bold; border-radius: 9999px; }
+        .layer-delete-button:hover { background-color: var(--danger-hover-bg); color: var(--danger-hover-text); }
+        header, main, aside { background-color: var(--bg-secondary); }
+        footer span { color: var(--text-secondary); }
+    </style>
+</head>
+<body class="h-screen flex flex-col">
+    <header class="bg-white shadow p-3 flex items-center justify-between flex-shrink-0 z-10">
+        <nav class="flex items-center space-x-3">
+            <h1 class="text-xl font-bold text-green-600">Editor v8.7</h1>
+            <div class="w-px h-6 bg-gray-300"></div>
+            <label for="imageLoader" class="top-bar-button">Φόρτωση Εικόνας</label>
+            <input type="file" id="imageLoader" accept="image/*" class="hidden"/>
+            <button id="overlay-panel-button" class="top-bar-button">Overlay</button>
+            <button id="layers-panel-button" class="top-bar-button">Layers</button>
+            <button id="filter-panel-button" class="top-bar-button">Φίλτρα</button>
+            <button id="transform-panel-button" class="top-bar-button">Μετασχηματισμός</button>
+            <button id="text-panel-button" class="top-bar-button">Κείμενο</button>
+            <div class="w-px h-6 bg-gray-300"></div>
+            <a href="smile_editor.html" class="top-bar-button">Smile Editor</a>
+            <a href="background-remover.html" class="top-bar-button">Background Remover</a>
+        </nav>
+        <div class="flex items-center space-x-3">
+            <button id="theme-toggle" class="top-bar-button p-2.5 leading-none">
+                <span id="theme-icon-light">☀️</span>
+                <span id="theme-icon-dark" class="hidden">🌙</span>
+            </button>
+            <div class="w-px h-6 bg-gray-300"></div>
+            <button id="reset-all-button" class="top-bar-button">Επαναφορά</button>
+            <button id="save-state-button" class="top-bar-button">Αποθήκευση</button>
+            <button id="load-state-button" class="top-bar-button">Φόρτωση</button>
+            <button id="download-button" class="top-bar-button bg-green-600 text-white border-green-700 hover:bg-green-700">Λήψη</button>
+        </div>
+    </header>
+    <div class="flex flex-1 overflow-hidden p-4 gap-4 h-full">
+        <aside class="w-20 bg-white p-2 flex flex-col items-center space-y-4 rounded-lg shadow-sm flex-shrink-0">
+            <button id="tool-select" class="tool-button" title="Επιλογή / Μετακίνηση"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto"><path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path><path d="M13 13l6 6"></path></svg></button>
+            <button id="tool-pan" class="tool-button" title="Πλοήγηση / Zoom"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-auto"><path d="M10 21.5c.9-.9 2.1-1.5 3.5-1.5s2.6.6 3.5 1.5"/><path d="M10 17.5c.9-.9 2.1-1.5 3.5-1.5s2.6.6 3.5 1.5"/><circle cx="12" cy="5" r="3"/><path d="M12 8v5"/><path d="M12 17.5V22"/></svg></button>
+        </aside>
+        <main id="canvas-container" class="flex-1 relative bg-white rounded-lg shadow-sm flex items-center justify-center min-w-0">
+             <div id="placeholder" class="text-center">
+                <h3 class="mt-2 text-lg font-medium">Καμία εικόνα</h3><p class="mt-1 text-sm text-gray-500">Επιλέξτε μια φωτογραφία για να ξεκινήσετε.</p>
+            </div>
+            <canvas id="imageCanvas" class="hidden absolute top-0 left-0"></canvas>
+        </main>
+    </div>
+    <footer class="w-full text-center p-2 text-xs text-gray-500 flex-shrink-0"><span>© 2025 Georgios Cheimonides</span></footer>
+    <div id="floating-panels-container">
+            <div id="layers-panel" class="floating-panel">
+                <div class="panel-header"><h3>Layers</h3><button class="close-button" data-panel-id="layers-panel">X</button></div>
+                <div id="layers-list" class="max-h-96 overflow-y-auto">
+                </div>
+            </div>
+            <div id="text-panel" class="floating-panel">
+                <div class="panel-header"><h3>Ρυθμίσεις Κειμένου</h3><button class="close-button" data-panel-id="text-panel">X</button></div>
+                <div class="space-y-4"><div class="control-group"><label for="textInput">Κείμενο:</label><input type="text" id="textInput" placeholder="Γράψτε κάτι..."></div><div class="control-group"><label for="textSize">Μέγεθος:</label><input type="number" id="textSize" value="200" min="8"></div><div class="control-group"><label for="textColor">Χρώμα:</label><input type="color" id="textColor" value="#FFFFFF" class="h-10"></div><details class="control-group"><summary>Ρυθμίσεις Σκιάς</summary><div class="mt-2 p-3 bg-gray-50 rounded-md space-y-4"><div class="control-group"><label for="shadowColor">Χρώμα Σκιάς:</label><input type="color" id="shadowColor" value="#000000" class="h-10"></div><div class="control-group"><label for="shadowBlur">Θόλωση:</label><input type="range" id="shadowBlur" min="0" max="50" value="5"></div><div class="control-group"><label for="shadowOffsetX">Οριζόντια Απόσταση:</label><input type="range" id="shadowOffsetX" min="-50" max="50" value="5"></div><div class="control-group"><label for="shadowOffsetY">Κάθετη Απόσταση:</label><input type="range" id="shadowOffsetY" min="-50" max="50" value="5"></div></div></details></div>
+            </div>
+            <div id="overlay-panel" class="floating-panel">
+                 <div class="panel-header"><h3>Ρυθμίσεις Overlay</h3><button class="close-button" data-panel-id="overlay-panel">X</button></div>
+                 <div class="space-y-4"><div class="control-group"><label for="overlayLoader" class="top-bar-button w-full text-center">Φόρτωση Νέου Overlay</label><input type="file" id="overlayLoader" class="hidden"></div><div class="control-group"><label for="overlayOpacity">Διαφάνεια:</label><input type="range" id="overlayOpacity" min="0" max="100" value="100"></div><div class="control-group"><label for="overlayRotation">Περιστροφή:</label><input type="range" id="overlayRotation" min="0" max="360" value="0"></div></div>
+            </div>
+            <div id="filter-panel" class="floating-panel">
+                <div class="panel-header"><h3>Ρυθμίσεις Φίλτρων</h3><button class="close-button" data-panel-id="filter-panel">X</button></div>
+                <div class="space-y-4"><div class="control-group"><label for="filterPreset">Έτοιμα Φίλτρα:</label><select id="filterPreset"><option value="none">Κανένα</option><option value="vintage">Vintage</option><option value="grayscale">Ασπρόμαυρο</option><option value="sepia">Σέπια</option><option value="warm">Θερμό</option><option value="cool">Ψυχρό</option></select></div><div class="control-group"><label for="brightness">Φωτεινότητα:</label><input type="range" id="brightness" min="0" max="200" value="100"></div><div class="control-group"><label for="contrast">Αντίθεση:</label><input type="range" id="contrast" min="0" max="200" value="100"></div><div class="control-group"><label for="saturate">Κορεσμός:</label><input type="range" id="saturate" min="0" max="200" value="100"></div><div class="control-group"><label for="sepia">Σέπια:</label><input type="range" id="sepia" min="0" max="100" value="0"></div><div class="control-group"><label for="grayscale">Ασπρόμαυρο:</label><input type="range" id="grayscale" min="0" max="100" value="0"></div><div class="control-group"><label for="hue-rotate">Απόχρωση:</label><input type="range" id="hue-rotate" min="0" max="360" value="0"></div><div class="control-group"><label for="invert">Αντιστροφή:</label><input type="range" id="invert" min="0" max="100" value="0"></div><div class="control-group"><label for="blur">Θόλωση (px):</label><input type="range" id="blur" min="0" max="20" value="0" step="0.1"></div><button id="reset-filters-button" class="top-bar-button w-full mt-4">Επαναφορά Φίλτρων</button></div>
+            </div>
+            <div id="transform-panel" class="floating-panel">
+                 <div class="panel-header"><h3>Μετασχηματισμός</h3><button class="close-button" data-panel-id="transform-panel">X</button></div>
+                 <div class="control-group"><label>(Η επιλογή του Layer γίνεται από το πάνελ "Layers")</label></div>
+                 <div class="control-group"><label for="flip-select">Αναστροφή:</label><select id="flip-select"><option value="none">Καμία</option><option value="horizontal">Οριζόντια</option><option value="vertical">Κάθετη</option></select></div>
+            </div>
+    </div>
+
+    <script>
+        // --- GLOBAL STATE ---
+        let originalImage = null;
+        const mainImage = { id: 'main', isVisible: true, flipH: false, flipV: false, textX: 0, textY: 0, brightness: 100, contrast: 100, saturate: 100, sepia: 0, grayscale: 0, 'hue-rotate': 0, invert: 0, blur: 0 };
+        let overlays = [];
+        let activeTarget = mainImage;
+        let currentTool = 'select';
+        let viewTransform = { scale: 1, offsetX: 0, offsetY: 0 };
+        const interaction = { type: 'none', startX: 0, startY: 0, startWidth: 0, startHeight: 0, startRotation: 0, startAngle: 0, startDragX: 0, startDragY: 0, target: null };
+        const dom = {};
+        const eyeIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+        const eyeOffIconSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><line x1="2" x2="22" y1="2" y2="22"></line></svg>`;
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', initialize);
+
+        function initialize() {
+            cacheDOMElements();
+            setupEventListeners();
+            initializeTheme();
+            setActiveTool('select');
+            setActiveTarget(mainImage);
+        }
+
+        function cacheDOMElements() {
+            const ids = ['imageCanvas', 'canvas-container', 'placeholder', 'download-button', 'reset-all-button', 'text-panel-button', 'filter-panel-button', 'overlay-panel-button', 'transform-panel-button', 'layers-panel-button', 'text-panel', 'filter-panel', 'overlay-panel', 'transform-panel', 'layers-panel', 'layers-list', 'textInput', 'textSize', 'textColor', 'shadowColor', 'shadowBlur', 'shadowOffsetX', 'shadowOffsetY', 'overlayLoader', 'overlayOpacity', 'overlayRotation', 'filterPreset', 'brightness', 'contrast', 'saturate', 'sepia', 'grayscale', 'hue-rotate', 'invert', 'blur', 'reset-filters-button', 'flip-select', 'imageLoader', 'tool-select', 'tool-pan', 'save-state-button', 'load-state-button', 'theme-toggle', 'theme-icon-light', 'theme-icon-dark'];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) { dom[id] = el; } else { console.warn(`Warning: Element with id '${id}' was not found in the HTML.`); }
+            });
+            dom.ctx = dom.imageCanvas ? dom.imageCanvas.getContext('2d') : null;
+            dom.closeButtons = document.querySelectorAll('.close-button');
+        }
+        
+        // --- EVENT LISTENERS ---
+        function setupEventListeners() {
+            if (dom['tool-select']) dom['tool-select'].addEventListener('click', () => setActiveTool('select'));
+            if (dom['tool-pan']) dom['tool-pan'].addEventListener('click', () => setActiveTool('pan'));
+            if (dom['layers-panel-button']) dom['layers-panel-button'].addEventListener('click', () => togglePanel(dom['layers-panel']));
+            if (dom['text-panel-button']) dom['text-panel-button'].addEventListener('click', () => togglePanel(dom['text-panel']));
+            if (dom['filter-panel-button']) dom['filter-panel-button'].addEventListener('click', () => togglePanel(dom['filter-panel']));
+            if (dom['overlay-panel-button']) dom['overlay-panel-button'].addEventListener('click', () => togglePanel(dom['overlay-panel']));
+            if (dom['transform-panel-button']) dom['transform-panel-button'].addEventListener('click', () => togglePanel(dom['transform-panel']));
+            if (dom.closeButtons) dom.closeButtons.forEach(btn => btn.addEventListener('click', (e) => closePanel(e.target.closest('.floating-panel'))));
+            if (dom.imageLoader) dom.imageLoader.addEventListener('change', handleImageLoad);
+            if (dom.overlayLoader) dom.overlayLoader.addEventListener('change', handleOverlayLoad);
+            document.querySelectorAll('#floating-panels-container input, #floating-panels-container select').forEach(el => {
+                if (!['flip-select', 'filterPreset'].includes(el.id)) { el.addEventListener('input', () => { updateActiveTargetProperties(); applyAndDraw(); }); }
+            });
+            if (dom.filterPreset) dom.filterPreset.addEventListener('change', applyPresetFilter);
+            if (dom.flipSelect) dom.flipSelect.addEventListener('change', applyFlip);
+            if (dom['reset-all-button']) dom['reset-all-button'].addEventListener('click', resetAll);
+            if (dom['reset-filters-button']) dom['reset-filters-button'].addEventListener('click', resetFilters);
+            if (dom['download-button']) dom['download-button'].addEventListener('click', handleDownload);
+            if (dom['save-state-button']) dom['save-state-button'].addEventListener('click', saveState);
+            if (dom['load-state-button']) dom['load-state-button'].addEventListener('click', loadState);
+            if (dom['theme-toggle']) dom['theme-toggle'].addEventListener('click', toggleTheme);
+            if (dom.imageCanvas) {
+                dom.imageCanvas.addEventListener('mousedown', handleMouseDown);
+                dom.imageCanvas.addEventListener('wheel', handleWheel, { passive: false });
+            }
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('mouseup', handleMouseUp);
+            window.addEventListener('resize', fitCanvasToImage);
+
+            let draggedItemEl = null;
+            if (dom.layersList) {
+                dom.layersList.addEventListener('dragstart', e => {
+                    const item = e.target.closest('.layer-item');
+                    if (item && item.dataset.layerId !== 'main') {
+                        draggedItemEl = item;
+                        setTimeout(() => item.classList.add('dragging'), 0);
+                    }
+                });
+                dom.layersList.addEventListener('dragover', e => {
+                    e.preventDefault();
+                    if (!draggedItemEl) return;
+                    const afterElement = getDragAfterElement(dom.layersList, e.clientY);
+                    if (afterElement) {
+                        dom.layersList.insertBefore(draggedItemEl, afterElement);
+                    } else {
+                        const backgroundEl = dom.layersList.querySelector('[data-layer-id="main"]');
+                        dom.layersList.insertBefore(draggedItemEl, backgroundEl);
+                    }
+                });
+                dom.layersList.addEventListener('drop', e => {
+                    e.preventDefault();
+                    if (!draggedItemEl) return;
+                    draggedItemEl.classList.remove('dragging');
+                    const finalOrderedIds = [...dom.layersList.querySelectorAll('.layer-item[draggable="true"]')]
+                        .map(item => item.dataset.layerId)
+                        .reverse();
+                    overlays = finalOrderedIds.map(id => overlays.find(o => o.id == id));
+                    draggedItemEl = null;
+                    updateLayersPanel();
+                    applyAndDraw();
+                });
+            }
+        }
+        
+        // --- UI & PANEL FUNCTIONS ---
+        function updateLayersPanel() {
+            if (!dom['layers-list']) return;
+            const layersList = dom['layers-list'];
+            const currentScroll = layersList.scrollTop;
+            layersList.innerHTML = '';
+            const layersToShow = [mainImage, ...overlays];
+            
+            layersToShow.reverse().forEach(layer => {
+                const item = document.createElement('div');
+                item.className = 'layer-item';
+                item.dataset.layerId = layer.id;
+                if (activeTarget.id === layer.id) item.classList.add('active');
+
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'layer-name';
+                nameSpan.textContent = layer.id === 'main' ? 'Κύρια Εικόνα' : `Overlay ${overlays.findIndex(o => o.id === layer.id) + 1}`;
+                nameSpan.addEventListener('click', () => setActiveTarget(layer));
+
+                const controlsDiv = document.createElement('div');
+                controlsDiv.className = 'layer-controls';
+
+                if (layer.id !== 'main') {
+                    const upButton = document.createElement('button');
+                    upButton.className = 'layer-move-button';
+                    upButton.innerHTML = '▲';
+                    upButton.disabled = overlays.findIndex(o => o.id === layer.id) === overlays.length - 1;
+                    upButton.addEventListener('click', (e) => { e.stopPropagation(); moveLayer(layer.id, 'up'); });
+                    controlsDiv.appendChild(upButton);
+
+                    const downButton = document.createElement('button');
+                    downButton.className = 'layer-move-button';
+                    downButton.innerHTML = '▼';
+                    downButton.disabled = overlays.findIndex(o => o.id === layer.id) === 0;
+                    downButton.addEventListener('click', (e) => { e.stopPropagation(); moveLayer(layer.id, 'down'); });
+                    controlsDiv.appendChild(downButton);
+                }
+
+                const visButton = document.createElement('button');
+                visButton.className = 'layer-vis-button';
+                visButton.innerHTML = layer.isVisible ? eyeIconSVG : eyeOffIconSVG;
+                if (!layer.isVisible) visButton.classList.add('is-hidden');
+                visButton.addEventListener('click', e => {
+                    e.stopPropagation();
+                    layer.isVisible = !layer.isVisible;
+                    updateLayersPanel();
+                    applyAndDraw();
+                });
+                controlsDiv.appendChild(visButton);
+
+                if (layer.id !== 'main') {
+                    const deleteButton = document.createElement('button');
+                    deleteButton.className = 'layer-delete-button';
+                    deleteButton.title = 'Διαγραφή Layer';
+                    deleteButton.textContent = 'X';
+                    deleteButton.addEventListener('click', (event) => {
+                        event.stopPropagation();
+                        if (confirm(`Διαγραφή του "${nameSpan.textContent}"`)) {
+                            overlays = overlays.filter(o => o.id !== layer.id);
+                            setActiveTarget(mainImage);
+                        }
+                    });
+                    controlsDiv.appendChild(deleteButton);
+                }
+                
+                item.appendChild(nameSpan);
+                item.appendChild(controlsDiv);
+                layersList.appendChild(item);
+            });
+            layersList.scrollTop = currentScroll;
+        }
+
+        function togglePanel(panel) { if (!panel) return; const isVisible = panel.classList.contains('visible'); document.querySelectorAll('.floating-panel').forEach(p => closePanel(p)); if (!isVisible) openPanel(panel); }
+        function openPanel(panel) { if(panel) { panel.classList.add('visible'); const btnId = panel.id.replace('panel', 'panel-button'); if (dom[btnId]) dom[btnId].classList.add('active'); } }
+        function closePanel(panel) { if(panel) { panel.classList.remove('visible'); const btnId = panel.id.replace('panel', 'panel-button'); if (dom[btnId]) dom[btnId].classList.remove('active'); } }
+
+        // --- DRAWING & CANVAS FUNCTIONS ---
+        function applyAndDraw() { if (!originalImage || !dom.ctx) return; const ctx = dom.ctx; const canvas = dom.imageCanvas; const container = dom['canvas-container']; canvas.width = container.clientWidth; canvas.height = container.clientHeight; ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.save(); ctx.translate(viewTransform.offsetX, viewTransform.offsetY); ctx.scale(viewTransform.scale, viewTransform.scale); if(mainImage.isVisible) drawImageWithTransforms(ctx, originalImage, mainImage); overlays.forEach(overlay => { if(overlay.isVisible) drawImageWithTransforms(ctx, overlay.image, overlay); }); if (activeTarget && activeTarget.id !== 'main') { drawOverlayHandles(ctx, activeTarget); } if(mainImage.isVisible) drawText(ctx); ctx.restore(); }
+        function drawImageWithTransforms(ctx, image, props) { ctx.save(); ctx.filter = getFilterString(props); if (props.id !== 'main') { ctx.globalAlpha = props.opacity; ctx.translate(props.x, props.y); ctx.rotate(props.rotation * Math.PI / 180); } const scaleX = props.flipH ? -1 : 1; const scaleY = props.flipV ? -1 : 1; if (props.id === 'main') { ctx.translate(props.flipH ? image.width : 0, props.flipV ? image.height : 0); } ctx.scale(scaleX, scaleY); if (props.id !== 'main') { const w = props.width; const h = props.width / props.aspectRatio; ctx.drawImage(image, -w / 2, -h / 2, w, h); } else { ctx.drawImage(image, 0, 0, image.width, image.height); } ctx.restore(); }
+        function drawText(ctx) { if (!dom.textInput || !dom.textInput.value) return; ctx.save(); ctx.font = `bold ${dom.textSize.value}px Inter`; ctx.fillStyle = dom.textColor.value; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.shadowColor = dom.shadowColor.value; ctx.shadowBlur = dom.shadowBlur.value; ctx.shadowOffsetX = dom.shadowOffsetX.value; ctx.shadowOffsetY = dom.shadowOffsetY.value; ctx.fillText(dom.textInput.value, mainImage.textX, mainImage.textY); ctx.restore(); }
+        function drawOverlayHandles(ctx, overlay) { if (currentTool !== 'select' || !overlay || !overlay.isVisible) return; ctx.save(); ctx.translate(overlay.x, overlay.y); ctx.rotate(overlay.rotation * Math.PI / 180); const w = overlay.width; const h = w / overlay.aspectRatio; const handleSize = 8 / viewTransform.scale; const handleOffset = handleSize / 1.5; ctx.strokeStyle = 'rgba(22, 163, 74, 0.9)'; ctx.lineWidth = 1.5 / viewTransform.scale; ctx.setLineDash([4 / viewTransform.scale, 3 / viewTransform.scale]); ctx.strokeRect(-w / 2, -h / 2, w, h); ctx.setLineDash([]); ctx.fillStyle = 'rgba(22, 163, 74, 1)'; ctx.strokeStyle = 'rgba(255, 255, 255, 1)'; ctx.lineWidth = 2 / viewTransform.scale; const corners = [ { x: -w/2 - handleOffset, y: -h/2 - handleOffset }, { x:  w/2 + handleOffset, y: -h/2 - handleOffset }, { x: -w/2 - handleOffset, y:  h/2 + handleOffset }, { x:  w/2 + handleOffset, y:  h/2 + handleOffset } ]; corners.forEach(corner => { ctx.beginPath(); ctx.rect(corner.x - handleSize / 2, corner.y - handleSize / 2, handleSize, handleSize); ctx.fill(); ctx.stroke(); }); ctx.restore(); }
+        
+        // --- INTERACTION & STATE LOGIC ---
+        function moveLayer(layerId, direction) {
+            const index = overlays.findIndex(o => o.id === layerId);
+            if (index === -1) return;
+            if (direction === 'up' && index < overlays.length - 1) {
+                [overlays[index], overlays[index + 1]] = [overlays[index + 1], overlays[index]]; // Swap
+            } else if (direction === 'down' && index > 0) {
+                [overlays[index], overlays[index - 1]] = [overlays[index - 1], overlays[index]]; // Swap
+            }
+            updateLayersPanel();
+            applyAndDraw();
+        }
+        function handleMouseDown(e) { e.preventDefault(); if (!originalImage) return; const worldPos = getWorldPosFromEvent(e); if (currentTool === 'pan') { interaction.type = 'pan'; interaction.startX = e.clientX - viewTransform.offsetX; interaction.startY = e.clientY - viewTransform.offsetY; dom.imageCanvas.classList.add('is-dragging'); return; } if (currentTool === 'select') { const hit = getHitTarget(worldPos); if (hit && hit.target === activeTarget) { interaction.type = hit.type; interaction.target = hit.target; interaction.startX = worldPos.x; interaction.startY = worldPos.y; if (hit.type === 'drag-overlay') { interaction.startDragX = hit.target.x; interaction.startDragY = hit.target.y; } else if (hit.type === 'drag-text') { interaction.startDragX = hit.target.textX; interaction.startDragY = hit.target.textY; } else if (hit.type.startsWith('resize')) { interaction.startWidth = hit.target.width; const angle = -hit.target.rotation * Math.PI / 180; const c = Math.cos(angle); const s = Math.sin(angle); interaction.startRotatedX = (worldPos.x - hit.target.x) * c - (worldPos.y - hit.target.y) * s; } dom.imageCanvas.classList.add('is-dragging'); } } }
+        function handleMouseMove(e) { e.preventDefault(); if (interaction.type === 'none') { if (currentTool === 'select') { updateCursor(getWorldPosFromEvent(e)); } return; } const worldPos = getWorldPosFromEvent(e); if (interaction.type === 'pan') { viewTransform.offsetX = e.clientX - interaction.startX; viewTransform.offsetY = e.clientY - interaction.startY; applyAndDraw(); return; } if (interaction.target) { const dx = worldPos.x - interaction.startX; const dy = worldPos.y - interaction.startY; if (interaction.type === 'drag-overlay') { interaction.target.x = interaction.startDragX + dx; interaction.target.y = interaction.startDragY + dy; } else if (interaction.type === 'drag-text') { interaction.target.textX = interaction.startDragX + dx; interaction.target.textY = interaction.startDragY + dy; } else if (interaction.type.startsWith('resize')) { const angle = -interaction.target.rotation * Math.PI / 180; const s = Math.sin(angle); const c = Math.cos(angle); const rotatedMouseX = (worldPos.x - interaction.target.x) * c - (worldPos.y - interaction.target.y) * s; const newWidth = Math.abs(rotatedMouseX * 2); interaction.target.width = Math.max(20, newWidth); } applyAndDraw(); } }
+        function handleMouseUp(e) { e.preventDefault(); interaction.type = 'none'; interaction.target = null; if(dom.imageCanvas) dom.imageCanvas.classList.remove('is-dragging'); }
+        function handleWheel(e) { e.preventDefault(); if (!originalImage || !dom.imageCanvas) return; const rect = dom.imageCanvas.getBoundingClientRect(); const mouseX = e.clientX - rect.left; const mouseY = e.clientY - rect.top; const zoomFactor = 1.05; const wheel = e.deltaY < 0 ? zoomFactor : 1 / zoomFactor; const newScale = Math.max(0.1, Math.min(10, viewTransform.scale * wheel)); const worldMouseX = (mouseX - viewTransform.offsetX) / viewTransform.scale; const worldMouseY = (mouseY - viewTransform.offsetY) / viewTransform.scale; viewTransform.offsetX = mouseX - worldMouseX * newScale; viewTransform.offsetY = mouseY - worldMouseY * newScale; viewTransform.scale = newScale; applyAndDraw(); }
+        function getHitTarget(worldPos) { if (!activeTarget || !activeTarget.isVisible) return null; if (activeTarget.id !== 'main') { const overlay = activeTarget; const w = overlay.width; const h = w / overlay.aspectRatio; const angle = -overlay.rotation * Math.PI / 180; const localX = worldPos.x - overlay.x; const localY = worldPos.y - overlay.y; const rotatedX = localX * Math.cos(angle) - localY * Math.sin(angle); const rotatedY = localX * Math.sin(angle) + localY * Math.cos(angle); const handleSize = 12 / viewTransform.scale; const corners = { 'resize-tl': {x: -w/2, y: -h/2}, 'resize-tr': {x: w/2, y: -h/2}, 'resize-bl': {x: -w/2, y: h/2}, 'resize-br': {x: w/2, y: h/2} }; for (const type in corners) { if (Math.abs(rotatedX - corners[type].x) < handleSize && Math.abs(rotatedY - corners[type].y) < handleSize) { return { type: type, target: overlay }; } } if (Math.abs(rotatedX) < w / 2 && Math.abs(rotatedY) < h / 2) { return { type: 'drag-overlay', target: overlay }; } } else if (activeTarget.id === 'main') { if (dom.textInput && dom.textInput.value) { const textSize = parseInt(dom.textSize.value); if(dom.ctx) dom.ctx.font = `bold ${textSize}px Inter`; const textWidth = dom.ctx ? dom.ctx.measureText(dom.textInput.value).width : 0; if (Math.abs(worldPos.x - mainImage.textX) < textWidth / 2 && Math.abs(worldPos.y - mainImage.textY) < textSize / 2) { return { type: 'drag-text', target: mainImage }; } } } return null; }
+        function updateCursor(worldPos) { if(!dom.imageCanvas) return; const hit = getHitTarget(worldPos); dom.imageCanvas.classList.remove('can-drag', 'cursor-nwse-resize', 'cursor-nesw-resize'); if (hit) { if (hit.type.startsWith('resize')) { const cursor = (hit.type === 'resize-tl' || hit.type === 'resize-br') ? 'cursor-nwse-resize' : 'cursor-nesw-resize'; dom.imageCanvas.classList.add(cursor); } else { dom.imageCanvas.classList.add('can-drag'); } } }
+        function handleImageLoad(e) { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (event) => { originalImage = new Image(); originalImage.onload = () => { mainImage.textX = originalImage.width / 2; mainImage.textY = originalImage.height / 2; if (dom.placeholder) dom.placeholder.classList.add('hidden'); if (dom.imageCanvas) dom.imageCanvas.classList.remove('hidden'); setTimeout(fitCanvasToImage, 50); updateLayersPanel(); }; originalImage.src = event.target.result; }; reader.readAsDataURL(file); }
+        function handleOverlayLoad(e) { const file = e.target.files[0]; if (!file || !originalImage) return; const reader = new FileReader(); reader.onload = (event) => { const newOverlayImage = new Image(); newOverlayImage.onload = () => { const newOverlay = { id: Date.now(), isVisible: true, image: newOverlayImage, aspectRatio: newOverlayImage.naturalWidth / newOverlayImage.naturalHeight, width: originalImage.width * 0.3, x: originalImage.width / 2, y: originalImage.height / 2, rotation: 0, opacity: 1.0, flipH: false, flipV: false, brightness: 100, contrast: 100, saturate: 100, sepia: 0, grayscale: 0, 'hue-rotate': 0, invert: 0, blur: 0 }; overlays.push(newOverlay); setActiveTarget(newOverlay); }; newOverlayImage.src = event.target.result; }; reader.readAsDataURL(file); }
+        function setActiveTarget(target) { if (!target) return; activeTarget = target; if (target.id === 'main') { if (dom.overlayOpacity) dom.overlayOpacity.disabled = true; if (dom.overlayRotation) dom.overlayRotation.disabled = true; } else { if (dom.overlayOpacity) { dom.overlayOpacity.disabled = false; dom.overlayOpacity.value = target.opacity * 100; } if (dom.overlayRotation) { dom.overlayRotation.disabled = false; dom.overlayRotation.value = target.rotation; } } if (dom.brightness) dom.brightness.value = target.brightness; if (dom.contrast) dom.contrast.value = target.contrast; if (dom.saturate) dom.saturate.value = target.saturate; if (dom.sepia) dom.sepia.value = target.sepia; if (dom.grayscale) dom.grayscale.value = target.grayscale; if (dom['hue-rotate']) dom['hue-rotate'].value = target['hue-rotate']; if (dom.invert) dom.invert.value = target.invert; if (dom.blur) dom.blur.value = target.blur; updateLayersPanel(); applyAndDraw(); }
+        function resetAll() { originalImage = null; overlays = []; Object.assign(mainImage, { id: 'main', isVisible: true, flipH: false, flipV: false, textX: 0, textY: 0, brightness: 100, contrast: 100, saturate: 100, sepia: 0, grayscale: 0, 'hue-rotate': 0, invert: 0, blur: 0 }); setActiveTarget(mainImage); setActiveTool('select'); viewTransform = { scale: 1, offsetX: 0, offsetY: 0 }; interaction.type = 'none'; if(dom.placeholder) dom.placeholder.classList.remove('hidden'); if(dom.imageCanvas) dom.imageCanvas.classList.add('hidden'); document.querySelectorAll('.floating-panel').forEach(p => closePanel(p)); if(dom.textInput) dom.textInput.value = ''; if(dom.imageLoader) dom.imageLoader.value = ''; if(dom.overlayLoader) dom.overlayLoader.value = ''; resetFilters(); if (dom.imageCanvas && dom.imageCanvas.width > 0 && dom.ctx) dom.ctx.clearRect(0, 0, dom.imageCanvas.width, dom.imageCanvas.height); updateLayersPanel(); }
+        function updateActiveTargetProperties() { if (!activeTarget) return; if (activeTarget.id !== 'main') { activeTarget.opacity = dom.overlayOpacity.value / 100; activeTarget.rotation = dom.overlayRotation.value; } activeTarget.brightness = dom.brightness.value; activeTarget.contrast = dom.contrast.value; activeTarget.saturate = dom.saturate.value; activeTarget.sepia = dom.sepia.value; activeTarget.grayscale = dom.grayscale.value; activeTarget['hue-rotate'] = dom['hue-rotate'].value; activeTarget.invert = dom.invert.value; activeTarget.blur = dom.blur.value; }
+        function applyPresetFilter() { if (!activeTarget) return; const preset = dom.filterPreset.value; const presets = { none: { brightness: 100, contrast: 100, saturate: 100, sepia: 0, grayscale: 0, invert: 0, 'hue-rotate': 0, blur: 0 }, vintage: { brightness: 110, contrast: 110, saturate: 150, sepia: 30 }, grayscale: { grayscale: 100, contrast: 120, saturate: 0 }, sepia: { sepia: 100 }, warm: { brightness: 105, saturate: 120, sepia: 15 }, cool: { brightness: 105, saturate: 80 } }; const values = { ...presets.none, ...presets[preset] }; Object.keys(values).forEach(key => { if (dom[key]) dom[key].value = values[key]; }); updateActiveTargetProperties(); applyAndDraw(); }
+        function applyFlip() { if (!activeTarget) return; const selection = dom.flipSelect.value; if (selection === 'none') return; if (selection === 'horizontal') activeTarget.flipH = !activeTarget.flipH; if (selection === 'vertical') activeTarget.flipV = !activeTarget.flipV; dom.flipSelect.value = 'none'; applyAndDraw(); }
+        function setActiveTool(tool) { currentTool = tool; if (dom['tool-select']) dom['tool-select'].classList.toggle('active', tool === 'select'); if (dom['tool-pan']) dom['tool-pan'].classList.toggle('active', tool === 'pan'); if(dom.imageCanvas) { dom.imageCanvas.className = dom.imageCanvas.className.replace(/tool-\w+/g, ''); dom.imageCanvas.classList.add(`tool-${tool}`); } applyAndDraw(); }
+        function fitCanvasToImage() { if (!originalImage || !dom['canvas-container']) return; const contW = dom['canvas-container'].clientWidth; const contH = dom['canvas-container'].clientHeight; const imgRatio = originalImage.width / originalImage.height; const contRatio = contW / contH; const scale = (imgRatio > contRatio) ? contW / originalImage.width : contH / originalImage.height; viewTransform.scale = scale * 0.95; viewTransform.offsetX = (contW - originalImage.width * viewTransform.scale) / 2; viewTransform.offsetY = (contH - originalImage.height * viewTransform.scale) / 2; applyAndDraw(); }
+        function getFilterString(props) { if (!props) return 'none'; return [ `brightness(${props.brightness}%)`, `contrast(${props.contrast}%)`, `saturate(${props.saturate}%)`, `sepia(${props.sepia}%)`, `grayscale(${props.grayscale}%)`, `hue-rotate(${props['hue-rotate']}deg)`, `invert(${props.invert}%)`, `blur(${props.blur}px)` ].join(' '); }
+        function handleDownload() { if (!originalImage) { alert('Δεν υπάρχει εικόνα για λήψη.'); return; } const tempCanvas = document.createElement('canvas'); const tempCtx = tempCanvas.getContext('2d'); tempCanvas.width = originalImage.width; tempCanvas.height = originalImage.height; const originalViewTransform = { ...viewTransform }; viewTransform = { scale: 1, offsetX: 0, offsetY: 0 }; if(mainImage.isVisible) drawImageWithTransforms(tempCtx, originalImage, mainImage); overlays.forEach(overlay => { if(overlay.isVisible) drawImageWithTransforms(tempCtx, overlay.image, overlay); }); if(mainImage.isVisible) drawText(tempCtx); viewTransform = originalViewTransform; const link = document.createElement('a'); link.download = 'edited-image.png'; link.href = tempCanvas.toDataURL('image/png'); link.click(); applyAndDraw(); }
+        function saveState() { if (!originalImage) { alert('Δεν υπάρχει εικόνα για αποθήκευση.'); return; } const stateToSave = { mainImageState: { ...mainImage, src: originalImage.src }, overlaysState: overlays.map(o => ({ ...o, image: undefined, src: o.image.src })), textState: { value: dom.textInput.value, size: dom.textSize.value, color: dom.textColor.value, shadowColor: dom.shadowColor.value, shadowBlur: dom.shadowBlur.value, shadowOffsetX: dom.shadowOffsetX.value, shadowOffsetY: dom.shadowOffsetY.value, }, viewTransform }; localStorage.setItem('imageEditorState', JSON.stringify(stateToSave)); alert('Η κατάσταση αποθηκεύτηκε τοπικά!'); }
+        function loadState() { const savedStateJSON = localStorage.getItem('imageEditorState'); if (!savedStateJSON) { alert('Δεν βρέθηκε αποθηκευμένη κατάσταση.'); return; } const state = JSON.parse(savedStateJSON); resetAll(); let imagesToLoad = 1 + (state.overlaysState ? state.overlaysState.length : 0); let imagesLoaded = 0; const onAllImagesLoaded = () => { viewTransform = state.viewTransform; dom.textInput.value = state.textState.value; dom.textSize.value = state.textState.size; dom.textColor.value = state.textState.color; dom.shadowColor.value = state.textState.shadowColor; dom.shadowBlur.value = state.textState.shadowBlur; dom.shadowOffsetX.value = state.textState.shadowOffsetX; dom.shadowOffsetY.value = state.textState.shadowOffsetY; overlays = state.overlaysState.map(oState => { const newImg = new Image(); newImg.src = oState.src; return { ...oState, image: newImg };}); dom.placeholder.classList.add('hidden'); dom.imageCanvas.classList.remove('hidden'); setActiveTarget(mainImage); applyAndDraw(); alert("Η κατάσταση φορτώθηκε!"); }; const onImageLoaded = () => { imagesLoaded++; if (imagesLoaded === imagesToLoad) { onAllImagesLoaded(); } }; Object.assign(mainImage, state.mainImageState); originalImage = new Image(); originalImage.crossOrigin = "anonymous"; originalImage.onload = onImageLoaded; originalImage.src = state.mainImageState.src; }
+        function initializeTheme() { const savedTheme = localStorage.getItem('theme'); if (savedTheme === 'dark') { document.body.classList.add('dark-theme'); if (dom['theme-icon-light']) dom['theme-icon-light'].classList.add('hidden'); if (dom['theme-icon-dark']) dom['theme-icon-dark'].classList.remove('hidden'); } }
+        function toggleTheme() { document.body.classList.toggle('dark-theme'); const isDark = document.body.classList.contains('dark-theme'); localStorage.setItem('theme', isDark ? 'dark' : 'light'); if (dom['theme-icon-light']) dom['theme-icon-light'].classList.toggle('hidden', isDark); if (dom['theme-icon-dark']) dom['theme-icon-dark'].classList.toggle('hidden', !isDark); }
+    </script>
+</body>
+</html>

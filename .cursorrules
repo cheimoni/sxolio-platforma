@@ -1,0 +1,45 @@
+# Cursor AI Rules for School Platform Project
+
+## MANDATORY: Read Project Info First
+Before starting ANY work on this project, you MUST read and understand:
+- `project_info.json` - Complete project structure, all modules, features, and specifications
+- `AI_INSTRUCTIONS.md` - Detailed guidelines and protocols
+
+## Project Overview
+This is a comprehensive school management platform with two main systems:
+1. **School Platform** (`school-platform/`) - Web application (Vanilla JS + Firebase)
+2. **Anaplirosis** (`anaplirosis/`) - React application for schedule/substitution management
+
+**Total**: 27 major modules, 150+ features, 7 user roles
+
+## Auto-Update Protocol
+When you make ANY changes:
+1. Update `project_info.json` immediately
+2. Update `last_updated` timestamp
+3. Add change notes in `important_notes.latest_changes`
+
+## Key Files to Always Check
+- `project_info.json` - Project structure and features (READ FIRST)
+- `js/utils/constants.js` - User roles and permissions
+- `js/services/*.js` - Backend services
+- `js/pages/*.js` - Page components
+
+## Architecture Rules
+- School Platform: Vanilla JS, modular services, Firebase backend
+- Anaplirosis: React 18, component-based, hooks for state
+- Always check permissions before operations
+- Always cleanup Firebase listeners
+- Follow existing code patterns
+
+## When Starting Work
+1. Read `project_info.json` completely
+2. Understand which module you're working on
+3. Check related files in `js/services/` and `js/pages/`
+4. Verify permissions needed
+
+## When Finishing Work
+1. Update `project_info.json` with changes
+2. Update `last_updated` field
+3. Document what was changed
+4. Ensure all listeners are cleaned up
+

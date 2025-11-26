@@ -1,0 +1,129 @@
+.celestial-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+  overflow: hidden;
+  z-index: 0; /* Behind login box, but visible */
+}
+
+/* --- Stars Layer --- */
+.stars {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  box-shadow: 
+    /* A lot of stars with random positions */
+    -15vw -15vh 2px #FFF, 7vw -3vh 1px #FFF, 19vw 18vh 1px #FFF, 
+    -19vw 30vh 3px #FFF, -4vw -33vh 2px #FFF, 30vw 23vh 3px #FFF, 
+    45vw -45vh 2px #FFF, -46vw 33vh 1px #FFF, 40vw 4vh 1px #FFF, 
+    -49vw -10vh 1px #FFF, 12vw 10vh 1px #FFF, -15vw 37vh 1px #FFF, 
+    -41vw -21vh 3px #FFF, 33vw -11vh 1px #FFF, 1vw -1vh 2px #FFF, 
+    -13vw -30vh 1px #FFF, -26vw -41vh 3px #FFF, -32vw 45vh 1px #FFF, 
+    -3vw 40vh 2px #FFF, 26vw -46vh 1px #FFF, 13vw 41vh 2px #FFF,
+    /* Add more for density */
+    50vw 10vh 2px #FFF, -50vw -10vh 1px #FFF, 25vw 35vh 3px #FFF,
+    -25vw 35vh 1px #FFF, 0vw 0vh 2px #FFF, 30vw -30vh 1px #FFF;
+  animation: anim-stars 200s linear infinite;
+}
+
+@keyframes anim-stars {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-2000px); }
+}
+
+/* --- Nebula Layer --- */
+.nebula {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100vmax;
+  height: 100vmax;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: anim-nebula 50s ease-in-out infinite alternate;
+}
+
+@keyframes anim-nebula {
+  0% {
+    background: radial-gradient(circle, rgba(100, 0, 150, 0.4) 0%, rgba(0, 50, 150, 0.2) 40%, rgba(0,0,0,0) 70%);
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  }
+  50% {
+    background: radial-gradient(circle, rgba(200, 50, 50, 0.3) 0%, rgba(150, 100, 0, 0.2) 40%, rgba(0,0,0,0) 70%);
+    transform: translate(-45%, -55%) rotate(180deg) scale(1.2);
+  }
+  100% {
+    background: radial-gradient(circle, rgba(0, 150, 100, 0.4) 0%, rgba(50, 0, 150, 0.2) 40%, rgba(0,0,0,0) 70%);
+    transform: translate(-50%, -50%) rotate(360deg) scale(1);
+  }
+}
+
+/* --- Planets Layer --- */
+.planets {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.planet {
+  position: absolute;
+  border-radius: 50%;
+  box-shadow: 0 0 40px -5px currentColor;
+}
+
+.planet-1 {
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle at 30% 30%, #ffcc66, #d4880f);
+  color: #d4880f;
+  animation: anim-planet-1 25s linear infinite;
+}
+
+@keyframes anim-planet-1 {
+  from { top: 120vh; left: 20vw; }
+  to { top: -150px; left: 40vw; }
+}
+
+.planet-2 {
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(circle at 70% 70%, #89cff0, #005f9e);
+  color: #89cff0;
+  animation: anim-planet-2 35s linear infinite;
+}
+
+@keyframes anim-planet-2 {
+  from { top: 120vh; left: 80vw; }
+  to { top: -50px; left: 65vw; }
+}
+
+.planet-3 {
+  width: 80px;
+  height: 80px;
+  background: radial-gradient(circle at 20% 80%, #ff6b6b, #a71d1d);
+  color: #ff6b6b;
+  animation: anim-planet-3 45s linear infinite;
+}
+
+@keyframes anim-planet-3 {
+  from { top: 50vh; left: -80px; }
+  to { top: 60vh; left: 110vw; }
+}
+
+.planet-4 {
+  width: 20px;
+  height: 20px;
+  background: #fff;
+  color: #fff;
+  animation: anim-planet-4 15s linear infinite;
+}
+
+@keyframes anim-planet-4 {
+  from { top: 10vh; left: -20px; }
+  to { top: 15vh; left: 110vw; }
+}

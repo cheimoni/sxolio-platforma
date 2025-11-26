@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Εργαλείο Αφαίρεσης Φόντου - Διορθωμένη Έκδοση</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.11.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.2.0/dist/body-pix.min.js"></script>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f0f2f5; color: #1c1e21; margin: 0; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .container, .editor-container { background-color: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, .15); width: 100%; max-width: 1200px; text-align: center; margin-bottom: 25px; }
+        h1, h2 { color: #0d6efd; }
+        nav { background-color: #fff; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, .1); margin-bottom: 20px; width: 100%; max-width: 1200px; text-align: left; }
+        nav a { text-decoration: none; color: #0d6efd; font-weight: 700; font-size: 1.2em; }
+        button, .tool-button, .edit-button, .preview-button { background-color: #0d6efd; color: #fff; border: none; padding: 8px 15px; border-radius: 5px; font-size: .8em; cursor: pointer; transition: background-color .3s, box-shadow .2s; margin-top: 10px; }
+        button:hover, .tool-button:hover, .edit-button:hover, .preview-button:hover { background-color: #0a58ca; }
+        button:disabled { background-color: #6c757d; cursor: not-allowed; opacity: 0.65; }
+        .edit-button { background-color: #198754; }
+        .edit-button:hover { background-color: #157347; }
+        .preview-button { background-color: #0dcaf0; color:#000; margin-left: 5px; }
+        .preview-button:hover { background-color: #0aa8c2; }
+        #results-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-top: 20px; }
+        .result-item { border: 1px solid #ddd; border-radius: 8px; padding: 10px; background-color: #f9f9f9; width: 220px; }
+        .result-item p { font-weight: 700; margin-top: 0; margin-bottom: 5px; line-height: 1.2; }
+        .result-item .description { font-size: 0.8em; color: #666; font-weight: normal; }
+        .result-item canvas, #editor-canvas { background-image: linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(135deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(135deg, transparent 75%, #ccc 75%); background-size: 20px 20px; background-position: 0 0, 10px 0, 10px -10px, 0 10px; }
+        .result-item canvas { max-width: 100%; height: auto; display: block; margin-top: 10px; }
+        #manual-editor:empty { display: none; } /* Hide editor when empty */
+        #editor-canvas { border: 2px dashed #0d6efd; cursor: crosshair; max-width: 100%; height: auto; }
+        .editor-tools { margin: 20px 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
+        .editor-tools-row { display: flex; justify-content: center; align-items: center; gap: 10px; }
+        .editor-tools label { font-weight: 700; }
+        #save-button { background-color: #dc3545; }
+        #save-button:hover { background-color: #bb2d3b; }
+        #back-button { background-color: #6c757d; }
+        #back-button:hover { background-color: #5a6268; }
+        .tool-button.active { box-shadow: 0 0 0 3px #0a58ca; background-color: #0a58ca; }
+        #undo-button, #redo-button { background-color: #fd7e14; margin: 0 5px; font-size: 1.2em; padding: 5px 12px; }
+        #undo-button:hover, #redo-button:hover { background-color: #e06200; }
+        #preview-modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center; }
+        #preview-image { max-width: 90%; max-height: 85vh; border: 3px solid #fff; border-radius: 5px; }
+        #modal-close { position: absolute; top: 15px; right: 35px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; transition: color 0.3s; }
+        #modal-close:hover { color: #bbb; }
+    </style>
+</head>
+<body>
+
+    <nav><a href="index.html">❮ Επιστροφή στην Αρχική Σελίδα</a></nav>
+
+    <div class="container" id="main-container">
+        <h1>Εργαλείο Αφαίρεσης Φόντου</h1>
+        <h2>1. Αυτόματη Επεξεργασία</h2>
+        <p>Ανεβάστε μια εικόνα για να δημιουργηθούν 5 αρχικές εκδοχές.</p>
+        <div id="controls">
+            <input type="file" id="image-upload" accept="image/*">
+            <button id="process-button" style="display:none;">Αφαίρεση Φόντου</button>
+        </div>
+        <p id="loading-message">Φόρτωση μοντέλου AI...</p>
+        <div id="results-grid"></div>
+    </div>
+
+    <div id="manual-editor" class="editor-container">
+        </div>
+
+    <img id="source-image" src="" alt="Source Image" style="display:none;"/>
+
+    <div id="preview-modal">
+        <span id="modal-close" title="Κλείσιμο (Esc)">&times;</span>
+        <img id="preview-image" src="" alt="Μεγεθυμένη Προεπισκόπηση"/>
+    </div>
+
+
+    <script>
+        const imageUpload = document.getElementById('image-upload');
+        const processButton = document.getElementById('process-button');
+        const sourceImage = document.getElementById('source-image');
+        const resultsGrid = document.getElementById('results-grid');
+        const loadingMessage = document.getElementById('loading-message');
+        const mainContainer = document.getElementById('main-container');
+        const editorContainer = document.getElementById('manual-editor');
+        const previewModal = document.getElementById('preview-modal');
+        const previewImage = document.getElementById('preview-image');
+        const modalClose = document.getElementById('modal-close');
+
+        let net;
+
+        async function loadModel() {
+            try {
+                net = await bodyPix.load();
+                loadingMessage.textContent = 'Το μοντέλο φορτώθηκε. Επιλέξτε αρχείο.';
+            } catch (e) {
+                console.error("Failed to load model:", e);
+                loadingMessage.textContent = 'Σφάλμα φόρτωσης του μοντέλου. Δοκιμάστε ανανέωση.';
+            }
+        }
+        loadModel();
+
+        imageUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                sourceImage.src = URL.createObjectURL(file);
+                sourceImage.onload = () => {
+                    resultsGrid.innerHTML = '';
+                    editorContainer.innerHTML = ''; // Clear editor
+                    processButton.style.display = 'inline-block';
+                    loadingMessage.textContent = 'Πατήστε το κουμπί για επεξεργασία.';
+                }
+            }
+        });
+
+        processButton.addEventListener('click', async () => {
+            if (!sourceImage.src || !net) return;
+            processButton.disabled = true;
+            loadingMessage.textContent = 'Γίνεται επεξεργασία...';
+            resultsGrid.innerHTML = '';
+
+            const processingOptions = [
+                { label: 'Επιλογή 1', threshold: 0.01, description: 'Πιο επιεικής' },
+                { label: 'Επιλογή 2', threshold: 0.02, description: 'Επιεικής' },
+                { label: 'Επιλογή 3', threshold: 0.03, description: 'Ισορροπημένη' },
+                { label: 'Επιλογή 4', threshold: 0.04, description: 'Ακριβής' },
+                { label: 'Επιλογή 5', threshold: 0.05, description: 'Πιο καθαρή' }
+            ];
+
+            for (const option of processingOptions) {
+                const segmentation = await net.segmentPerson(sourceImage, { segmentationThreshold: option.threshold });
+                const resultItem = document.createElement('div');
+                resultItem.className = 'result-item';
+                resultItem.innerHTML = `<p>${option.label}<br><span class="description">${option.description}</span></p>`;
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = sourceImage.naturalWidth;
+                canvas.height = sourceImage.naturalHeight;
+                ctx.drawImage(sourceImage, 0, 0);
+                const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const pixelData = imageData.data;
+                for (let i = 0; i < segmentation.data.length; i++) {
+                    if (segmentation.data[i] === 0) { pixelData[i * 4 + 3] = 0; }
+                }
+                ctx.putImageData(imageData, 0, 0);
+                const editButton = document.createElement('button');
+                editButton.className = 'edit-button';
+                editButton.textContent = 'Διόρθωση';
+                editButton.onclick = () => loadEditor(canvas);
+                const previewButton = document.createElement('button');
+                previewButton.className = 'preview-button';
+                previewButton.textContent = 'Προεπισκόπηση';
+                previewButton.onclick = () => showPreview(canvas);
+                resultItem.appendChild(canvas);
+                const buttonWrapper = document.createElement('div');
+                buttonWrapper.appendChild(editButton);
+                buttonWrapper.appendChild(previewButton);
+                resultItem.appendChild(buttonWrapper);
+                resultsGrid.appendChild(resultItem);
+            }
+            processButton.disabled = false;
+            loadingMessage.textContent = 'Επιλέξτε μια εκδοχή για "Διόρθωση" ή "Προεπισκόπηση".';
+        });
+
+        function showPreview(sourceCanvas) {
+            previewImage.src = sourceCanvas.toDataURL();
+            previewModal.style.display = 'flex';
+        }
+
+        function closePreview() {
+            previewModal.style.display = 'none';
+            previewImage.src = '';
+        }
+        modalClose.addEventListener('click', closePreview);
+        previewModal.addEventListener('click', (e) => {
+            if (e.target === previewModal) closePreview();
+        });
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && previewModal.style.display === 'flex') closePreview();
+        });
+
+        function loadEditor(sourceCanvas) {
+            mainContainer.style.display = 'none';
+            editorContainer.innerHTML = `
+                <h2>2. Χειροκίνητη Διόρθωση</h2>
+                <p>Επιλέξτε εργαλείο. (Δεξί κλικ για Αναίρεση)</p>
+                <div class="editor-tools">
+                    <div class="editor-tools-row">
+                        <button class="tool-button" id="eraser-tool-button">Γόμα</button>
+                        <button class="tool-button" id="wand-tool-button">Μαγικό Ραβδί</button>
+                    </div>
+                    <div id="eraser-controls" class="editor-tools-row">
+                        <label for="eraser-size">Μέγεθος Γόμας:</label>
+                        <input type="range" id="eraser-size" min="1" max="100" value="20">
+                    </div>
+                    <div id="wand-controls" class="editor-tools-row" style="display: none;">
+                        <label for="wand-tolerance">Ανοχή:</label>
+                        <input type="range" id="wand-tolerance" min="1" max="200" value="60">
+                    </div>
+                </div>
+                <canvas id="editor-canvas"></canvas>
+                <div class="editor-tools">
+                    <div class="editor-tools-row">
+                        <button id="back-button">Πίσω στις Επιλογές</button>
+                        <button id="undo-button" title="Αναίρεση (Δεξί Κλικ)">↶</button>
+                        <button id="redo-button" title="Επανάληψη">↷</button>
+                        <button id="save-button">Αποθήκευση</button>
+                    </div>
+                </div>
+            `;
+            const editorCanvas = document.getElementById('editor-canvas');
+            const editorCtx = editorCanvas.getContext('2d');
+            editorCanvas.width = sourceCanvas.width;
+            editorCanvas.height = sourceCanvas.height;
+            editorCtx.drawImage(sourceCanvas, 0, 0);
+            setupEditorLogic(editorCanvas, editorCtx);
+            window.scrollTo(0, 0);
+        }
+
+        function setupEditorLogic(editorCanvas, editorCtx) {
+            const eraserToolButton = document.getElementById('eraser-tool-button');
+            const wandToolButton = document.getElementById('wand-tool-button');
+            const eraserControls = document.getElementById('eraser-controls');
+            const wandControls = document.getElementById('wand-controls');
+            const eraserSizeSlider = document.getElementById('eraser-size');
+            const wandToleranceSlider = document.getElementById('wand-tolerance');
+            const undoButton = document.getElementById('undo-button');
+            const redoButton = document.getElementById('redo-button');
+            const backButton = document.getElementById('back-button');
+            const saveButton = document.getElementById('save-button');
+
+            let history = [];
+            let historyIndex = -1;
+            let isDrawing = false;
+            let currentTool = 'eraser';
+
+            const saveState = () => {
+                history.splice(historyIndex + 1);
+                history.push(editorCtx.getImageData(0, 0, editorCanvas.width, editorCanvas.height));
+                historyIndex++;
+                updateUndoRedoButtons();
+            };
+
+            const undo = () => {
+                if (historyIndex > 0) {
+                    historyIndex--;
+                    editorCtx.putImageData(history[historyIndex], 0, 0);
+                    updateUndoRedoButtons();
+                }
+            };
+
+            const redo = () => {
+                if (historyIndex < history.length - 1) {
+                    historyIndex++;
+                    editorCtx.putImageData(history[historyIndex], 0, 0);
+                    updateUndoRedoButtons();
+                }
+            };
+
+            const updateUndoRedoButtons = () => {
+                undoButton.disabled = historyIndex <= 0;
+                redoButton.disabled = historyIndex >= history.length - 1;
+            };
+
+            const setCurrentTool = (tool) => {
+                currentTool = tool;
+                eraserControls.style.display = tool === 'eraser' ? 'flex' : 'none';
+                wandControls.style.display = tool === 'wand' ? 'flex' : 'none';
+                eraserToolButton.classList.toggle('active', tool === 'eraser');
+                wandToolButton.classList.toggle('active', tool === 'wand');
+                editorCanvas.style.cursor = tool === 'wand' ? 'copy' : 'crosshair';
+            };
+
+            const getMousePos = (evt) => {
+                const rect = editorCanvas.getBoundingClientRect();
+                return {
+                    x: Math.round((evt.clientX - rect.left) * (editorCanvas.width / rect.width)),
+                    y: Math.round((evt.clientY - rect.top) * (editorCanvas.height / rect.height))
+                };
+            };
+            
+            const magicWandErase = (startX, startY) => {
+                const imageData = editorCtx.getImageData(0, 0, editorCanvas.width, editorCanvas.height);
+                const { data } = imageData;
+                const { width, height } = editorCanvas;
+                const tolerance = parseInt(wandToleranceSlider.value, 10);
+                const startPos = (startY * width + startX) * 4;
+                if (data[startPos + 3] === 0) return;
+
+                const startR = data[startPos];
+                const startG = data[startPos + 1];
+                const startB = data[startPos + 2];
+                const queue = [[startX, startY]];
+                const visited = new Set([`${startX},${startY}`]);
+                let changed = false;
+
+                while (queue.length > 0) {
+                    const [x, y] = queue.shift();
+                    const currentPos = (y * width + x) * 4;
+                    if (data[currentPos + 3] !== 0) {
+                        data[currentPos + 3] = 0;
+                        changed = true;
+                    }
+
+                    [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]].forEach(([nx, ny]) => {
+                        if (nx >= 0 && nx < width && ny >= 0 && ny < height && !visited.has(`${nx},${ny}`)) {
+                            visited.add(`${nx},${ny}`);
+                            const neighborPos = (ny * width + nx) * 4;
+                            if (data[neighborPos + 3] > 0) {
+                                const d = Math.sqrt(
+                                    (data[neighborPos] - startR) ** 2 +
+                                    (data[neighborPos + 1] - startG) ** 2 +
+                                    (data[neighborPos + 2] - startB) ** 2
+                                );
+                                if (d <= tolerance) queue.push([nx, ny]);
+                            }
+                        }
+                    });
+                }
+                if (changed) {
+                    editorCtx.putImageData(imageData, 0, 0);
+                    saveState();
+                }
+            };
+            
+            editorCanvas.addEventListener('mousedown', (e) => {
+                const pos = getMousePos(e);
+                if (currentTool === 'eraser') {
+                    isDrawing = true;
+                    editorCtx.globalCompositeOperation = 'destination-out';
+                    editorCtx.beginPath();
+                    editorCtx.moveTo(pos.x, pos.y);
+                } else if (currentTool === 'wand') {
+                    magicWandErase(pos.x, pos.y);
+                }
+            });
+
+            editorCanvas.addEventListener('mousemove', (e) => {
+                if (isDrawing && currentTool === 'eraser') {
+                    const pos = getMousePos(e);
+                    editorCtx.lineCap = 'round';
+                    editorCtx.lineJoin = 'round';
+                    editorCtx.lineWidth = eraserSizeSlider.value;
+                    editorCtx.lineTo(pos.x, pos.y);
+                    editorCtx.stroke();
+                }
+            });
+
+            editorCanvas.addEventListener('mouseup', () => {
+                if (isDrawing && currentTool === 'eraser') {
+                    editorCtx.closePath();
+                    isDrawing = false;
+                    saveState();
+                }
+            });
+            
+            editorCanvas.addEventListener('contextmenu', e => { e.preventDefault(); undo(); });
+            undoButton.addEventListener('click', undo);
+            redoButton.addEventListener('click', redo);
+            eraserToolButton.addEventListener('click', () => setCurrentTool('eraser'));
+            wandToolButton.addEventListener('click', () => setCurrentTool('wand'));
+            backButton.addEventListener('click', () => {
+                editorContainer.innerHTML = '';
+                mainContainer.style.display = 'block';
+            });
+            saveButton.addEventListener('click', () => {
+                const link = document.createElement('a');
+                link.download = 'edited-image.png';
+                link.href = editorCanvas.toDataURL();
+                link.click();
+            });
+
+            // Initial setup
+            saveState();
+            setCurrentTool('eraser');
+        }
+
+    </script>
+</body>
+</html>

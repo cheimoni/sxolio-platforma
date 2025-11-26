@@ -1,0 +1,467 @@
+{
+  "totalEntries": 44,
+  "entries": [
+    {
+      "teacher": "ΒΑΣΙΛΕΙΟΥ ΗΛΙΑΣ",
+      "day": "Τρίτη",
+      "period": "6",
+      "subject": "Γκατ_1 ΕΜΠ_κατ (Γ) Εμπορ-Marketing… B252",
+      "classInParens": "Γ",
+      "fullName": "ΕΜΠ_"
+    },
+    {
+      "teacher": "ΒΑΣΙΛΕΙΟΥ ΗΛΙΑΣ",
+      "day": "Τρίτη",
+      "period": "7",
+      "subject": "Γκατ_1 ΕΜΠ_κατ (Γ) Εμπορ-Marketing… B252",
+      "classInParens": "Γ",
+      "fullName": "ΕΜΠ_"
+    },
+    {
+      "teacher": "ΒΑΣΙΛΕΙΟΥ ΗΛΙΑΣ",
+      "day": "Πέμπτη",
+      "period": "1",
+      "subject": "Γκατ_1 ΕΜΠ_κατ (Γ) Εμπορ-Marketing… B252",
+      "classInParens": "Γ",
+      "fullName": "ΕΜΠ_"
+    },
+    {
+      "teacher": "ΒΑΣΙΛΕΙΟΥ ΗΛΙΑΣ",
+      "day": "Πέμπτη",
+      "period": "2",
+      "subject": "Γκατ_1 ΕΜΠ_κατ (Γ) Εμπορ-Marketing… B252",
+      "classInParens": "Γ",
+      "fullName": "ΕΜΠ_"
+    },
+    {
+      "teacher": "ΔΡΟΣΟΠΟΥΛΟΥ ΚΩΝΣΤΑΝΤΙΝΑ",
+      "day": "Τρίτη",
+      "period": "6",
+      "subject": "Γκατ_1 ΑΡΧ_4_κατ… Αρχαία κατ (Γ) B250",
+      "classInParens": "Γ",
+      "fullName": "ΑΡΧ_"
+    },
+    {
+      "teacher": "ΔΡΟΣΟΠΟΥΛΟΥ ΚΩΝΣΤΑΝΤΙΝΑ",
+      "day": "Τρίτη",
+      "period": "7",
+      "subject": "Γκατ_1 ΑΡΧ_4_κατ… Αρχαία κατ (Γ) Ζ246",
+      "classInParens": "Γ",
+      "fullName": "ΑΡΧ_"
+    },
+    {
+      "teacher": "ΔΡΟΣΟΠΟΥΛΟΥ ΚΩΝΣΤΑΝΤΙΝΑ",
+      "day": "Πέμπτη",
+      "period": "1",
+      "subject": "Γκατ_1 ΑΡΧ_4_κατ… Αρχαία κατ (Γ) B258",
+      "classInParens": "Γ",
+      "fullName": "ΑΡΧ_"
+    },
+    {
+      "teacher": "ΔΡΟΣΟΠΟΥΛΟΥ ΚΩΝΣΤΑΝΤΙΝΑ",
+      "day": "Πέμπτη",
+      "period": "2",
+      "subject": "Γκατ_1 ΑΡΧ_4_κατ… Αρχαία κατ (Γ) B258",
+      "classInParens": "Γ",
+      "fullName": "ΑΡΧ_"
+    },
+    {
+      "teacher": "ΙΩΑΝΝΟΥ ΑΝΘΟΥΛΑ",
+      "day": "Τρίτη",
+      "period": "6",
+      "subject": "Γκατ_1 ΛΓΣΤ_κατ (Γ) Λογιστική κατ (Γ) B258",
+      "classInParens": "Γ",
+      "fullName": "ΛΓΣΤ_"
+    },
+    {
+      "teacher": "ΙΩΑΝΝΟΥ ΑΝΘΟΥΛΑ",
+      "day": "Τρίτη",
+      "period": "7",
+      "subject": "Γκατ_1 ΛΓΣΤ_κατ (Γ) Λογιστική κατ (Γ) B258",
+      "classInParens": "Γ",
+      "fullName": "ΛΓΣΤ_"
+    },
+    {
+      "teacher": "ΙΩΑΝΝΟΥ ΑΝΘΟΥΛΑ",
+      "day": "Πέμπτη",
+      "period": "1",
+      "subject": "Γκατ_1 ΛΓΣΤ_κατ (Γ) Λογιστική κατ (Γ) Δ130",
+      "classInParens": "Γ",
+      "fullName": "ΛΓΣΤ_"
+    },
+    {
+      "teacher": "ΙΩΑΝΝΟΥ ΑΝΘΟΥΛΑ",
+      "day": "Πέμπτη",
+      "period": "2",
+      "subject": "Γκατ_1 ΛΓΣΤ_κατ (Γ) Λογιστική κατ (Γ) Δ130",
+      "classInParens": "Γ",
+      "fullName": "ΛΓΣΤ_"
+    },
+    {
+      "teacher": "ΚΟΝΗ ΛΙΖΑ",
+      "day": "Τρίτη",
+      "period": "6",
+      "subject": "Γκατ_1 ΒΙΟ_κατ… Βιολογία κατ (Γ) Γ131",
+      "classInParens": "Γ",
+      "fullName": "ΒΙΟ_"
+    },
+    {
+      "teacher": "ΚΟΝΗ ΛΙΖΑ",
+      "day": "Τρίτη",
+      "period": "7",
+      "subject": "Γκατ_1 ΒΙΟ_κατ… Βιολογία κατ (Γ) Γ131",
+      "classInParens": "Γ",
+      "fullName": "ΒΙΟ_"
+    },
+    {
+      "teacher": "ΚΟΝΗ ΛΙΖΑ",
+      "day": "Πέμπτη",
+      "period": "1",
+      "subject": "Γκατ_1 ΒΙΟ_κατ… Βιολογία κατ (Γ) Γ127",
+      "classInParens": "Γ",
+      "fullName": "ΒΙΟ_"
+    },
+    {
+      "teacher": "ΚΟΝΗ ΛΙΖΑ",
+      "day": "Πέμπτη",
+      "period": "2",
+      "subject": "Γκατ_1 ΒΙΟ_κατ… Βιολογία κατ (Γ) Γ127",
+      "classInParens": "Γ",
+      "fullName": "ΒΙΟ_"
+    },
+    {
+      "teacher": "ΚΡΑΣΙΔΟΥ ΠΕΡΣΕΦΟΝΗ",
+      "day": "Τρίτη",
+      "period": "6",
+      "subject": "Γκατ_1 ΕΛΣΧ_κατ… Ελεύθερο Σχέδιο… A104",
+      "classInParens": null,
+      "fullName": "ΕΛΣΧ_"
+    },
+    {
+      "teacher": "ΚΡΑΣΙΔΟΥ ΠΕΡΣΕΦΟΝΗ",
+      "day": "Τρίτη",
+      "period": "7",
+      "subject": "Γκατ_1 ΕΛΣΧ_κατ… Ελεύθερο Σχέδιο… A104",
+      "classInParens": null,
+      "fullName": "ΕΛΣΧ_"
+    },
+    {
+      "teacher": "ΚΡΑΣΙΔΟΥ ΠΕΡΣΕΦΟΝΗ",
+      "day": "Πέμπτη",
+      "period": "1",
+      "subject": "Γκατ_1 ΕΛΣΧ_κατ… Ελεύθερο Σχέδιο… A104",
+      "classInParens": null,
+      "fullName": "ΕΛΣΧ_"
+    },
+    {
+      "teacher": "ΚΡΑΣΙΔΟΥ ΠΕΡΣΕΦΟΝΗ",
+      "day": "Πέμπτη",
+      "period": "2",
+      "subject": "Γκατ_1 ΕΛΣΧ_κατ… Ελεύθερο Σχέδιο… A104",
+      "classInParens": null,
+      "fullName": "ΕΛΣΧ_"
+    },
+    {
+      "teacher": "ΛΟΙΖΙΑ ΛΕΥΚΗ",
+      "day": "Τρίτη",
+      "period": "6",
+      "subject": "Γκατ_1 ΧΗΜ_κατ (Γ) Χημεία κατ (Γ) B124",
+      "classInParens": "Γ",
+      "fullName": "ΧΗΜ_"
+    },
+    {
+      "teacher": "ΛΟΙΖΙΑ ΛΕΥΚΗ",
+      "day": "Τρίτη",
+      "period": "7",
+      "subject": "Γκατ_1 ΧΗΜ_κατ (Γ) Χημεία κατ (Γ) B124",
+      "classInParens": "Γ",
+      "fullName": "ΧΗΜ_"
+    },
+    {
+      "teacher": "ΛΟΙΖΙΑ ΛΕΥΚΗ",
+      "day": "Πέμπτη",
+      "period": "1",
+      "subject": "Γκατ_1 ΧΗΜ_κατ (Γ) Χημεία κατ (Γ) B124",
+      "classInParens": "Γ",
+      "fullName": "ΧΗΜ_"
+    },
+    {
+      "teacher": "ΛΟΙΖΙΑ ΛΕΥΚΗ",
+      "day": "Πέμπτη",
+      "period": "2",
+      "subject": "Γκατ_1 ΧΗΜ_κατ (Γ) Χημεία κατ (Γ) B124",
+      "classInParens": "Γ",
+      "fullName": "ΧΗΜ_"
+    },
+    {
+      "teacher": "ΜΑΚΡΗ ΑΜΑΛΙΑ",
+      "day": "Τρίτη",
+      "period": "6",
+      "subject": "Γκατ_1 ΑΓΓ_6_κατ (Γ Αγγλικά κατ (Γ) Δ268",
+      "classInParens": "Γ",
+      "fullName": "ΑΓΓ_"
+    },
+    {
+      "teacher": "ΜΑΚΡΗ ΑΜΑΛΙΑ",
+      "day": "Τρίτη",
+      "period": "7",
+      "subject": "Γκατ_1 ΑΓΓ_6_κατ (Γ Αγγλικά κατ (Γ) Δ267",
+      "classInParens": "Γ",
+      "fullName": "ΑΓΓ_"
+    },
+    {
+      "teacher": "ΜΑΚΡΗ ΑΜΑΛΙΑ",
+      "day": "Πέμπτη",
+      "period": "1",
+      "subject": "Γκατ_1 ΑΓΓ_6_κατ (Γ Αγγλικά κατ (Γ) B259",
+      "classInParens": "Γ",
+      "fullName": "ΑΓΓ_"
+    },
+    {
+      "teacher": "ΜΑΚΡΗ ΑΜΑΛΙΑ",
+      "day": "Πέμπτη",
+      "period": "2",
+      "subject": "Γκατ_1 ΑΓΓ_6_κατ (Γ Αγγλικά κατ (Γ) B259",
+      "classInParens": "Γ",
+      "fullName": "ΑΓΓ_"
+    },
+    {
+      "teacher": "ΜΙΧΑΗΛ ΠΑΝΑΓΙΩΤΑ",
+      "day": "Τρίτη",
+      "period": "6",
+      "subject": "Γκατ_1 ΟΙΚ_κατ (Γ) Οικογ. Αγωγή κατ (Γ) Δ266",
+      "classInParens": "Γ",
+      "fullName": "ΟΙΚ_"
+    },
+    {
+      "teacher": "ΜΙΧΑΗΛ ΠΑΝΑΓΙΩΤΑ",
+      "day": "Τρίτη",
+      "period": "7",
+      "subject": "Γκατ_1 ΟΙΚ_κατ (Γ) Οικογ. Αγωγή κατ (Γ) Δ266",
+      "classInParens": "Γ",
+      "fullName": "ΟΙΚ_"
+    },
+    {
+      "teacher": "ΜΙΧΑΗΛ ΠΑΝΑΓΙΩΤΑ",
+      "day": "Πέμπτη",
+      "period": "1",
+      "subject": "Γκατ_1 ΟΙΚ_κατ (Γ) Οικογ. Αγωγή κατ (Γ) Δ266",
+      "classInParens": "Γ",
+      "fullName": "ΟΙΚ_"
+    },
+    {
+      "teacher": "ΜΙΧΑΗΛ ΠΑΝΑΓΙΩΤΑ",
+      "day": "Πέμπτη",
+      "period": "2",
+      "subject": "Γκατ_1 ΟΙΚ_κατ (Γ) Οικογ. Αγωγή κατ (Γ) Δ266",
+      "classInParens": "Γ",
+      "fullName": "ΟΙΚ_"
+    },
+    {
+      "teacher": "ΣΒΑΝΑ ΚΑΛΙΑΝΑ",
+      "day": "Τρίτη",
+      "period": "6",
+      "subject": "Γκατ_1 ΒΙΟ_κατ… Βιολογία κατ (Γ) Γ127",
+      "classInParens": "Γ",
+      "fullName": "ΒΙΟ_"
+    },
+    {
+      "teacher": "ΣΒΑΝΑ ΚΑΛΙΑΝΑ",
+      "day": "Τρίτη",
+      "period": "7",
+      "subject": "Γκατ_1 ΒΙΟ_κατ… Βιολογία κατ (Γ) Γ127",
+      "classInParens": "Γ",
+      "fullName": "ΒΙΟ_"
+    },
+    {
+      "teacher": "ΣΒΑΝΑ ΚΑΛΙΑΝΑ",
+      "day": "Πέμπτη",
+      "period": "1",
+      "subject": "Γκατ_1 ΒΙΟ_κατ… Βιολογία κατ (Γ) Γ131",
+      "classInParens": "Γ",
+      "fullName": "ΒΙΟ_"
+    },
+    {
+      "teacher": "ΣΒΑΝΑ ΚΑΛΙΑΝΑ",
+      "day": "Πέμπτη",
+      "period": "2",
+      "subject": "Γκατ_1 ΒΙΟ_κατ… Βιολογία κατ (Γ) Γ131",
+      "classInParens": "Γ",
+      "fullName": "ΒΙΟ_"
+    },
+    {
+      "teacher": "ΤΡΥΓΩΝΑΚΗ ΜΑΡΙΑ",
+      "day": "Τρίτη",
+      "period": "6",
+      "subject": "Γκατ_1 ΡΩΣ_κατ (Γ) Ρωσικά κατ (Γ) B255",
+      "classInParens": "Γ",
+      "fullName": "ΡΩΣ_"
+    },
+    {
+      "teacher": "ΤΡΥΓΩΝΑΚΗ ΜΑΡΙΑ",
+      "day": "Τρίτη",
+      "period": "7",
+      "subject": "Γκατ_1 ΡΩΣ_κατ (Γ) Ρωσικά κατ (Γ) B255",
+      "classInParens": "Γ",
+      "fullName": "ΡΩΣ_"
+    },
+    {
+      "teacher": "ΤΡΥΓΩΝΑΚΗ ΜΑΡΙΑ",
+      "day": "Πέμπτη",
+      "period": "1",
+      "subject": "Γκατ_1 ΡΩΣ_κατ (Γ) Ρωσικά κατ (Γ) B255",
+      "classInParens": "Γ",
+      "fullName": "ΡΩΣ_"
+    },
+    {
+      "teacher": "ΤΡΥΓΩΝΑΚΗ ΜΑΡΙΑ",
+      "day": "Πέμπτη",
+      "period": "2",
+      "subject": "Γκατ_1 ΡΩΣ_κατ (Γ) Ρωσικά κατ (Γ) B255",
+      "classInParens": "Γ",
+      "fullName": "ΡΩΣ_"
+    },
+    {
+      "teacher": "ΧΕΙΜΩΝΙΔΗΣ ΓΙΩΡΓΟΣ",
+      "day": "Τρίτη",
+      "period": "6",
+      "subject": "Γκατ_1 ΕΙΚ_κατ (Γ) Εικαστικές Εφ. κατ… A105",
+      "classInParens": "Γ",
+      "fullName": "ΕΙΚ_"
+    },
+    {
+      "teacher": "ΧΕΙΜΩΝΙΔΗΣ ΓΙΩΡΓΟΣ",
+      "day": "Τρίτη",
+      "period": "7",
+      "subject": "Γκατ_1 ΕΙΚ_κατ (Γ) Εικαστικές Εφ. κατ… A105",
+      "classInParens": "Γ",
+      "fullName": "ΕΙΚ_"
+    },
+    {
+      "teacher": "ΧΕΙΜΩΝΙΔΗΣ ΓΙΩΡΓΟΣ",
+      "day": "Πέμπτη",
+      "period": "1",
+      "subject": "Γκατ_1 ΕΙΚ_κατ (Γ) Εικαστικές Εφ. κατ… A105",
+      "classInParens": "Γ",
+      "fullName": "ΕΙΚ_"
+    },
+    {
+      "teacher": "ΧΕΙΜΩΝΙΔΗΣ ΓΙΩΡΓΟΣ",
+      "day": "Πέμπτη",
+      "period": "2",
+      "subject": "Γκατ_1 ΕΙΚ_κατ (Γ) Εικαστικές Εφ. κατ… A105",
+      "classInParens": "Γ",
+      "fullName": "ΕΙΚ_"
+    }
+  ],
+  "teachersSummary": [
+    {
+      "teacher": "ΒΑΣΙΛΕΙΟΥ ΗΛΙΑΣ",
+      "entriesCount": 4,
+      "classes": [
+        "Γ"
+      ],
+      "fullNames": [
+        "ΕΜΠ_"
+      ]
+    },
+    {
+      "teacher": "ΔΡΟΣΟΠΟΥΛΟΥ ΚΩΝΣΤΑΝΤΙΝΑ",
+      "entriesCount": 4,
+      "classes": [
+        "Γ"
+      ],
+      "fullNames": [
+        "ΑΡΧ_"
+      ]
+    },
+    {
+      "teacher": "ΙΩΑΝΝΟΥ ΑΝΘΟΥΛΑ",
+      "entriesCount": 4,
+      "classes": [
+        "Γ"
+      ],
+      "fullNames": [
+        "ΛΓΣΤ_"
+      ]
+    },
+    {
+      "teacher": "ΚΟΝΗ ΛΙΖΑ",
+      "entriesCount": 4,
+      "classes": [
+        "Γ"
+      ],
+      "fullNames": [
+        "ΒΙΟ_"
+      ]
+    },
+    {
+      "teacher": "ΚΡΑΣΙΔΟΥ ΠΕΡΣΕΦΟΝΗ",
+      "entriesCount": 4,
+      "classes": [],
+      "fullNames": [
+        "ΕΛΣΧ_"
+      ]
+    },
+    {
+      "teacher": "ΛΟΙΖΙΑ ΛΕΥΚΗ",
+      "entriesCount": 4,
+      "classes": [
+        "Γ"
+      ],
+      "fullNames": [
+        "ΧΗΜ_"
+      ]
+    },
+    {
+      "teacher": "ΜΑΚΡΗ ΑΜΑΛΙΑ",
+      "entriesCount": 4,
+      "classes": [
+        "Γ"
+      ],
+      "fullNames": [
+        "ΑΓΓ_"
+      ]
+    },
+    {
+      "teacher": "ΜΙΧΑΗΛ ΠΑΝΑΓΙΩΤΑ",
+      "entriesCount": 4,
+      "classes": [
+        "Γ"
+      ],
+      "fullNames": [
+        "ΟΙΚ_"
+      ]
+    },
+    {
+      "teacher": "ΣΒΑΝΑ ΚΑΛΙΑΝΑ",
+      "entriesCount": 4,
+      "classes": [
+        "Γ"
+      ],
+      "fullNames": [
+        "ΒΙΟ_"
+      ]
+    },
+    {
+      "teacher": "ΤΡΥΓΩΝΑΚΗ ΜΑΡΙΑ",
+      "entriesCount": 4,
+      "classes": [
+        "Γ"
+      ],
+      "fullNames": [
+        "ΡΩΣ_"
+      ]
+    },
+    {
+      "teacher": "ΧΕΙΜΩΝΙΔΗΣ ΓΙΩΡΓΟΣ",
+      "entriesCount": 4,
+      "classes": [
+        "Γ"
+      ],
+      "fullNames": [
+        "ΕΙΚ_"
+      ]
+    }
+  ]
+}

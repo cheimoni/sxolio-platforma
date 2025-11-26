@@ -1,0 +1,57 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+build/
+dist/
+*.log
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Backups
+**/backups/
+*.bak
+*_backup_*.json
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Large media files (optional - uncomment if needed)
+# *.mp3
+# *.mp4
+# *.mov
+# *.avi
+
+# PDFs and documents (optional - uncomment if you don't want to track these)
+# *.pdf
+# *.doc
+# *.docx
+
+# Keep important config files
+!firebase.json
+!.firebaserc
+

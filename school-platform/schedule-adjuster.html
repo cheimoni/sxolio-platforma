@@ -1,0 +1,2110 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Προσαρμογή Ωραρίου - Σχολική Πλατφόρμα</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
+    <style>
+        :root {
+            /* Theme Colors - Using school platform palette */
+            --primary: #667eea;
+            --primary-dark: #5a67d8;
+            --primary-light: #a3bffa;
+            --secondary: #764ba2;
+            --success: #10b981;
+            --success-dark: #059669;
+            --danger: #ef4444;
+            --danger-dark: #dc2626;
+            --warning: #f59e0b;
+            --warning-dark: #d97706;
+            --info: #3b82f6;
+            --info-dark: #2563eb;
+
+            --bg-primary: #f8fafc;
+            --bg-secondary: #f1f5f9;
+            --bg-card: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --border-color: #e2e8f0;
+
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            --border-radius: 0.5rem;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 72rem;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .main-card {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-xl);
+            padding: 1rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .version-info {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .copyright-footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        .alert {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            background-color: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .alert-text {
+            color: var(--danger-dark);
+            font-size: 0.875rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 1024px) {
+            .grid {
+                grid-template-columns: 1fr 3fr;
+            }
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .control-section {
+            border-radius: var(--border-radius);
+            padding: 0.75rem;
+            border: 2px solid;
+        }
+
+        /* Themed section colors */
+        .section-gray {
+            background-color: var(--bg-secondary);
+            border-color: var(--text-secondary);
+        }
+        .section-purple {
+            background-color: rgba(118, 75, 162, 0.1);
+            border-color: var(--secondary);
+        }
+        .section-green {
+            background-color: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+        }
+        .section-blue {
+            background-color: rgba(102, 126, 234, 0.1);
+            border-color: var(--primary);
+        }
+        .section-orange {
+            background-color: rgba(245, 158, 11, 0.15);
+            border-color: var(--warning);
+        }
+        .section-red {
+            background-color: rgba(239, 68, 68, 0.1);
+            border-color: var(--danger);
+        }
+        .section-yellow {
+            background-color: rgba(245, 158, 11, 0.1);
+            border-color: var(--warning);
+        }
+
+        .section-title {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 0.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 0.875rem;
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        }
+
+        .select-field {
+            width: 100%;
+            padding: 0.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background: var(--bg-card);
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.25rem;
+        }
+
+        @media (max-width: 640px) {
+            .button-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .button-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.25rem;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.25rem;
+            padding: 0.5rem 1rem;
+            border: 2px solid transparent;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            min-height: 40px;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Themed button colors */
+        .btn-red {
+            background-color: var(--danger);
+            color: white;
+            border-color: var(--danger-dark);
+        }
+
+        .btn-green {
+            background-color: var(--success);
+            color: white;
+            border-color: var(--success-dark);
+        }
+
+        .btn-gray {
+            background-color: var(--text-secondary);
+            color: white;
+            border-color: #4b5563;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: var(--primary-dark);
+        }
+
+        .btn-orange {
+            background-color: var(--warning);
+            color: white;
+            border-color: var(--warning-dark);
+        }
+
+        .btn-yellow {
+            background-color: var(--warning);
+            color: white;
+            border-color: var(--warning-dark);
+        }
+
+        .btn-small {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            min-height: 32px;
+        }
+
+        .period-adjustment {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .period-adjustment.selected {
+            border-color: var(--warning);
+            background-color: rgba(245, 158, 11, 0.1);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+
+        .period-reduction {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .period-reduction.selected {
+            border-color: var(--danger);
+            background-color: rgba(239, 68, 68, 0.1);
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
+        .period-reduction.disabled {
+            opacity: 0.5;
+            background-color: var(--bg-secondary);
+        }
+
+        .break-adjustment {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 0.375rem;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .break-adjustment.selected {
+            border-color: var(--warning);
+            background-color: rgba(245, 158, 11, 0.1);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+        }
+
+        .period-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        .adjustment-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 0.5rem;
+            gap: 0.5rem;
+        }
+
+        .adjustment-value {
+            font-weight: bold;
+            font-size: 0.875rem;
+            min-width: 50px;
+            text-align: center;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            color: white;
+        }
+
+        .adjustment-value.positive {
+            background-color: var(--success);
+        }
+
+        .adjustment-value.negative {
+            background-color: var(--danger);
+        }
+
+        .adjustment-value.zero {
+            background-color: var(--text-secondary);
+        }
+
+        .event-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-card);
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            border: 2px solid var(--border-color);
+            font-size: 0.75rem;
+        }
+
+        .event-form {
+            background: var(--bg-card);
+            padding: 0.75rem;
+            border-radius: 0.375rem;
+            border: 2px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .schedule-container {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            border: 2px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .schedule-header {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .schedule-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 25%, transparent 25%, transparent 75%, rgba(255,255,255,0.1) 75%);
+            background-size: 20px 20px;
+        }
+
+        .schedule-header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .schedule-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        @media (max-width: 640px) {
+            .schedule-title {
+                font-size: 2rem;
+            }
+        }
+
+        .schedule-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.25rem;
+            margin: 0.25rem 0;
+            font-weight: 600;
+        }
+
+        .period-item {
+            padding: 0.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 640px) {
+            .period-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        .period-item:hover:not(.break):not(.event) {
+            background-color: var(--bg-secondary);
+        }
+
+        /* Themed period colors */
+        .period-break {
+            background: linear-gradient(135deg, #fbbf24 0%, var(--warning) 100%);
+            border-left: 6px solid var(--warning-dark);
+            color: #92400e;
+        }
+
+        .period-event {
+            background: linear-gradient(135deg, #34d399 0%, var(--success) 100%);
+            border-left: 6px solid var(--success-dark);
+            color: #065f46;
+        }
+
+        .period-adjusted {
+            background: linear-gradient(135deg, #fb923c 0%, var(--warning) 100%);
+            border-left: 6px solid var(--warning-dark);
+            color: #9a3412;
+        }
+
+        .period-reduced {
+            background: linear-gradient(135deg, #f87171 0%, var(--danger) 100%);
+            border-left: 6px solid var(--danger-dark);
+            color: #991b1b;
+        }
+
+        .period-item-name {
+            font-weight: 600;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .period-item-name.break {
+            font-weight: 700;
+            font-style: italic;
+        }
+
+        .period-item-name.event {
+            font-weight: 700;
+        }
+
+        .period-item-name.adjusted {
+            font-weight: 700;
+        }
+
+        .period-item-name.reduced {
+            font-weight: 700;
+        }
+
+        .period-time {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-family: monospace;
+            font-size: 1.125rem;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        @media (max-width: 640px) {
+            .period-time {
+                font-size: 1rem;
+                gap: 0.5rem;
+            }
+        }
+
+        .event-badge {
+            margin-left: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background-color: var(--success-dark);
+            color: white;
+            font-size: 0.75rem;
+            border-radius: 9999px;
+            white-space: nowrap;
+            font-weight: 700;
+        }
+
+        .adjusted-badge {
+            margin-left: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background-color: #9a3412;
+            color: white;
+            font-size: 0.75rem;
+            border-radius: 9999px;
+            white-space: nowrap;
+            font-weight: 700;
+        }
+
+        .reduced-badge {
+            margin-left: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background-color: var(--danger-dark);
+            color: white;
+            font-size: 0.75rem;
+            border-radius: 9999px;
+            white-space: nowrap;
+            font-weight: 700;
+        }
+
+        .break-extended-badge {
+            margin-left: 0.5rem;
+            padding: 0.25rem 0.5rem;
+            background-color: #92400e;
+            color: white;
+            font-size: 0.75rem;
+            border-radius: 9999px;
+            white-space: nowrap;
+            font-weight: 700;
+        }
+
+        .info-list {
+            color: var(--primary);
+            font-size: 0.75rem;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .icon {
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+
+        .hidden { display: none; }
+        .space-y-2 > * + * { margin-top: 0.5rem; }
+        .space-y-4 > * + * { margin-top: 1rem; }
+
+        .checkbox-input {
+            margin-right: 0.5rem;
+            transform: scale(1.3);
+            accent-color: var(--primary);
+        }
+
+        .checkbox-input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .disabled-text {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* Blinking animation for warning */
+        .blinking-warning {
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
+        }
+
+        /* Back button to platform */
+        .back-to-platform {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            box-shadow: var(--shadow-md);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .back-to-platform:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Print Styles */
+        @media print {
+            .version-info,
+            .copyright-footer,
+            .back-to-platform {
+                display: none !important;
+            }
+
+            body * {
+                visibility: hidden;
+            }
+
+            .printable-content, .printable-content * {
+                visibility: visible;
+            }
+
+            .printable-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0;
+                padding: 20px;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .schedule-body {
+                max-height: none !important;
+                overflow: visible !important;
+                height: auto !important;
+            }
+
+            .schedule-container {
+                page-break-inside: avoid;
+                break-inside: avoid;
+                border: 3px solid #000000 !important;
+            }
+
+            .schedule-header {
+                background: var(--gradient-primary) !important;
+                color: white !important;
+                text-align: center !important;
+                padding: 25px !important;
+                position: relative !important;
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .period-item {
+                page-break-inside: avoid;
+                break-inside: avoid;
+                padding: 12px 18px;
+                border-bottom: 2px solid #374151 !important;
+                font-size: 16px !important;
+                flex-direction: row !important;
+                align-items: center !important;
+            }
+
+            .period-break,
+            .period-event,
+            .period-adjusted,
+            .period-reduced {
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .print-footer {
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                right: 20px;
+                display: flex !important;
+                justify-content: space-between;
+                font-size: 14px;
+                color: #000000 !important;
+                font-weight: bold !important;
+                border-top: 2px solid #000000 !important;
+                padding-top: 10px;
+            }
+
+            @page {
+                size: A4;
+                margin: 18mm;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="version-info">
+        Version 2.0 - Σχολική Πλατφόρμα
+    </div>
+
+    <a href="index.html" class="back-to-platform">
+        ← Επιστροφή στην Πλατφόρμα
+    </a>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // === FIREBASE CONFIGURATION ===
+        const firebaseConfig = {
+            apiKey: "AIzaSyAnKzEkMrWcCkpJhgVeDSw_cJGUgHBep5M",
+            authDomain: "platformalas.firebaseapp.com",
+            projectId: "platformalas",
+            storageBucket: "platformalas.firebasestorage.app",
+            messagingSenderId: "486304725952",
+            appId: "1:486304725952:web:eacfc49431f408122ae625",
+            measurementId: "G-81Y4KNS1YN"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const db = firebase.firestore();
+
+        // === FIREBASE HELPERS ===
+        const saveScheduleToFirebase = async (scheduleData) => {
+            try {
+                const docRef = await db.collection('schedules').add({
+                    ...scheduleData,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                return { success: true, id: docRef.id };
+            } catch (error) {
+                console.error('Error saving schedule:', error);
+                return { success: false, error: error.message };
+            }
+        };
+
+        const loadSchedulesFromFirebase = async () => {
+            try {
+                const snapshot = await db.collection('schedules')
+                    .orderBy('updatedAt', 'desc')
+                    .limit(20)
+                    .get();
+
+                const schedules = [];
+                snapshot.forEach(doc => {
+                    schedules.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+
+                return { success: true, schedules };
+            } catch (error) {
+                console.error('Error loading schedules:', error);
+                return { success: false, error: error.message };
+            }
+        };
+
+        const updateScheduleInFirebase = async (scheduleId, scheduleData) => {
+            try {
+                await db.collection('schedules').doc(scheduleId).update({
+                    ...scheduleData,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                return { success: true };
+            } catch (error) {
+                console.error('Error updating schedule:', error);
+                return { success: false, error: error.message };
+            }
+        };
+
+        const deleteScheduleFromFirebase = async (scheduleId) => {
+            try {
+                await db.collection('schedules').doc(scheduleId).delete();
+                return { success: true };
+            } catch (error) {
+                console.error('Error deleting schedule:', error);
+                return { success: false, error: error.message };
+            }
+        };
+
+        // Icon Components (SVG)
+        const ClockIcon = () => (
+            <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12,6 12,12 16,14"></polyline>
+            </svg>
+        );
+
+        const PlusIcon = () => (
+            <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        );
+
+        const MinusIcon = () => (
+            <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        );
+
+        const RotateIcon = () => (
+            <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <polyline points="1,4 1,10 7,10"></polyline>
+                <path d="M3.51,15a9,9,0,0,0,2.13,3.09l1.27,1.27a9,9,0,0,0,13.52,0L21.7,18.09A9,9,0,0,0,23,15"></path>
+            </svg>
+        );
+
+        const XIcon = () => (
+            <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+        );
+
+        const EditIcon = () => (
+            <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M11,4H4A2,2,0,0,0,2,6V18a2,2,0,0,0,2,2H14a2,2,0,0,0,2-2V11"></path>
+                <path d="M18.5,2.5a2.12,2.12,0,0,1,3,3L12,15l-4,1,1-4Z"></path>
+            </svg>
+        );
+
+        const PrinterIcon = () => (
+            <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <polyline points="6,9 6,2 18,2 18,9"></polyline>
+                <path d="M6,18H4a2,2,0,0,1-2-2V11a2,2,0,0,1,2-2H20a2,2,0,0,1,2,2v5a2,2,0,0,1-2,2H18"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+        );
+
+        const AlertIcon = () => (
+            <svg className="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M10.29,3.86,1.82,18a2,2,0,0,0,1.71,3H20.47a2,2,0,0,0,1.71-3L13.71,3.86a2,2,0,0,0-3.42,0Z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+            </svg>
+        );
+
+        function SchoolScheduleAdjuster() {
+            const [adjustment, setAdjustment] = useState(0);
+            const [selectedDay, setSelectedDay] = useState("monday");
+            const [customEvents, setCustomEvents] = useState([]);
+            const [showEventForm, setShowEventForm] = useState(false);
+            const [scheduleTitle, setScheduleTitle] = useState("");
+            const [scheduleDate, setScheduleDate] = useState("");
+            const [editingTitle, setEditingTitle] = useState(false);
+            const [periodAdjustments, setPeriodAdjustments] = useState({});
+            const [periodsToReduce, setPeriodsToReduce] = useState(new Set());
+            const [breakAdjustments, setBreakAdjustments] = useState({});
+            const [eventForm, setEventForm] = useState({
+                name: "",
+                insertAt: "",
+                duration: 15,
+                type: "event",
+            });
+
+            // Firebase state
+            const [savedSchedules, setSavedSchedules] = useState([]);
+            const [showLoadModal, setShowLoadModal] = useState(false);
+            const [isSaving, setIsSaving] = useState(false);
+            const [isLoading, setIsLoading] = useState(false);
+            const [currentScheduleId, setCurrentScheduleId] = useState(null);
+
+            const SCHEDULE_END_TIME = "13:35";
+
+            const schedules = {
+                monday: {
+                    name: "Δευτέρα & Πέμπτη",
+                    periods: [
+                        { name: "1η περίοδος", start: "7:30", end: "8:10" },
+                        { name: "2η περίοδος", start: "8:10", end: "8:50" },
+                        { name: "Διάλειμμα", start: "8:50", end: "9:10", isBreak: true },
+                        { name: "3η περίοδος", start: "9:10", end: "9:50" },
+                        { name: "4η περίοδος", start: "9:50", end: "10:30" },
+                        { name: "Διάλειμμα", start: "10:30", end: "10:45", isBreak: true },
+                        { name: "5η περίοδος", start: "10:45", end: "11:25" },
+                        { name: "6η περίοδος", start: "11:25", end: "12:05" },
+                        { name: "Διάλειμμα", start: "12:05", end: "12:15", isBreak: true },
+                        { name: "7η περίοδος", start: "12:15", end: "12:55" },
+                        { name: "8η περίοδος", start: "12:55", end: "13:35" },
+                    ],
+                },
+                tuesday: {
+                    name: "Τρίτη, Τετάρτη & Παρασκευή",
+                    periods: [
+                        { name: "1η περίοδος", start: "7:30", end: "8:15" },
+                        { name: "2η περίοδος", start: "8:15", end: "9:00" },
+                        { name: "Διάλειμμα", start: "9:00", end: "9:20", isBreak: true },
+                        { name: "3η περίοδος", start: "9:20", end: "10:05" },
+                        { name: "4η περίοδος", start: "10:05", end: "10:50" },
+                        { name: "Διάλειμμα", start: "10:50", end: "11:10", isBreak: true },
+                        { name: "5η περίοδος", start: "11:10", end: "11:55" },
+                        { name: "6η περίοδος", start: "11:55", end: "12:40" },
+                        { name: "Διάλειμμα", start: "12:40", end: "12:50", isBreak: true },
+                        { name: "7η περίοδος", start: "12:50", end: "13:35" },
+                    ],
+                },
+                special: {
+                    name: "Ειδικό Πρόγραμμα (με Εμβόλιμη Περίοδο)",
+                    periods: [
+                        { name: "1η περίοδος", start: "7:30", end: "8:10" },
+                        { name: "2η περίοδος", start: "8:10", end: "8:50" },
+                        { name: "Διάλειμμα", start: "8:50", end: "9:10", isBreak: true },
+                        { name: "3η περίοδος", start: "9:10", end: "9:50" },
+                        { name: "4η περίοδος Εμβόλιμη (Υ.Τ)", start: "9:50", end: "10:05", isEvent: true },
+                        { name: "4η περίοδος", start: "10:05", end: "10:50" },
+                        { name: "Διάλειμμα", start: "10:50", end: "11:10", isBreak: true },
+                        { name: "5η περίοδος", start: "11:10", end: "11:55" },
+                        { name: "6η περίοδος", start: "11:55", end: "12:40" },
+                        { name: "Διάλειμμα", start: "12:40", end: "12:50", isBreak: true },
+                        { name: "7η περίοδος", start: "12:50", end: "13:35" },
+                    ],
+                },
+            };
+
+            const timeToMinutes = (timeStr) => {
+                const [hours, minutes] = timeStr.split(":").map(Number);
+                return hours * 60 + minutes;
+            };
+
+            const minutesToTime = (totalMinutes) => {
+                const hours = Math.floor(totalMinutes / 60);
+                const minutes = totalMinutes % 60;
+                return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+            };
+
+            const adjustTime = (timeStr, adjustmentMinutes) => {
+                const totalMinutes = timeToMinutes(timeStr) + adjustmentMinutes;
+                return minutesToTime(totalMinutes);
+            };
+
+            const getCurrentDate = () => {
+                const today = new Date();
+                const day = today.getDate().toString().padStart(2, "0");
+                const month = (today.getMonth() + 1).toString().padStart(2, "0");
+                const year = today.getFullYear();
+                return `${day}/${month}/${year}`;
+            };
+
+            const createScheduleWithPeriodAdjustments = () => {
+                const baseSchedule = [...schedules[selectedDay].periods];
+                const eventsToInsert = [...customEvents].sort((a, b) => a.insertAt - b.insertAt);
+
+                const totalEventDuration = eventsToInsert.reduce((sum, event) => sum + event.duration, 0);
+                const totalPeriodAdjustments = Object.values(periodAdjustments).reduce((sum, adj) => sum + adj, 0);
+                const totalBreakAdjustments = Object.values(breakAdjustments).reduce((sum, adj) => sum + adj, 0);
+                const totalTimeToReduce = totalEventDuration + totalPeriodAdjustments + totalBreakAdjustments;
+
+                let finalSchedule = [];
+                let currentTime = timeToMinutes(baseSchedule[0].start);
+
+                const selectedPeriodsForReduction = Array.from(periodsToReduce).filter(index => {
+                    const period = baseSchedule[index];
+                    return period && !period.isBreak && !period.isEvent && !periodAdjustments[index];
+                });
+
+                const periodsForReduction = selectedPeriodsForReduction.length > 0
+                    ? selectedPeriodsForReduction
+                    : baseSchedule.map((p, i) => i).filter(index => {
+                        const period = baseSchedule[index];
+                        return period && !period.isBreak && !period.isEvent && !periodAdjustments[index];
+                    });
+
+                let reductionPerPeriod = 0;
+                if (periodsForReduction.length > 0 && totalTimeToReduce > 0) {
+                    const rawReduction = totalTimeToReduce / periodsForReduction.length;
+                    reductionPerPeriod = Math.ceil(rawReduction / 5) * 5;
+                }
+
+                for (let i = 0; i < baseSchedule.length; i++) {
+                    const eventsBeforeThisPeriod = eventsToInsert.filter(event => event.insertAt === i);
+                    eventsBeforeThisPeriod.forEach((event) => {
+                        const eventStart = minutesToTime(currentTime);
+                        const eventEnd = minutesToTime(currentTime + event.duration);
+
+                        finalSchedule.push({
+                            name: event.name,
+                            start: eventStart,
+                            end: eventEnd,
+                            isEvent: true,
+                            eventId: event.id,
+                        });
+
+                        currentTime += event.duration;
+                    });
+
+                    const period = baseSchedule[i];
+                    const originalDuration = timeToMinutes(period.end) - timeToMinutes(period.start);
+                    let newDuration = originalDuration;
+
+                    if (period.isBreak && breakAdjustments[i]) {
+                        newDuration += breakAdjustments[i];
+                        newDuration = Math.max(newDuration, 5);
+                    } else if (periodAdjustments[i]) {
+                        newDuration += periodAdjustments[i];
+                    } else if (periodsForReduction.includes(i) && totalTimeToReduce > 0) {
+                        newDuration -= reductionPerPeriod;
+                        newDuration = Math.max(newDuration, 30);
+                    }
+
+                    const adjustedPeriod = {
+                        ...period,
+                        start: minutesToTime(currentTime),
+                        end: minutesToTime(currentTime + newDuration),
+                        isAdjusted: !!periodAdjustments[i],
+                        adjustmentValue: periodAdjustments[i] || 0,
+                        isBreakExtended: period.isBreak && !!breakAdjustments[i],
+                        breakAdjustmentValue: breakAdjustments[i] || 0,
+                        isReduced: periodsForReduction.includes(i) && !periodAdjustments[i] && totalTimeToReduce > 0,
+                        reductionValue: periodsForReduction.includes(i) && !periodAdjustments[i] && totalTimeToReduce > 0 ? reductionPerPeriod : 0
+                    };
+
+                    finalSchedule.push(adjustedPeriod);
+                    currentTime += newDuration;
+                }
+
+                const eventsAtEnd = eventsToInsert.filter(event => event.insertAt >= baseSchedule.length);
+                eventsAtEnd.forEach((event) => {
+                    if (currentTime + event.duration <= timeToMinutes(SCHEDULE_END_TIME)) {
+                        const eventStart = minutesToTime(currentTime);
+                        const eventEnd = minutesToTime(currentTime + event.duration);
+
+                        finalSchedule.push({
+                            name: event.name,
+                            start: eventStart,
+                            end: eventEnd,
+                            isEvent: true,
+                            eventId: event.id,
+                        });
+
+                        currentTime += event.duration;
+                    }
+                });
+
+                return finalSchedule;
+            };
+
+            const checkScheduleOverflow = () => {
+                const finalSchedule = createScheduleWithPeriodAdjustments();
+                const lastPeriod = finalSchedule[finalSchedule.length - 1];
+                const endTime = adjustTime(lastPeriod.end, adjustment);
+                return timeToMinutes(endTime) > timeToMinutes(SCHEDULE_END_TIME);
+            };
+
+            const checkAutoReduction = () => {
+                const totalEventDuration = customEvents.reduce((sum, event) => sum + event.duration, 0);
+                const totalPeriodAdjustments = Object.values(periodAdjustments).reduce((sum, adj) => sum + adj, 0);
+                const totalBreakAdjustments = Object.values(breakAdjustments).reduce((sum, adj) => sum + adj, 0);
+                const totalTimeToReduce = totalEventDuration + totalPeriodAdjustments + totalBreakAdjustments;
+
+                const selectedPeriodsForReduction = Array.from(periodsToReduce).filter(index => {
+                    const period = schedules[selectedDay].periods[index];
+                    return period && !period.isBreak && !period.isEvent && !periodAdjustments[index];
+                });
+
+                return totalTimeToReduce > 0 && selectedPeriodsForReduction.length === 0;
+            };
+
+            const adjustPeriod = (periodIndex, minutes) => {
+                const currentAdjustment = periodAdjustments[periodIndex] || 0;
+                const newAdjustment = currentAdjustment + minutes;
+
+                const roundedAdjustment = Math.round(newAdjustment / 5) * 5;
+
+                if (roundedAdjustment === 0) {
+                    const newAdjustments = { ...periodAdjustments };
+                    delete newAdjustments[periodIndex];
+                    setPeriodAdjustments(newAdjustments);
+                } else {
+                    setPeriodAdjustments({
+                        ...periodAdjustments,
+                        [periodIndex]: roundedAdjustment
+                    });
+                }
+
+                if (roundedAdjustment !== 0) {
+                    const newSet = new Set(periodsToReduce);
+                    newSet.delete(periodIndex);
+                    setPeriodsToReduce(newSet);
+                }
+            };
+
+            const adjustBreak = (breakIndex, minutes) => {
+                const currentAdjustment = breakAdjustments[breakIndex] || 0;
+                const newAdjustment = currentAdjustment + minutes;
+
+                const roundedAdjustment = Math.round(newAdjustment / 5) * 5;
+
+                if (roundedAdjustment === 0) {
+                    const newAdjustments = { ...breakAdjustments };
+                    delete newAdjustments[breakIndex];
+                    setBreakAdjustments(newAdjustments);
+                } else {
+                    setBreakAdjustments({
+                        ...breakAdjustments,
+                        [breakIndex]: roundedAdjustment
+                    });
+                }
+            };
+
+            const togglePeriodForReduction = (periodIndex) => {
+                if (periodAdjustments[periodIndex]) return;
+
+                const newSet = new Set(periodsToReduce);
+                if (newSet.has(periodIndex)) {
+                    newSet.delete(periodIndex);
+                } else {
+                    newSet.add(periodIndex);
+                }
+                setPeriodsToReduce(newSet);
+            };
+
+            const selectAllPeriodsForReduction = () => {
+                const allPeriods = new Set();
+                schedules[selectedDay].periods.forEach((period, index) => {
+                    if (!period.isBreak && !period.isEvent && !periodAdjustments[index]) {
+                        allPeriods.add(index);
+                    }
+                });
+                setPeriodsToReduce(allPeriods);
+            };
+
+            const clearPeriodsForReduction = () => {
+                setPeriodsToReduce(new Set());
+            };
+
+            const resetPeriodAdjustments = () => {
+                setPeriodAdjustments({});
+            };
+
+            const resetBreakAdjustments = () => {
+                setBreakAdjustments({});
+            };
+
+            const handlePrint = () => {
+                window.print();
+            };
+
+            const handleAdjustmentChange = (value) => {
+                let newValue = parseInt(value) || 0;
+                newValue = Math.round(newValue / 5) * 5;
+                setAdjustment(newValue);
+            };
+
+            const quickAdjust = (minutes) => {
+                setAdjustment(prev => prev + minutes);
+            };
+
+            const reset = () => {
+                setAdjustment(0);
+                resetPeriodAdjustments();
+                resetBreakAdjustments();
+                setPeriodsToReduce(new Set());
+            };
+
+            const handleAddEvent = () => {
+                if (eventForm.name && eventForm.insertAt !== "") {
+                    const newEvent = {
+                        ...eventForm,
+                        id: Date.now(),
+                        insertAt: parseInt(eventForm.insertAt),
+                        duration: parseInt(eventForm.duration),
+                    };
+                    setCustomEvents([...customEvents, newEvent]);
+                    setEventForm({ name: "", insertAt: "", duration: 15, type: "event" });
+                    setShowEventForm(false);
+                }
+            };
+
+            const removeEvent = (eventId) => {
+                setCustomEvents(customEvents.filter(event => event.id !== eventId));
+            };
+
+            // === FIREBASE SAVE/LOAD FUNCTIONS ===
+
+            const handleSaveSchedule = async () => {
+                if (!scheduleTitle.trim()) {
+                    alert('Παρακαλώ εισάγετε έναν τίτλο για το ωράριο');
+                    setEditingTitle(true);
+                    return;
+                }
+
+                setIsSaving(true);
+
+                const scheduleData = {
+                    title: scheduleTitle,
+                    date: scheduleDate,
+                    selectedDay,
+                    adjustment,
+                    periodAdjustments,
+                    breakAdjustments,
+                    periodsToReduce: Array.from(periodsToReduce),
+                    customEvents: customEvents.map(e => ({...e, id: undefined})), // Remove temporary IDs
+                };
+
+                try {
+                    let result;
+                    if (currentScheduleId) {
+                        // Update existing schedule
+                        result = await updateScheduleInFirebase(currentScheduleId, scheduleData);
+                    } else {
+                        // Save as new schedule
+                        result = await saveScheduleToFirebase(scheduleData);
+                        if (result.success) {
+                            setCurrentScheduleId(result.id);
+                        }
+                    }
+
+                    if (result.success) {
+                        alert('✅ Το ωράριο αποθηκεύτηκε επιτυχώς!');
+                    } else {
+                        alert('❌ Σφάλμα αποθήκευσης: ' + result.error);
+                    }
+                } catch (error) {
+                    alert('❌ Σφάλμα αποθήκευσης: ' + error.message);
+                } finally {
+                    setIsSaving(false);
+                }
+            };
+
+            const handleLoadSchedules = async () => {
+                setIsLoading(true);
+                setShowLoadModal(true);
+
+                const result = await loadSchedulesFromFirebase();
+
+                if (result.success) {
+                    setSavedSchedules(result.schedules);
+                } else {
+                    alert('❌ Σφάλμα φόρτωσης: ' + result.error);
+                }
+
+                setIsLoading(false);
+            };
+
+            const handleLoadSchedule = (schedule) => {
+                // Load schedule data into state
+                setScheduleTitle(schedule.title || '');
+                setScheduleDate(schedule.date || '');
+                setSelectedDay(schedule.selectedDay || 'monday');
+                setAdjustment(schedule.adjustment || 0);
+                setPeriodAdjustments(schedule.periodAdjustments || {});
+                setBreakAdjustments(schedule.breakAdjustments || {});
+                setPeriodsToReduce(new Set(schedule.periodsToReduce || []));
+
+                // Restore custom events with new IDs
+                const restoredEvents = (schedule.customEvents || []).map(e => ({
+                    ...e,
+                    id: Date.now() + Math.random()
+                }));
+                setCustomEvents(restoredEvents);
+
+                setCurrentScheduleId(schedule.id);
+                setShowLoadModal(false);
+
+                alert('✅ Το ωράριο φορτώθηκε επιτυχώς!');
+            };
+
+            const handleDeleteSchedule = async (scheduleId) => {
+                if (!confirm('Είστε σίγουροι ότι θέλετε να διαγράψετε αυτό το ωράριο;')) {
+                    return;
+                }
+
+                const result = await deleteScheduleFromFirebase(scheduleId);
+
+                if (result.success) {
+                    // Remove from local list
+                    setSavedSchedules(savedSchedules.filter(s => s.id !== scheduleId));
+
+                    // Clear current schedule if it was deleted
+                    if (currentScheduleId === scheduleId) {
+                        setCurrentScheduleId(null);
+                    }
+
+                    alert('✅ Το ωράριο διαγράφηκε επιτυχώς!');
+                } else {
+                    alert('❌ Σφάλμα διαγραφής: ' + result.error);
+                }
+            };
+
+            const currentSchedule = schedules[selectedDay];
+            const finalSchedule = createScheduleWithPeriodAdjustments();
+            const hasOverflow = checkScheduleOverflow();
+            const hasAutoReduction = checkAutoReduction();
+
+            const getInsertOptions = () => {
+                const options = [];
+                const basePeriods = currentSchedule.periods;
+
+                options.push({ value: 0, label: "Πριν από την 1η περίοδο" });
+
+                for (let i = 1; i < basePeriods.length; i++) {
+                    if (!basePeriods[i].isBreak) {
+                        options.push({
+                            value: i,
+                            label: `Μεταξύ ${basePeriods[i - 1].name} και ${basePeriods[i].name}`,
+                        });
+                    }
+                }
+
+                options.push({
+                    value: basePeriods.length,
+                    label: "Μετά την τελευταία περίοδο",
+                });
+
+                return options;
+            };
+
+            const saveTitle = () => {
+                setEditingTitle(false);
+            };
+
+            const adjustmentOptions = [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+
+            return (
+                <div className="container">
+                    <div className="main-card">
+                        <div className="header">
+                            <h1>
+                                <ClockIcon />
+                                Προσαρμογή Ωραρίου
+                            </h1>
+                            <p>Διαχείριση Ωραρίου & Εμβόλιμων Περιόδων</p>
+                        </div>
+
+                        {hasOverflow && (
+                            <div className="alert">
+                                <AlertIcon />
+                                <span className="alert-text">
+                                    Προσοχή: Το ωράριο υπερβαίνει τις 13:35! Μειώστε τις προσαρμογές ή τις εμβόλιμες περιόδους.
+                                </span>
+                            </div>
+                        )}
+
+                        {hasAutoReduction && (
+                            <div className="alert blinking-warning" style={{backgroundColor: '#fff3cd', borderColor: '#ffeaa7', textAlign: 'center', flexDirection: 'column'}}>
+                                <div style={{fontSize: '3rem', marginBottom: '0.5rem'}}>⚠️</div>
+                                <span className="alert-text" style={{color: '#856404'}}>
+                                    <strong>Δεν έχετε επιλέξει συγκεκριμένες περιόδους για μείωση!</strong><br/>
+                                    Το σύστημα θα μειώσει αυτόματα ΌΛΕΣ τις διαθέσιμες περιόδους.<br/>
+                                    Επιλέξτε συγκεκριμένες περιόδους από την κόκκινη ενότητα για καλύτερο έλεγχο.
+                                </span>
+                            </div>
+                        )}
+
+                        <div className="grid">
+                            <div className="controls no-print">
+                                {/* Day Selection */}
+                                <div className="control-section section-gray">
+                                    <div className="section-title">📅 Επιλογή Προγράμματος</div>
+                                    <select
+                                        value={selectedDay}
+                                        onChange={(e) => setSelectedDay(e.target.value)}
+                                        className="select-field"
+                                    >
+                                        <option value="monday">Δευτέρα & Πέμπτη</option>
+                                        <option value="tuesday">Τρίτη, Τετάρτη & Παρασκευή</option>
+                                        <option value="special">Ειδικό Πρόγραμμα (με Εμβόλιμη Περίοδο)</option>
+                                    </select>
+                                </div>
+
+                                {/* Title Editor */}
+                                <div className="control-section section-purple">
+                                    <div className="section-title">
+                                        ✏️ Επικεφαλίδα
+                                        <button
+                                            onClick={() => setEditingTitle(!editingTitle)}
+                                            className="btn btn-small"
+                                            style={{background: 'transparent', color: 'var(--secondary)'}}
+                                        >
+                                            <EditIcon />
+                                        </button>
+                                    </div>
+
+                                    {editingTitle ? (
+                                        <div className="space-y-2">
+                                            <input
+                                                type="text"
+                                                placeholder="Τίτλος προγράμματος"
+                                                value={scheduleTitle}
+                                                onChange={(e) => setScheduleTitle(e.target.value)}
+                                                className="input-field"
+                                            />
+                                            <input
+                                                type="text"
+                                                placeholder="Ημερομηνία (π.χ. 25/9/2024)"
+                                                value={scheduleDate}
+                                                onChange={(e) => setScheduleDate(e.target.value)}
+                                                className="input-field"
+                                            />
+                                            <button
+                                                onClick={saveTitle}
+                                                className="btn btn-primary"
+                                                style={{width: '100%'}}
+                                            >
+                                                Αποθήκευση
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <div style={{fontSize: '0.875rem', color: 'var(--text-secondary)'}}>
+                                            {scheduleTitle || "Κλικ για επεξεργασία τίτλου"}
+                                            {scheduleDate && (
+                                                <div style={{fontSize: '0.75rem', marginTop: '0.25rem'}}>{scheduleDate}</div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Break Adjustments */}
+                                <div className="control-section section-yellow">
+                                    <div className="section-title">
+                                        ☕ Προσαρμογή Διαλειμμάτων
+                                        <button
+                                            onClick={resetBreakAdjustments}
+                                            className="btn btn-small btn-gray"
+                                        >
+                                            <RotateIcon />
+                                            Reset
+                                        </button>
+                                    </div>
+
+                                    <div style={{maxHeight: '200px', overflowY: 'auto'}}>
+                                        {currentSchedule.periods.map((period, index) => {
+                                            if (!period.isBreak) return null;
+
+                                            const currentAdjustment = breakAdjustments[index] || 0;
+
+                                            return (
+                                                <div
+                                                    key={index}
+                                                    className={`break-adjustment ${currentAdjustment !== 0 ? 'selected' : ''}`}
+                                                >
+                                                    <div className="period-name">{period.name}</div>
+                                                    <div className="adjustment-controls">
+                                                        <button
+                                                            onClick={() => adjustBreak(index, -5)}
+                                                            className="btn btn-red btn-small"
+                                                            disabled={currentAdjustment <= -10}
+                                                        >
+                                                            <MinusIcon />5λ
+                                                        </button>
+
+                                                        <div className={`adjustment-value ${
+                                                            currentAdjustment > 0 ? 'positive' :
+                                                            currentAdjustment < 0 ? 'negative' : 'zero'
+                                                        }`}>
+                                                            {currentAdjustment > 0 ? `+${currentAdjustment}` : currentAdjustment}λ
+                                                        </div>
+
+                                                        <button
+                                                            onClick={() => adjustBreak(index, 5)}
+                                                            className="btn btn-yellow btn-small"
+                                                            disabled={currentAdjustment >= 30}
+                                                        >
+                                                            <PlusIcon />5λ
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                {/* Periods for Reduction */}
+                                <div className="control-section section-red">
+                                    <div className="section-title">
+                                        ➖ Επιλογή Περιόδων για Μείωση
+                                        <div>
+                                            <button
+                                                onClick={selectAllPeriodsForReduction}
+                                                className="btn btn-small btn-primary"
+                                                style={{marginRight: '5px'}}
+                                            >
+                                                Όλες
+                                            </button>
+                                            <button
+                                                onClick={clearPeriodsForReduction}
+                                                className="btn btn-small btn-gray"
+                                            >
+                                                Καμία
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div style={{maxHeight: '200px', overflowY: 'auto'}}>
+                                        {currentSchedule.periods.map((period, index) => {
+                                            if (period.isBreak || period.isEvent) return null;
+
+                                            const isDisabled = !!periodAdjustments[index];
+
+                                            return (
+                                                <div
+                                                    key={index}
+                                                    className={`period-reduction ${
+                                                        periodsToReduce.has(index) ? 'selected' : ''
+                                                    } ${isDisabled ? 'disabled' : ''}`}
+                                                >
+                                                    <label style={{
+                                                        cursor: isDisabled ? 'not-allowed' : 'pointer',
+                                                        display: 'flex',
+                                                        alignItems: 'center'
+                                                    }}>
+                                                        <input
+                                                            type="checkbox"
+                                                            className="checkbox-input"
+                                                            checked={periodsToReduce.has(index)}
+                                                            onChange={() => togglePeriodForReduction(index)}
+                                                            disabled={isDisabled}
+                                                        />
+                                                        <span className={`period-name ${isDisabled ? 'disabled-text' : ''}`}>
+                                                            {period.name}
+                                                            {isDisabled && (
+                                                                <span style={{fontSize: '0.75rem', marginLeft: '0.5rem'}}>
+                                                                    (Έχει προσαρμογή)
+                                                                </span>
+                                                            )}
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+
+                                    {periodsToReduce.size > 0 && (
+                                        <div style={{fontSize: '0.75rem', color: 'var(--danger)', marginTop: '0.5rem', fontWeight: '600'}}>
+                                            ✓ Επιλεγμένες: {periodsToReduce.size} περίοδοι
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Period Adjustments */}
+                                <div className="control-section section-orange">
+                                    <div className="section-title">
+                                        ➕ Προσαρμογή Περιόδων
+                                        <button
+                                            onClick={resetPeriodAdjustments}
+                                            className="btn btn-small btn-gray"
+                                        >
+                                            <RotateIcon />
+                                            Reset
+                                        </button>
+                                    </div>
+
+                                    <div style={{maxHeight: '300px', overflowY: 'auto'}}>
+                                        {currentSchedule.periods.map((period, index) => {
+                                            if (period.isBreak || period.isEvent) return null;
+
+                                            const currentAdjustment = periodAdjustments[index] || 0;
+
+                                            return (
+                                                <div
+                                                    key={index}
+                                                    className={`period-adjustment ${currentAdjustment !== 0 ? 'selected' : ''}`}
+                                                >
+                                                    <div className="period-name">{period.name}</div>
+                                                    <div className="adjustment-controls">
+                                                        <button
+                                                            onClick={() => adjustPeriod(index, -5)}
+                                                            className="btn btn-red btn-small"
+                                                            disabled={currentAdjustment <= -30}
+                                                        >
+                                                            <MinusIcon />5λ
+                                                        </button>
+
+                                                        <div className={`adjustment-value ${
+                                                            currentAdjustment > 0 ? 'positive' :
+                                                            currentAdjustment < 0 ? 'negative' : 'zero'
+                                                        }`}>
+                                                            {currentAdjustment > 0 ? `+${currentAdjustment}` : currentAdjustment}λ
+                                                        </div>
+
+                                                        <button
+                                                            onClick={() => adjustPeriod(index, 5)}
+                                                            className="btn btn-green btn-small"
+                                                            disabled={currentAdjustment >= 60}
+                                                        >
+                                                            <PlusIcon />5λ
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+
+                                {/* Time Adjustment */}
+                                <div className="control-section section-gray">
+                                    <div className="section-title">⏰ Μετατόπιση Όλου του Ωραρίου</div>
+
+                                    <div className="space-y-2">
+                                        <input
+                                            type="number"
+                                            value={adjustment}
+                                            onChange={(e) => handleAdjustmentChange(e.target.value)}
+                                            className="input-field"
+                                            placeholder="Μετατόπιση (λεπτά)"
+                                            step="5"
+                                        />
+
+                                        <div className="button-grid">
+                                            <button onClick={() => quickAdjust(-15)} className="btn btn-red btn-small">
+                                                <MinusIcon />15λ
+                                            </button>
+                                            <button onClick={() => quickAdjust(-10)} className="btn btn-red btn-small">
+                                                <MinusIcon />10λ
+                                            </button>
+                                            <button onClick={() => quickAdjust(-5)} className="btn btn-red btn-small">
+                                                <MinusIcon />5λ
+                                            </button>
+                                            <button onClick={() => quickAdjust(5)} className="btn btn-green btn-small">
+                                                <PlusIcon />5λ
+                                            </button>
+                                            <button onClick={() => quickAdjust(10)} className="btn btn-green btn-small">
+                                                <PlusIcon />10λ
+                                            </button>
+                                            <button onClick={() => quickAdjust(15)} className="btn btn-green btn-small">
+                                                <PlusIcon />15λ
+                                            </button>
+                                        </div>
+
+                                        <button onClick={reset} className="btn btn-gray" style={{width: '100%'}}>
+                                            <RotateIcon />
+                                            Επαναφορά Όλων
+                                        </button>
+                                    </div>
+
+                                    {adjustment !== 0 && (
+                                        <div style={{fontSize: '0.875rem', color: 'var(--primary)', fontWeight: '600', marginTop: '0.5rem'}}>
+                                            🕐 Μετατόπιση: {adjustment > 0 ? `+${adjustment}` : adjustment} λεπτά
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Events Management */}
+                                <div className="control-section section-green">
+                                    <div className="section-title">
+                                        🎯 Εμβόλιμες Περίοδοι
+                                        <button
+                                            onClick={() => setShowEventForm(true)}
+                                            className="btn btn-green btn-small"
+                                        >
+                                            <PlusIcon />
+                                            Προσθήκη
+                                        </button>
+                                    </div>
+
+                                    {customEvents.length > 0 && (
+                                        <div className="space-y-2" style={{marginBottom: '0.75rem'}}>
+                                            {customEvents.map((event) => (
+                                                <div key={event.id} className="event-item">
+                                                    <div>
+                                                        <div style={{fontWeight: '600'}}>{event.name}</div>
+                                                        <div style={{color: 'var(--text-secondary)', fontWeight: '500'}}>{event.duration}λ</div>
+                                                    </div>
+                                                    <button
+                                                        onClick={() => removeEvent(event.id)}
+                                                        style={{color: 'var(--danger)', background: 'transparent', border: 'none', cursor: 'pointer'}}
+                                                    >
+                                                        <XIcon />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {showEventForm && (
+                                        <div className="event-form">
+                                            <input
+                                                type="text"
+                                                placeholder="Όνομα εμβόλιμης περιόδου"
+                                                value={eventForm.name}
+                                                onChange={(e) => setEventForm({...eventForm, name: e.target.value})}
+                                                className="input-field"
+                                            />
+
+                                            <select
+                                                value={eventForm.insertAt}
+                                                onChange={(e) => setEventForm({...eventForm, insertAt: e.target.value})}
+                                                className="select-field"
+                                            >
+                                                <option value="">Πού να τοποθετηθεί;</option>
+                                                {getInsertOptions().map((option, index) => (
+                                                    <option key={index} value={option.value}>
+                                                        {option.label}
+                                                    </option>
+                                                ))}
+                                            </select>
+
+                                            <select
+                                                value={eventForm.duration}
+                                                onChange={(e) => setEventForm({...eventForm, duration: e.target.value})}
+                                                className="select-field"
+                                            >
+                                                <option value="">Διάρκεια…</option>
+                                                {adjustmentOptions.map(minutes => (
+                                                    <option key={minutes} value={minutes}>
+                                                        {minutes} λεπτά
+                                                    </option>
+                                                ))}
+                                            </select>
+
+                                            <div className="form-buttons">
+                                                <button
+                                                    onClick={handleAddEvent}
+                                                    className="btn btn-green"
+                                                    style={{flex: 1}}
+                                                >
+                                                    Προσθήκη
+                                                </button>
+                                                <button
+                                                    onClick={() => setShowEventForm(false)}
+                                                    className="btn btn-gray"
+                                                    style={{flex: 1}}
+                                                >
+                                                    Ακύρωση
+                                                </button>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Info */}
+                                <div className="control-section section-blue">
+                                    <div className="section-title">ℹ️ Πληροφορίες</div>
+                                    <div className="info-list">
+                                        <div>• Όλες οι αλλαγές γίνονται ανά 5 λεπτά</div>
+                                        <div>• Το ωράριο τελειώνει πάντα στις 13:35</div>
+                                        <div>• Μπορείτε να αυξήσετε τα διαλείμματα έως +30΄</div>
+                                        <div>• Μπορείτε να αυξήσετε τις περιόδους έως +60΄</div>
+                                        <div>• Ελάχιστη διάρκεια περιόδου: 30 λεπτά</div>
+                                        <div>• Ελάχιστη διάρκεια διαλείμματος: 5 λεπτά</div>
+                                    </div>
+                                </div>
+
+                                {/* Save/Load Buttons */}
+                                <div className="button-grid-2" style={{marginBottom: '0.5rem'}}>
+                                    <button
+                                        onClick={handleSaveSchedule}
+                                        className="btn btn-primary"
+                                        disabled={isSaving}
+                                        style={{fontSize: '0.9rem', padding: '0.75rem'}}
+                                    >
+                                        {isSaving ? '⏳ Αποθήκευση...' : '💾 Αποθήκευση'}
+                                    </button>
+                                    <button
+                                        onClick={handleLoadSchedules}
+                                        className="btn btn-primary"
+                                        disabled={isLoading}
+                                        style={{fontSize: '0.9rem', padding: '0.75rem'}}
+                                    >
+                                        {isLoading ? '⏳ Φόρτωση...' : '📂 Φόρτωση'}
+                                    </button>
+                                </div>
+
+                                {/* Print Button */}
+                                <button onClick={handlePrint} className="btn btn-orange" style={{width: '100%', fontSize: '1rem', padding: '0.75rem'}}>
+                                    <PrinterIcon />
+                                    🖨️ Εκτύπωση
+                                </button>
+                            </div>
+
+                            {/* Schedule Display */}
+                            <div className="printable-content">
+                                <div className="schedule-container">
+                                    <div className="schedule-header">
+                                        <div className="schedule-header-content">
+                                            <div className="schedule-title">
+                                                Σχολική Πλατφόρμα
+                                            </div>
+                                            <div className="schedule-subtitle">
+                                                Προσαρμογή Ωραρίου
+                                            </div>
+                                            {(scheduleTitle || currentSchedule.name) && (
+                                                <div className="schedule-subtitle">
+                                                    {scheduleTitle || currentSchedule.name}
+                                                </div>
+                                            )}
+                                            {scheduleDate && (
+                                                <p className="schedule-subtitle">{scheduleDate}</p>
+                                            )}
+                                            {adjustment !== 0 && (
+                                                <p className="schedule-subtitle">
+                                                    Μετατόπιση: ({adjustment > 0 ? "+" : ""}{adjustment} λεπτά)
+                                                </p>
+                                            )}
+                                            {Object.keys(periodAdjustments).length > 0 && (
+                                                <p className="schedule-subtitle">
+                                                    Με προσαρμογές περιόδων
+                                                </p>
+                                            )}
+                                            {Object.keys(breakAdjustments).length > 0 && (
+                                                <p className="schedule-subtitle">
+                                                    Με προσαρμογές διαλειμμάτων
+                                                </p>
+                                            )}
+                                            {customEvents.length > 0 && (
+                                                <p className="schedule-subtitle">
+                                                    Με {customEvents.length} εμβόλιμη{customEvents.length > 1 ? "ες" : ""}
+                                                </p>
+                                            )}
+                                            <p className="schedule-subtitle">Τέλος ωραρίου: 13:35</p>
+                                        </div>
+                                    </div>
+
+                                    <div className="schedule-body">
+                                        {finalSchedule.map((period, index) => (
+                                            <div
+                                                key={index}
+                                                className={`period-item ${
+                                                    period.isBreak
+                                                        ? 'period-break break'
+                                                        : period.isEvent
+                                                        ? 'period-event event'
+                                                        : period.isAdjusted
+                                                        ? 'period-adjusted adjusted'
+                                                        : period.isReduced
+                                                        ? 'period-reduced reduced'
+                                                        : ''
+                                                }`}
+                                            >
+                                                <div className="period-item-name">
+                                                    <span className={
+                                                        period.isBreak
+                                                            ? 'break'
+                                                            : period.isEvent
+                                                            ? 'event'
+                                                            : period.isAdjusted
+                                                            ? 'adjusted'
+                                                            : period.isReduced
+                                                            ? 'reduced'
+                                                            : ''
+                                                    }>
+                                                        {period.name}
+                                                        {period.isEvent && (
+                                                            <span className="event-badge">ΕΜΒΟΛΙΜΗ</span>
+                                                        )}
+                                                        {period.isAdjusted && (
+                                                            <span className="adjusted-badge">
+                                                                {period.adjustmentValue > 0 ? `+${period.adjustmentValue}` : period.adjustmentValue}λ
+                                                            </span>
+                                                        )}
+                                                        {period.isBreakExtended && (
+                                                            <span className="break-extended-badge">
+                                                                {period.breakAdjustmentValue > 0 ? `+${period.breakAdjustmentValue}` : period.breakAdjustmentValue}λ
+                                                            </span>
+                                                        )}
+                                                        {period.isReduced && (
+                                                            <span className="reduced-badge">
+                                                                -{period.reductionValue}λ
+                                                            </span>
+                                                        )}
+                                                    </span>
+                                                </div>
+                                                <div className="period-time">
+                                                    <span>{adjustTime(period.start, adjustment)}</span>
+                                                    <span style={{color: 'var(--text-muted)'}}>-</span>
+                                                    <span>{adjustTime(period.end, adjustment)}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="print-footer">
+                                    <div>{getCurrentDate()}</div>
+                                    <div>ΑΠΟ ΤΗ ΔΙΕΥΘΥΝΣΗ</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Load Schedules Modal */}
+                        {showLoadModal && (
+                            <div
+                                className="modal-overlay"
+                                style={{
+                                    position: 'fixed',
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    background: 'rgba(0,0,0,0.5)',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    zIndex: 10000
+                                }}
+                                onClick={() => setShowLoadModal(false)}
+                            >
+                                <div
+                                    className="modal"
+                                    style={{
+                                        background: 'var(--bg-card)',
+                                        borderRadius: 'var(--border-radius)',
+                                        padding: '1.5rem',
+                                        maxWidth: '600px',
+                                        width: '90%',
+                                        maxHeight: '80vh',
+                                        overflow: 'auto',
+                                        boxShadow: 'var(--shadow-xl)'
+                                    }}
+                                    onClick={(e) => e.stopPropagation()}
+                                >
+                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem'}}>
+                                        <h3 style={{margin: 0, color: 'var(--text-primary)'}}>📂 Αποθηκευμένα Ωράρια</h3>
+                                        <button
+                                            onClick={() => setShowLoadModal(false)}
+                                            style={{
+                                                background: 'transparent',
+                                                border: 'none',
+                                                fontSize: '1.5rem',
+                                                cursor: 'pointer',
+                                                color: 'var(--text-muted)'
+                                            }}
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+
+                                    {isLoading ? (
+                                        <div style={{textAlign: 'center', padding: '2rem'}}>
+                                            <div style={{fontSize: '2rem', marginBottom: '1rem'}}>⏳</div>
+                                            <p>Φόρτωση ωραρίων...</p>
+                                        </div>
+                                    ) : savedSchedules.length === 0 ? (
+                                        <div style={{textAlign: 'center', padding: '2rem', color: 'var(--text-muted)'}}>
+                                            <div style={{fontSize: '3rem', marginBottom: '1rem'}}>📭</div>
+                                            <p>Δεν υπάρχουν αποθηκευμένα ωράρια</p>
+                                        </div>
+                                    ) : (
+                                        <div style={{display: 'flex', flexDirection: 'column', gap: '0.75rem'}}>
+                                            {savedSchedules.map((schedule) => (
+                                                <div
+                                                    key={schedule.id}
+                                                    style={{
+                                                        border: '2px solid var(--border-color)',
+                                                        borderRadius: 'var(--border-radius)',
+                                                        padding: '1rem',
+                                                        cursor: 'pointer',
+                                                        transition: 'all 0.2s',
+                                                        background: currentScheduleId === schedule.id ? 'rgba(102, 126, 234, 0.1)' : 'transparent',
+                                                        borderColor: currentScheduleId === schedule.id ? 'var(--primary)' : 'var(--border-color)'
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        if (currentScheduleId !== schedule.id) {
+                                                            e.currentTarget.style.borderColor = 'var(--primary)';
+                                                            e.currentTarget.style.background = 'var(--bg-secondary)';
+                                                        }
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        if (currentScheduleId !== schedule.id) {
+                                                            e.currentTarget.style.borderColor = 'var(--border-color)';
+                                                            e.currentTarget.style.background = 'transparent';
+                                                        }
+                                                    }}
+                                                >
+                                                    <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start'}}>
+                                                        <div style={{flex: 1}} onClick={() => handleLoadSchedule(schedule)}>
+                                                            <h4 style={{margin: '0 0 0.5rem 0', color: 'var(--text-primary)'}}>
+                                                                {schedule.title}
+                                                                {currentScheduleId === schedule.id && (
+                                                                    <span style={{
+                                                                        marginLeft: '0.5rem',
+                                                                        fontSize: '0.75rem',
+                                                                        color: 'var(--primary)',
+                                                                        fontWeight: 'normal'
+                                                                    }}>
+                                                                        (Ενεργό)
+                                                                    </span>
+                                                                )}
+                                                            </h4>
+                                                            {schedule.date && (
+                                                                <p style={{margin: '0 0 0.25rem 0', fontSize: '0.875rem', color: 'var(--text-secondary)'}}>
+                                                                    📅 {schedule.date}
+                                                                </p>
+                                                            )}
+                                                            <p style={{margin: 0, fontSize: '0.75rem', color: 'var(--text-muted)'}}>
+                                                                Τύπος: {schedules[schedule.selectedDay]?.name || schedule.selectedDay}
+                                                            </p>
+                                                        </div>
+                                                        <button
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleDeleteSchedule(schedule.id);
+                                                            }}
+                                                            className="btn btn-small btn-red"
+                                                            style={{marginLeft: '0.5rem'}}
+                                                        >
+                                                            🗑️
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+
+                        {/* Copyright Footer */}
+                        <div className="copyright-footer">
+                            Σχολική Πλατφόρμα - Προσαρμογή Ωραρίου<br/>
+                            Βασισμένο στο πρόγραμμα του Γεωργίου Χειμωνίδη
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        // Main App - NO PASSWORD REQUIRED
+        function App() {
+            return <SchoolScheduleAdjuster />;
+        }
+
+        // React 18 createRoot
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>

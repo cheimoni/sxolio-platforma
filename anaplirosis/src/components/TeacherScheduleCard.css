@@ -1,0 +1,648 @@
+.schedule-card {
+  position: fixed;
+  top: 0;
+  left: 173px;
+  width: 320px;
+  height: 421px;
+  background: var(--window-bg-color, rgba(248, 249, 250, 0.96)) !important;
+  border-top: none;
+  border-right: none;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  z-index: 5000;
+  display: flex;
+  flex-direction: column;
+  transition: none;
+  overflow: hidden;
+  border: var(--border-width, 2px) var(--border-style, solid) var(--border-color, rgba(102, 126, 234, 0.25)) !important;
+  border-radius: 8px;
+}
+
+.schedule-card.dragging {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
+  z-index: 9999 !important;
+  cursor: move !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.schedule-card.dragging * {
+  pointer-events: none !important;
+}
+
+.schedule-card.dragging .draggable-header {
+  pointer-events: auto !important;
+}
+
+.schedule-card.active {
+  /* z-index controlled by inline style from useWindowLayer hook */
+}
+
+.schedule-card.resizing {
+  user-select: none;
+}
+
+.schedule-card.resizing * {
+  pointer-events: none;
+}
+
+.schedule-card.resizing .resize-handle {
+  pointer-events: auto;
+}
+
+/* Resize Handles */
+.schedule-card .resize-handle {
+  position: absolute;
+  background: transparent;
+  z-index: 10;
+}
+
+.schedule-card .resize-handle-n {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  cursor: n-resize;
+}
+
+.schedule-card .resize-handle-s {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  cursor: s-resize;
+}
+
+.schedule-card .resize-handle-e {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: e-resize;
+}
+
+.schedule-card .resize-handle-w {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: w-resize;
+}
+
+.schedule-card .resize-handle-ne {
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  cursor: ne-resize;
+}
+
+.schedule-card .resize-handle-nw {
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  cursor: nw-resize;
+}
+
+.schedule-card .resize-handle-se {
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  cursor: se-resize;
+  background: rgba(74, 144, 226, 0.3);
+  border-radius: 0 0 8px 0;
+}
+
+.schedule-card .resize-handle-se::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-bottom: 4px solid #4a90e2;
+}
+
+.schedule-card .resize-handle-sw {
+  bottom: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  cursor: sw-resize;
+}
+
+.schedule-card .resize-handle:hover {
+  background: rgba(74, 144, 226, 0.2);
+}
+
+/* When sidebar is expanded - removed left property since inline styles take precedence */
+.schedule-card.expanded {
+  width: 320px;
+  height: 421px;
+}
+
+.schedule-header {
+  position: relative;
+  background: linear-gradient(135deg, var(--primary-color, #667eea) 0%, var(--primary-dark, #764ba2) 100%);
+  padding: 3px 4px;
+  border-bottom: 1px solid var(--primary-dark, #2c5aa0);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.schedule-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #000;
+  text-align: left;
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+}
+
+.schedule-header .reset-position-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+.schedule-refresh-btn {
+  border: 2px solid #28a745;
+  background: #28a745;
+  color: #000;
+  border-radius: 50%;
+  padding: 6px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  min-height: 26px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+}
+
+.schedule-refresh-btn:hover {
+  background: #155724;
+  border-color: #155724;
+  transform: scale(1.1);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+.schedule-refresh-btn:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.schedule-teacher {
+  font-size: 12px;
+  font-weight: 700;
+  color: #000;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+.schedule-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 5px 0px 5px 5px;
+}
+
+.schedule-html {
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-x: auto;
+}
+
+.schedule-html table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  min-width: 350px;
+}
+
+.schedule-html th,
+.schedule-html td {
+  border: 1px solid #ccc;
+  padding: 3px 4px;
+  text-align: left;
+  vertical-align: middle;
+  white-space: nowrap;
+  font-weight: 500;
+  font-size: 10px;
+}
+
+.schedule-html th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+  font-size: 10px;
+  text-align: left;
+}
+
+.schedule-html p {
+  margin: 0;
+  padding: 0;
+}
+
+.schedule-html div {
+  margin: 0;
+  padding: 0;
+}
+
+.no-selection {
+  padding: 40px 20px;
+  text-align: center;
+  color: #999;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.loading {
+  padding: 40px 20px;
+  text-align: center;
+  color: #666;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.error {
+  padding: 20px;
+  text-align: center;
+  color: #d32f2f;
+  font-size: 14px;
+  font-weight: 500;
+  background: #ffebee;
+  border-radius: 8px;
+  margin: 10px;
+}
+
+.no-data {
+  padding: 40px 20px;
+  text-align: center;
+  color: #999;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* New schedule table styles */
+.schedule-table {
+  font-size: 11px;
+}
+
+.schedule-info {
+  display: none;
+}
+
+.schedule-info h3 {
+  margin: 0 0 10px 0;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.schedule-info p {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.schedule-grid {
+  display: flex;
+  gap: 0px;
+  overflow-x: auto;
+  padding: 0;
+  margin: 0;
+}
+
+.day-column {
+  flex: 1;
+  min-width: 50px;
+}
+
+.day-header {
+  background: #f0f0f0;
+  padding: 3px 4px;
+  text-align: left;
+  font-weight: 900;
+  font-size: 11px;
+  border: 1px solid #ccc;
+  border-bottom: none;
+  color: #333;
+}
+
+.period-cell {
+  border: 1px solid #ccc;
+  border-top: none;
+  min-height: 32px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 4px 6px;
+  background: #fafafa;
+  transition: none;
+}
+
+.draggable-period {
+  cursor: grab;
+  border: 2px solid transparent;
+}
+
+.draggable-period:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  border-color: #007bff;
+}
+
+.draggable-period:active {
+  cursor: grabbing;
+}
+
+.draggable-period[draggable="false"] {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.draggable-period[draggable="false"]:hover {
+  background-color: transparent;
+  border-color: transparent;
+  transform: none;
+}
+
+.schedule-card .period-number {
+  display: none;
+}
+
+.schedule-card .period-number-inline {
+  font-weight: 900 !important;
+  font-size: 13px !important;
+  color: #d32f2f !important;
+  margin-right: 3px;
+}
+
+.schedule-card .period-subject {
+  font-size: 12px !important;
+  text-align: left;
+  line-height: 1.4;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
+  hyphens: auto;
+  color: #333;
+  font-weight: 700;
+  width: 100%;
+  display: block;
+}
+
+/* Κόκκινο για συνδιδασκαλίες */
+.schedule-card .period-cell.coteaching-subject {
+  background: rgba(220, 53, 69, 0.2) !important;
+  border-color: #dc3545 !important;
+}
+
+.schedule-card .period-cell.coteaching-subject .period-number-inline {
+  color: #dc3545 !important;
+  font-weight: 900 !important;
+  font-size: 13px !important;
+}
+
+.schedule-card .period-cell.coteaching-subject .period-subject {
+  color: #dc3545 !important;
+  font-weight: 900 !important;
+}
+
+.schedule-card .period-cell.coteaching-subject:hover {
+  background-color: rgba(220, 53, 69, 0.3) !important;
+  border-color: #c82333 !important;
+}
+
+/* Πράσινο για κανονικά μαθήματα */
+.schedule-card .period-cell.normal-subject {
+  background: rgba(40, 167, 69, 0.15) !important;
+  border-color: #28a745 !important;
+}
+
+.schedule-card .period-cell.normal-subject .period-number-inline {
+  color: #28a745 !important;
+  font-weight: 900 !important;
+  font-size: 13px !important;
+}
+
+.schedule-card .period-cell.normal-subject .period-subject {
+  color: #155724 !important;
+}
+
+.schedule-card .period-cell.normal-subject:hover {
+  background-color: rgba(40, 167, 69, 0.25) !important;
+  border-color: #1e7e34 !important;
+}
+
+/* Μπλε για στηρίξεις */
+.schedule-card .period-cell.support-subject {
+  background: rgba(13, 110, 253, 0.15) !important;
+  border-color: #0d6efd !important;
+}
+
+.schedule-card .period-cell.support-subject .period-number-inline {
+  color: #0d6efd !important;
+  font-weight: 900 !important;
+  font-size: 13px !important;
+}
+
+.schedule-card .period-cell.support-subject .period-subject {
+  color: #084298 !important;
+  font-weight: 700 !important;
+}
+
+.schedule-card .period-cell.support-subject:hover {
+  background-color: rgba(13, 110, 253, 0.25) !important;
+  border-color: #0a58ca !important;
+}
+
+/* Scrollbar styling */
+.schedule-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.schedule-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.schedule-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.schedule-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Responsive για ΜΟΝΟ μικρές οθόνες */
+@media screen and (max-width: 1400px) {
+  .schedule-card {
+    left: 133px;
+    width: 280px;
+    height: 380px;
+  }
+  
+  .schedule-card.expanded {
+    left: 163px;
+    width: 280px;
+    height: 380px;
+  }
+  
+  .schedule-header {
+    padding: 6px 10px;
+  }
+  
+  .schedule-title {
+    font-size: 11px;
+  }
+  
+  .schedule-teacher {
+    font-size: 9px;
+  }
+  
+  .schedule-html table {
+    min-width: 370px;
+    font-size: 10px;
+  }
+  
+  .schedule-html th,
+  .schedule-html td {
+    padding: 5px 4px;
+    font-size: 10px;
+  }
+  
+  .day-column {
+    min-width: 52px;
+  }
+  
+  .day-header {
+    font-size: 10px;
+    padding: 3px 1px;
+  }
+  
+  .period-cell {
+    min-height: 24px;
+  }
+  
+  .schedule-card .period-number {
+    font-size: 8px !important;
+  }
+  
+  .schedule-card .period-subject {
+    font-size: 9px !important;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .schedule-card {
+    left: 133px;
+    width: 280px;
+    height: 350px;
+  }
+  
+  .schedule-card.expanded {
+    left: 163px;
+    width: 280px;
+    height: 350px;
+  }
+  
+  .schedule-header {
+    padding: 4px 8px;
+  }
+  
+  .schedule-title {
+    font-size: 10px;
+  }
+  
+  .schedule-teacher {
+    font-size: 8px;
+  }
+  
+  .schedule-content {
+    padding: 3px;
+  }
+  
+  .schedule-html table {
+    min-width: 310px;
+    font-size: 9px;
+  }
+  
+  .schedule-html th,
+  .schedule-html td {
+    border: 1px solid #ccc;
+    padding: 3px 2px;
+    font-size: 9px;
+  }
+  
+  .day-column {
+    min-width: 44px;
+  }
+  
+  .day-header {
+    font-size: 9px;
+    padding: 2px 1px;
+  }
+  
+  .period-cell {
+    min-height: 20px;
+    padding: 1px;
+  }
+  
+  .schedule-card .period-number {
+    font-size: 7px !important;
+  }
+  
+  .schedule-card .period-subject {
+    font-size: 8px !important;
+  }
+  
+  .no-selection,
+  .loading,
+  .no-data {
+    padding: 15px 10px;
+    font-size: 11px;
+  }
+  
+  .error {
+    padding: 10px;
+    font-size: 10px;
+  }
+}
+
+/* Drag over effect */
+.period-cell.drag-over {
+  background: rgba(102, 126, 234, 0.3) !important;
+  border-color: #667eea !important;
+  border-style: dashed !important;
+  border-width: 3px !important;
+  animation: pulse-border 1s infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    border-color: #667eea;
+  }
+  50% {
+    border-color: #764ba2;
+  }
+}

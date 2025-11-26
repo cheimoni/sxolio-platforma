@@ -1,0 +1,2900 @@
+.main-window {
+  position: fixed;
+  /* Position and size are controlled via inline styles from JavaScript */
+  min-width: 400px;
+  min-height: 300px;
+  background: var(--window-bg-color, rgba(248, 249, 250, 0.96)) !important;
+  border: var(--border-width, 2px) var(--border-style, solid) var(--border-color, rgba(102, 126, 234, 0.25)) !important;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  /* z-index controlled via inline styles from JavaScript */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: default;
+  box-sizing: border-box;
+  transition: none;
+  color: #333 !important;
+}
+
+/* Force MainWindow to stay in default theme regardless of body theme */
+body.night-mode .main-window,
+body[data-theme="dark"] .main-window,
+body[data-theme="green"] .main-window {
+  background: var(--window-bg-color, rgba(248, 249, 250, 0.96)) !important;
+  color: #333 !important;
+  border: var(--border-width, 2px) var(--border-style, solid) var(--border-color, rgba(102, 126, 234, 0.25)) !important;
+}
+
+body.night-mode .main-window *,
+body[data-theme="dark"] .main-window *,
+body[data-theme="green"] .main-window * {
+  color: inherit;
+}
+
+body.night-mode .main-window h2,
+body.night-mode .main-window h3,
+body.night-mode .main-window th,
+body.night-mode .main-window td {
+  color: #333 !important;
+  background: white !important;
+}
+
+/* But allow header to change with theme */
+body.night-mode .main-window .draggable-header {
+  background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%) !important;
+  border-bottom-color: #404040 !important;
+}
+
+body.night-mode .main-window .draggable-header h3 {
+  color: #e0e0e0 !important;
+}
+
+.main-window.dragging {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
+  z-index: 9999 !important;
+  cursor: move !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.main-window.dragging * {
+  pointer-events: none !important;
+}
+
+.main-window.dragging .draggable-header {
+  pointer-events: auto !important;
+}
+
+.main-window.active {
+  /* z-index controlled by inline style from useWindowLayer hook */
+}
+
+.main-window.resizing {
+  user-select: none;
+}
+
+.main-window.resizing * {
+  pointer-events: none;
+}
+
+.main-window.resizing .resize-handle {
+  pointer-events: auto;
+}
+
+/* Resize Handles */
+.resize-handle {
+  position: absolute;
+  background: transparent;
+  z-index: 10;
+}
+
+.resize-handle-n {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  cursor: n-resize;
+}
+
+.resize-handle-s {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 6px;
+  cursor: s-resize;
+}
+
+.resize-handle-e {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: e-resize;
+}
+
+.resize-handle-w {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 6px;
+  cursor: w-resize;
+}
+
+.resize-handle-ne {
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  cursor: ne-resize;
+}
+
+.resize-handle-nw {
+  top: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  cursor: nw-resize;
+}
+
+.resize-handle-se {
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  cursor: se-resize;
+  background: rgba(74, 144, 226, 0.3);
+  border-radius: 0 0 8px 0;
+}
+
+.resize-handle-se::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-bottom: 6px solid #4a90e2;
+}
+
+.resize-handle-sw {
+  bottom: 0;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  cursor: sw-resize;
+}
+
+.resize-handle:hover {
+  background: rgba(74, 144, 226, 0.2);
+}
+
+.draggable-header {
+  background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+  padding: 3px 4px;
+  border-bottom: 1px solid #2c5aa0;
+  cursor: move;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+/* Theme support for MainWindow header only */
+body .main-window .draggable-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+  border-bottom-color: var(--primary-dark) !important;
+}
+
+.window-header-content {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  pointer-events: none;
+}
+
+.window-header-content h3 {
+  margin: 0;
+  font-size: 14px !important;
+  font-weight: 700;
+  color: #000;
+  text-shadow: none;
+  pointer-events: none;
+}
+
+.fullscreen-header-btn {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+  color: #fff;
+  border: 2px solid var(--primary-color);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  pointer-events: auto;
+  z-index: 1000;
+  position: relative;
+}
+
+.fullscreen-header-btn:hover {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+  border-color: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+}
+
+.fullscreen-header-btn:active {
+  transform: translateY(0px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Unified Schedule - Single Container */
+.unified-schedule {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 5px;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* Names Row Styles */
+.names-row {
+  display: flex;
+  align-items: center;
+  background: #fff3e0;
+  border: 2px solid #ff9800;
+  border-radius: 4px;
+  padding: 4px 8px;
+  min-height: 30px;
+}
+
+.names-label {
+  font-size: 14px;
+  font-weight: 900;
+  color: #ff9800;
+  min-width: 80px;
+  margin-right: 15px;
+}
+
+.teachers-names {
+  display: flex;
+  flex: 1;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.teacher-name-cell {
+  display: flex;
+  align-items: center;
+  background: white;
+  border: 1px solid #ff9800;
+  border-radius: 3px;
+  padding: 4px 8px;
+  gap: 5px;
+}
+
+.teacher-name-text {
+  font-size: 11px;
+  font-weight: 700;
+  color: #000;
+}
+
+.remove-btn {
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.remove-btn:hover {
+  background: #d32f2f;
+}
+
+/* Periods Header Row */
+.periods-header-row {
+  display: flex;
+  align-items: center;
+  background: #e3f2fd;
+  border: 2px solid #2196F3;
+  border-radius: 4px;
+  padding: 8px 15px;
+  min-height: 35px;
+}
+
+.periods-label {
+  font-size: 14px;
+  font-weight: 900;
+  color: #2196F3;
+  min-width: 80px;
+  margin-right: 15px;
+}
+
+.periods-numbers {
+  display: flex;
+  flex: 1;
+  gap: 3px;
+}
+
+.period-number-header {
+  flex: 1;
+  background: #bbdefb;
+  border: 1px solid #2196F3;
+  border-radius: 3px;
+  padding: 6px;
+  text-align: center;
+  font-weight: 900;
+  font-size: 12px;
+  color: #1976D2;
+}
+
+/* Teacher Label in Schedule Rows */
+.teacher-label {
+  font-size: 12px;
+  font-weight: 900;
+  color: #333;
+  min-width: 30px;
+  margin-right: 10px;
+  text-align: center;
+}
+
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8f9fa;
+  border: 2px solid #333;
+  border-radius: 4px;
+  padding: 8px 15px;
+  min-height: 40px;
+}
+
+.date-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 120px;
+}
+
+.current-date {
+  font-size: 14px;
+  font-weight: 900;
+  color: #333;
+}
+
+.date-numbers {
+  font-size: 12px;
+  font-weight: 700;
+  color: #666;
+}
+
+.print-btn-below-date {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 10px;
+  margin-top: 5px;
+}
+
+.print-btn-below-date:hover {
+  background: #45a049;
+}
+
+.teacher-info-horizontal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  margin: 0 20px;
+}
+
+.teacher-name-horizontal {
+  font-size: 14px;
+  font-weight: 900;
+  color: #333;
+}
+
+.school-year-horizontal {
+  font-size: 11px;
+  font-weight: 600;
+  color: #666;
+}
+
+.print-btn-horizontal {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 3px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 11px;
+  min-width: 80px;
+}
+
+.print-btn-horizontal:hover {
+  background: #45a049;
+}
+
+.schedule-row-horizontal {
+  display: flex;
+  align-items: center;
+  background: #f0f8ff;
+  border: 2px solid #2196F3;
+  border-radius: 4px;
+  padding: 8px 15px;
+  min-height: 50px;
+}
+
+.day-label {
+  font-size: 14px;
+  font-weight: 900;
+  color: #2196F3;
+  min-width: 80px;
+  margin-right: 15px;
+}
+
+.periods-horizontal {
+  display: flex;
+  flex: 1;
+  gap: 3px;
+}
+
+.period-horizontal {
+  flex: 1;
+  min-height: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 3px;
+  padding: 4px;
+  border: 1px solid #ddd;
+}
+
+.period-horizontal.empty {
+  background: #ffebee;
+  color: #d32f2f;
+  border-color: #ffcdd2;
+}
+
+.period-horizontal.filled {
+  background: #e8f5e8;
+  color: #2e7d32;
+  border-color: #c8e6c9;
+}
+
+.period-number {
+  font-weight: 900;
+  font-size: 12px;
+  margin-bottom: 2px;
+}
+
+.subject-text-horizontal {
+  font-size: 8px;
+  line-height: 1.1;
+  font-weight: 600;
+  text-align: center;
+  word-break: break-word;
+}
+
+/* Subjects Horizontal Display */
+.subjects-horizontal {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.subject-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #e8f5e8;
+  border: 1px solid #c8e6c9;
+  border-radius: 4px;
+  padding: 6px 8px;
+  min-width: 80px;
+}
+
+.subject-item .period-number {
+  font-weight: 900;
+  font-size: 12px;
+  margin-bottom: 3px;
+  color: #2e7d32;
+}
+
+.subject-item .subject-text-horizontal {
+  font-size: 9px;
+  line-height: 1.2;
+  font-weight: 600;
+  text-align: center;
+  word-break: break-word;
+  color: #2e7d32;
+}
+
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  background: #f8f9fa;
+}
+
+
+.content-info {
+  background: white;
+  border: 2px solid #4CAF50;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 2px;
+}
+
+.content-info h3 {
+  margin: 0 0 2px 0;
+  color: #4CAF50;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.dimensions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 2px;
+}
+
+.dimension-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #e8f5e8;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #4CAF50;
+}
+
+.dimension-item .label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #333;
+}
+
+.dimension-item .value {
+  font-size: 14px;
+  font-weight: 900;
+  color: #4CAF50;
+}
+
+.position-info {
+  background: #e3f2fd;
+  border: 1px solid #2196F3;
+  border-radius: 4px;
+  padding: 15px;
+}
+
+.position-info h4 {
+  margin: 0 0 10px 0;
+  color: #2196F3;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.position-info p {
+  margin: 5px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  font-family: 'Courier New', monospace;
+}
+
+/* Scrollbar styling */
+.main-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Compact Teacher Schedule Display */
+.teacher-schedule-display {
+  background: white;
+  border-radius: 4px;
+  padding: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.teacher-info {
+  text-align: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.teacher-name {
+  font-size: 18px;
+  font-weight: 900;
+  color: #000;
+  margin: 0 0 5px 0;
+}
+
+.school-year {
+  font-size: 12px;
+  color: #666;
+  margin: 0;
+  font-weight: 600;
+}
+
+.compact-schedule {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.day-row {
+  display: flex;
+  align-items: center;
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  min-height: 35px;
+}
+
+.day-name {
+  width: 80px;
+  padding: 8px 6px;
+  font-weight: 900;
+  font-size: 11px;
+  text-align: center;
+  background: #e9ecef;
+  border-right: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.periods-row {
+  display: flex;
+  flex: 1;
+  gap: 1px;
+}
+
+.period-box {
+  flex: 1;
+  min-height: 33px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+  margin: 1px;
+}
+
+.period-box.empty {
+  background: #ffebee;
+  color: #d32f2f;
+  border: 1px solid #ffcdd2;
+}
+
+.period-box.filled {
+  background: #e8f5e8;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+.period-num {
+  font-weight: 900;
+  font-size: 10px;
+}
+
+.subject-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.subject-name {
+  font-size: 8px;
+  line-height: 1.1;
+  font-weight: 600;
+  word-break: break-word;
+  margin-top: 2px;
+}
+
+.loading-message {
+  text-align: center;
+  padding: 40px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #2196F3;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.error-message {
+  background: #ffebee;
+  border: 2px solid #f44336;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+
+.error-message p {
+  margin: 0;
+  color: #d32f2f;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.no-selection {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.no-selection h3 {
+  font-size: 20px;
+  margin: 0 0 15px 0;
+  color: #333;
+}
+
+.no-selection p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* Print styles */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+  
+  body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: white;
+  }
+  
+  .main-window {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Κρύβουμε το modal όταν τυπώνουμε το κυρίως παράθυρο */
+  .modal-overlay {
+    display: none !important;
+  }
+  
+  .absence-report-display {
+    padding: 10px !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+  
+  .print-btn, .action-buttons {
+    display: none !important;
+  }
+  
+  .remove-teacher-btn {
+    display: none !important;
+  }
+  
+  .teacher-name-container button {
+    display: none !important;
+  }
+
+  @page {
+    margin: 0.2in;
+    size: A4 landscape;
+  }
+  
+  .absence-table th,
+  .absence-table td {
+    border: 1px solid #000 !important;
+    background: white !important;
+    padding: 2px 1px !important;
+    font-size: 14px !important;
+    vertical-align: middle !important;
+    font-weight: 900 !important;
+    line-height: 1.1 !important;
+  }
+  
+  .absence-table th {
+    background: #f0f0f0 !important;
+    font-weight: 900 !important;
+    text-align: center !important;
+  }
+  
+  .teacher-name {
+    background: #f9f9f9 !important;
+    font-weight: 900 !important;
+    text-align: center !important;
+    font-size: 18px !important;
+    min-width: 200px !important;
+    width: 200px !important;
+  }
+  
+  .teacher-name-container {
+    width: 100% !important;
+  }
+  
+  /* Hide teacher separator rows in print */
+  .teacher-separator-row {
+    display: none !important;
+  }
+  
+  .replacement {
+    background: #e8f5e8 !important;
+    min-height: 30px !important;
+    width: 250px !important;
+    min-width: 250px !important;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    text-align: center !important;
+    line-height: 1.1 !important;
+    padding: 2px 1px !important;
+  }
+  
+  /* Hide quota badge in print */
+  .quota-badge {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+  }
+  
+  .period {
+    background: #e3f2fd !important;
+    text-align: center !important;
+    font-weight: 900 !important;
+    width: 48px !important;
+    vertical-align: middle !important;
+    font-size: 14px !important;
+    padding: 2px 1px !important;
+    line-height: 1.1 !important;
+  }
+
+  .subject {
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    line-height: 1.1 !important;
+    vertical-align: middle !important;
+    text-align: left !important;
+    word-wrap: break-word !important;
+    padding: 2px 1px !important;
+  }
+  
+  .total {
+    background: #fff3e0 !important;
+    text-align: center !important;
+    font-weight: 900 !important;
+    font-size: 14px !important;
+    width: 40px !important;
+    vertical-align: middle !important;
+    padding: 2px 1px !important;
+    line-height: 1.1 !important;
+  }
+  
+  .absence-table {
+    page-break-inside: avoid;
+    width: 100% !important;
+    border-collapse: collapse !important;
+  }
+  
+  .report-header {
+    page-break-after: avoid;
+    margin-bottom: 2px !important;
+    padding-bottom: 2px !important;
+  }
+  
+  .report-header h1 {
+    font-size: 22px !important;
+    font-weight: 900 !important;
+    margin-bottom: 2px !important;
+    line-height: 1.1 !important;
+  }
+  
+  .section {
+    page-break-inside: avoid;
+    margin-bottom: 2px !important;
+  }
+  
+  .section h2 {
+    font-size: 18px !important;
+    font-weight: 900 !important;
+    margin-bottom: 1px !important;
+    page-break-after: avoid;
+    padding: 2px !important;
+    line-height: 1.1 !important;
+  }
+  
+  .section h3 {
+    font-size: 16px !important;
+    font-weight: 900 !important;
+    margin-bottom: 1px !important;
+    page-break-after: avoid;
+    line-height: 1.1 !important;
+  }
+
+  .section.bd-section h3 {
+    display: block !important;
+    font-size: 6px !important;
+  }
+
+  .section h4 {
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    margin-bottom: 1px !important;
+    page-break-after: avoid;
+    line-height: 1.1 !important;
+  }
+  
+  .summary-section {
+    display: none !important;
+  }
+  
+  .summary-row {
+    margin-bottom: 6px !important;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    display: flex !important;
+    justify-content: space-around !important;
+    gap: 15px !important;
+    line-height: 1.1 !important;
+  }
+  
+  .summary-label {
+    color: #000 !important;
+    font-weight: 900 !important;
+    margin-right: 5px !important;
+  }
+  
+  .summary-value {
+    color: #000 !important;
+    font-size: 14px !important;
+    font-weight: 900 !important;
+    margin-right: 10px !important;
+  }
+  
+  .report-footer {
+    page-break-before: avoid;
+    margin-top: 20px !important;
+    font-size: 9px !important;
+  }
+}
+
+/* Selection Message Styles */
+.selection-message {
+  display: none !important;
+}
+
+.message-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 120px;
+}
+
+.message-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  margin: 0 20px;
+}
+
+.message-content h3 {
+  font-size: 18px;
+  margin: 0 0 5px 0;
+  color: #333;
+  font-weight: 900;
+}
+
+.message-content p {
+  font-size: 14px;
+  margin: 0;
+  color: #666;
+  font-weight: 600;
+}
+
+/* Empty State */
+.empty-state {
+  display: none !important;
+}
+
+/* Absence Report Display in Main Window */
+.absence-report-display {
+  padding: 8px;
+  font-family: Arial, sans-serif;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 0;
+}
+
+/* Header */
+.report-header {
+  text-align: center;
+  margin-bottom: 6px;
+  border-bottom: 2px solid #333;
+  padding-bottom: 6px;
+  width: 100%;
+  max-width: 860px;
+}
+
+.report-header h1 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+  margin: 0 0 2px 0;
+}
+
+.report-date {
+  font-size: 14px;
+  color: #666;
+  font-weight: 600;
+}
+
+/* Sections */
+.section {
+  margin-bottom: 1px;
+  width: 100%;
+  max-width: 860px;
+}
+
+.section h2 {
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 0px 0;
+  background: #f0f0f0;
+  padding: 2px;
+  border-left: 3px solid #2196F3;
+}
+
+.section h3 {
+  font-size: 12px;
+  font-weight: bold;
+  color: #333;
+  margin: 0 0 0px 0;
+}
+
+/* Β.Δ. Section Title - smaller font */
+.section.bd-section h3 {
+  display: none !important; /* Hidden on screen */
+  font-size: 8px !important;
+  margin: 0 0 1px 0 !important;
+}
+
+/* Β.Δ. Section - reduce spacing */
+.section.bd-section {
+  margin-bottom: 2px !important;
+}
+
+.bd-section .sub-section {
+  margin-top: 1px !important;
+  margin-left: 4px !important;
+}
+
+/* Β.Δ. Section - reduce line spacing */
+.bd-section .absence-table th,
+.bd-section .absence-table td {
+  padding: 0px 4px !important;
+  line-height: 0.9 !important;
+  font-size: 10px !important;
+}
+
+.bd-section .table-container {
+  margin-bottom: 1px !important;
+}
+
+.section h4 {
+  font-size: 11px;
+  font-weight: bold;
+  color: #555;
+  margin: 0 0 0px 0;
+}
+
+/* Table */
+.table-container {
+  overflow-x: auto;
+  margin-bottom: 0px;
+  width: 100%;
+  position: relative;
+}
+
+/* Hover zone for clock - right side */
+.clock-hover-zone {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none; /* Changed to none - don't block clicks */
+}
+
+.absence-table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #333;
+  font-size: 10px;
+  table-layout: auto;
+  border-spacing: 0;
+}
+
+.absence-table th {
+  background: #f0f0f0;
+  border: 1px solid #333;
+  padding: 3px 4px;
+  font-weight: bold;
+  text-align: center;
+  font-size: 11px;
+  vertical-align: middle;
+  line-height: 1.2;
+  box-sizing: border-box;
+}
+
+.absence-table td {
+  border: 1px solid #333;
+  padding: 0px 3px;
+  vertical-align: middle;
+  font-weight: bold;
+  font-size: 10px;
+  line-height: 0.85;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.teacher-name {
+  font-weight: bold;
+  background: #f9f9f9;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 12px;
+  width: 280px;
+  min-width: 280px;
+  max-width: 280px;
+  line-height: 0.85;
+  padding: 0;
+  box-sizing: border-box;
+  height: auto;
+}
+
+.teacher-name-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  position: relative;
+  min-height: 100%;
+  width: 100%;
+  padding: 3px 4px;
+}
+
+/* Remove ALL borders from continuation cells to create merged appearance */
+.teacher-name.continuation {
+  border: none !important;
+  color: white !important;
+  background: white !important;
+}
+
+.total.continuation {
+  border: none !important;
+  color: white !important;
+  background: white !important;
+}
+
+/* Μπλε διαχωριστική γραμμή μεταξύ καθηγητών */
+.teacher-separator-row {
+  height: 0.5px;
+}
+
+.teacher-separator-row td {
+  padding: 0 !important;
+  height: 0.5px;
+  background-color: #2196F3 !important;
+  border: none !important;
+}
+
+.remove-teacher-btn {
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  font-size: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.remove-teacher-btn:hover {
+  background: #d32f2f;
+}
+
+.period {
+  text-align: center;
+  font-weight: bold;
+  background: #e3f2fd;
+  font-size: 11px;
+  width: 48px;
+  vertical-align: middle;
+  padding: 0px 2px;
+  line-height: 0.85;
+  box-sizing: border-box;
+  height: auto;
+  margin: 0;
+}
+
+.replacement {
+  font-weight: bold;
+  background: #e8f5e8;
+  font-size: 14px;
+  padding: 0px 2px;
+  min-height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 250px;
+  text-align: center;
+  line-height: 0.85;
+  word-break: break-word;
+  box-sizing: border-box;
+  height: auto;
+  margin: 0;
+}
+
+.drop-zone {
+  min-height: auto;
+  border: 1px dashed transparent;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  padding: 0px;
+}
+
+.drop-zone:hover {
+  border-color: #007bff;
+  background-color: #e3f2fd;
+}
+
+.drop-zone.drag-over {
+  border-color: #28a745;
+  background-color: #d4edda;
+}
+
+.drop-zone.correct-period {
+  border-color: #28a745;
+  background-color: #d4edda;
+}
+
+.drop-zone.wrong-period {
+  border-color: #ffc107;
+  background-color: #fff3cd;
+}
+
+.subject {
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 0.85;
+  width: 200px;
+  vertical-align: middle;
+  text-align: left;
+  padding: 0px 6px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
+}
+
+.subject.clickable-subject {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.subject.clickable-subject:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+  color: #007bff;
+  transform: scale(1.02);
+}
+
+.subject.clickable-subject:active {
+  transform: scale(0.98);
+}
+
+.subject.clickable-subject::after {
+  content: '🔍';
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  font-size: 12px;
+}
+
+.subject.clickable-subject:hover::after {
+  opacity: 1;
+}
+
+.total {
+  text-align: center;
+  font-weight: bold;
+  background: #fff3e0;
+  vertical-align: middle;
+  font-size: 11px;
+  width: 40px;
+  padding: 0px 6px;
+  line-height: 0.85;
+  box-sizing: border-box;
+}
+
+/* No Absent Teachers Message */
+.no-absent-teachers {
+  background: #f9f9f9;
+  border: 2px dashed #ccc;
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-style: italic;
+}
+
+.no-absent-teachers p {
+  margin: 5px 0;
+  font-size: 12px;
+}
+
+.no-absent-teachers .day-info {
+  font-weight: bold;
+  color: #2196F3;
+  margin-top: 10px !important;
+}
+
+/* Sub-section */
+.sub-section {
+  margin-left: 8px;
+  margin-top: 2px;
+}
+
+.no-assistant-directors {
+  background: #f0f0f0;
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+  font-style: italic;
+  color: #666;
+  font-size: 10px;
+}
+
+/* Action Buttons */
+.action-buttons {
+  position: static;
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 3px;
+  margin: 4px 0;
+  width: 100%;
+  max-width: 860px;
+  justify-content: center;
+  flex-wrap: wrap !important;
+  align-items: center;
+}
+
+.action-buttons > * {
+  flex: 0 0 auto;
+  width: auto !important;
+}
+
+.print-btn {
+  background: #2196F3;
+  color: #000 !important;
+  border: 2px solid #2196F3;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 700 !important;
+  cursor: pointer;
+  font-size: 10px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.print-btn:hover {
+  background: #1976D2;
+  border-color: #1976D2;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+.print-btn:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+.reset-windows-btn {
+  background: #ff9800;
+  color: #000 !important;
+  border: 2px solid #ff9800;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-weight: 900 !important;
+  cursor: pointer;
+  font-size: 11px !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.reset-windows-btn:hover {
+  background: #f57c00;
+  border-color: #f57c00;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+}
+
+.student-attendance-main-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: #000 !important;
+  box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+  transition: all 0.2s ease;
+  padding: 4px 10px !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  white-space: nowrap;
+}
+
+.student-attendance-main-btn:hover {
+  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%) !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+}
+
+/* Theme support for student attendance button */
+body .student-attendance-main-btn {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+  color: #000 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  border-color: var(--primary-dark) !important;
+  font-weight: 900 !important;
+}
+
+body .student-attendance-main-btn:hover {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  color: #000 !important;
+}
+
+/* Modal Overlay for Student Attendance */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 20px;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 15px;
+  max-width: 95%;
+  max-height: 95vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.student-attendance-modal {
+  width: 100%;
+  max-width: 1400px;
+}
+
+/* Summary Section */
+.summary-section {
+  background: #f8f9fa;
+  border: 2px solid #333;
+  border-radius: 4px;
+  padding: 4px;
+  margin: 2px 0;
+  width: 100%;
+  max-width: 860px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 0;
+  font-size: 12px;
+  font-weight: bold;
+  gap: 4px;
+}
+
+.summary-row:last-child {
+  margin-bottom: 0;
+}
+
+.summary-label {
+  color: #ff0000;
+}
+
+.summary-value {
+  color: #2196F3;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+/* Footer */
+.report-footer {
+  display: none !important; /* Hidden on screen */
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 4px;
+  border-top: 1px solid #ccc;
+  font-size: 10px;
+  color: #666;
+  width: 100%;
+  max-width: 860px;
+}
+
+.footer-left {
+  font-weight: bold;
+}
+
+.footer-right {
+  font-style: italic;
+}
+
+/* Β.Δ. Directors Text */
+.bd-directors-text {
+  font-size: 4px;
+  color: #333;
+  font-style: italic;
+  font-weight: bold;
+  margin-top: 1px;
+  padding: 1px 4px;
+  background: #f8f9fa;
+  border-radius: 3px;
+  line-height: 0.9;
+}
+
+/* Ruler System */
+.ruler-system {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 999;
+}
+
+.horizontal-ruler {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 30px;
+  background: rgba(255, 255, 255, 0.9);
+  border-bottom: 2px solid #000;
+  display: flex;
+  align-items: flex-end;
+}
+
+.vertical-ruler {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  border-right: 2px solid #000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.ruler-mark {
+  position: relative;
+  background: #000;
+}
+
+.ruler-mark.horizontal {
+  width: 1px;
+  height: 10px;
+  margin-right: 9px;
+}
+
+.ruler-mark.horizontal:nth-child(10n) {
+  height: 20px;
+}
+
+.ruler-mark.vertical {
+  width: 10px;
+  height: 1px;
+  margin-bottom: 9px;
+}
+
+.ruler-mark.vertical:nth-child(10n) {
+  width: 20px;
+}
+
+.ruler-number {
+  position: absolute;
+  font-size: 10px;
+  color: #000;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 1px 2px;
+  border-radius: 2px;
+}
+
+.ruler-mark.horizontal .ruler-number {
+  top: -25px;
+  left: -10px;
+}
+
+.ruler-mark.vertical .ruler-number {
+  top: -8px;
+  left: -25px;
+  transform: rotate(-90deg);
+}
+
+/* Schedule Changes Section */
+.schedule-changes-section {
+  margin-top: 5px;
+  padding: 2px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  width: 100%;
+  max-width: 860px;
+}
+
+.schedule-changes-section h3 {
+  display: none;
+}
+
+.schedule-changes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.schedule-change-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  padding: 12px;
+  background: white;
+  border: 2px solid #667eea;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.15);
+  transition: all 0.2s ease;
+}
+
+.schedule-change-item:hover {
+  box-shadow: 0 6px 12px rgba(102, 126, 234, 0.25);
+  transform: translateY(-2px);
+}
+
+.change-info {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.change-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.change-header strong {
+  color: #333;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.change-timestamp {
+  color: #999;
+  font-size: 11px;
+  font-style: italic;
+}
+
+.change-teachers {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.teacher-change {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  border-radius: 6px;
+  flex: 1;
+}
+
+.teacher-change.teacher-a {
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid #4CAF50;
+}
+
+.teacher-change.teacher-b {
+  background: rgba(33, 150, 243, 0.1);
+  border: 1px solid #2196F3;
+}
+
+.teacher-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+}
+
+.teacher-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #000;
+}
+
+.teacher-class {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+}
+
+.exchange-symbol {
+  font-size: 20px;
+  color: #667eea;
+  font-weight: 700;
+  align-self: center;
+}
+
+.change-actions {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.remove-change-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+}
+
+.remove-change-btn:hover {
+  background: #c82333;
+  transform: scale(1.15) rotate(90deg);
+}
+
+.remove-change-btn:active {
+  transform: scale(0.95);
+}
+
+/* Swap Manager Styles - Ultra Compact Version */
+.swap-manager {
+  margin-bottom: 8px;
+  padding: 5px;
+  background: transparent;
+}
+
+.swap-slots-container {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.swap-slot {
+  flex: 1;
+  min-height: 55px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  background: #fafafa;
+}
+
+.swap-slot.empty {
+  border-style: dashed;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.swap-slot.filled {
+  border-color: #667eea;
+  background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+}
+
+.swap-slot.drag-over {
+  border-color: #764ba2;
+  border-width: 3px;
+  background: linear-gradient(135deg, #667eea30 0%, #764ba230 100%);
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.swap-slot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.slot-label {
+  font-weight: 900;
+  font-size: 14px;
+  color: #667eea;
+}
+
+.clear-slot-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.clear-slot-btn:hover {
+  background: #c82333;
+  transform: scale(1.15) rotate(90deg);
+}
+
+.slot-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.slot-content-compact {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.slot-teacher {
+  font-weight: 700;
+  font-size: 12px;
+  color: #333;
+}
+
+.teacher-input {
+  width: 100%;
+  padding: 4px 6px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #333;
+  background: white;
+  transition: border-color 0.2s ease;
+}
+
+.teacher-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+.slot-info-line {
+  font-size: 10px;
+  color: #666;
+  line-height: 1.3;
+}
+
+.slot-info-editable {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  color: #666;
+  flex-wrap: wrap;
+}
+
+.day-input {
+  padding: 2px 6px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 10px;
+  background: white;
+  font-weight: 600;
+  color: #667eea;
+  min-width: 70px;
+}
+
+.day-input:focus {
+  outline: none;
+  border-color: #667eea;
+}
+
+.period-input {
+  width: 30px;
+  padding: 2px 4px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 10px;
+  text-align: center;
+  font-weight: 600;
+  color: #764ba2;
+}
+
+.period-input:focus {
+  outline: none;
+  border-color: #764ba2;
+}
+
+.period-label {
+  font-size: 10px;
+  color: #764ba2;
+  font-weight: 600;
+}
+
+.slot-details {
+  font-size: 9px;
+  color: #999;
+  white-space: nowrap;
+}
+
+.slot-subject-full {
+  font-size: 10px;
+  color: #444;
+  padding: 4px 0;
+  line-height: 1.4;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  border-top: 1px solid #e9ecef;
+  margin-top: 4px;
+  padding-top: 6px;
+}
+
+.slot-details {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-size: 11px;
+  color: #666;
+}
+
+.slot-day {
+  font-weight: 600;
+  color: #667eea;
+}
+
+.slot-separator {
+  color: #999;
+}
+
+.slot-period {
+  font-weight: 600;
+  color: #764ba2;
+}
+
+.slot-class {
+  font-size: 12px;
+  font-weight: 600;
+  color: #28a745;
+}
+
+.slot-subject {
+  font-size: 11px;
+  color: #555;
+  font-style: italic;
+}
+
+.slot-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: #000;
+  font-size: 10px;
+  font-weight: bold;
+  font-style: italic;
+  text-align: center;
+}
+
+.swap-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  font-size: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+  align-self: center;
+}
+
+.swap-btn:hover:not(:disabled) {
+  transform: scale(1.1) rotate(180deg);
+  box-shadow: 0 6px 12px rgba(102, 126, 234, 0.5);
+}
+
+.swap-btn:active:not(:disabled) {
+  transform: scale(0.95) rotate(180deg);
+}
+
+.swap-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.swap-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+}
+
+.confirm-swap-btn {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+}
+
+.confirm-swap-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #218838 0%, #1aa87d 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(40, 167, 69, 0.4);
+}
+
+.confirm-swap-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.confirm-swap-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.clear-all-btn {
+  background: #6c757d;
+  color: #000;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.clear-all-btn:hover:not(:disabled) {
+  background: #5a6268;
+  transform: translateY(-2px);
+}
+
+.clear-all-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.clear-all-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* Floating Swap Panel - Draggable & Resizable */
+.swap-panel-dropup {
+  position: fixed;
+  /* Position and size controlled via inline styles from JavaScript */
+  min-width: 400px;
+  min-height: 200px;
+  z-index: 10000;
+  background: white;
+  border: 3px solid #667eea;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: default;
+  box-sizing: border-box;
+  transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.swap-panel-dropup.dragging {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+  cursor: move;
+  z-index: 10001;
+}
+
+.swap-panel-dropup.resizing {
+  user-select: none;
+}
+
+.swap-panel-dropup.resizing * {
+  pointer-events: none;
+}
+
+.swap-panel-dropup.resizing .resize-handle {
+  pointer-events: auto;
+}
+
+.swap-panel-tab {
+  height: 30px;
+  background: var(--primary-color);
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 0 10px;
+  cursor: move;
+  user-select: none;
+  transition: all 0.2s ease;
+  font-weight: 700;
+  font-size: 12px;
+  border-radius: 8px 8px 0 0;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.swap-panel-tab:hover {
+  background: var(--primary-dark);
+}
+
+.swap-panel-close-btn {
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.swap-panel-close-btn:hover {
+  background: #c82333;
+  transform: scale(1.1) rotate(90deg);
+}
+
+.tab-icon {
+  font-size: 14px;
+  transition: transform 0.3s ease;
+}
+
+.tab-text {
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.tab-badge {
+  background: #dc3545;
+  color: #000;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.swap-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  background: white;
+  min-height: 0;
+}
+
+/* Compact Schedule Change Item */
+.schedule-change-item-compact {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 3px 25px 3px 6px;
+  background: white;
+  border: 2px solid #667eea;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(102, 126, 234, 0.1);
+  transition: all 0.2s ease;
+}
+
+.schedule-change-item-compact:hover {
+  box-shadow: 0 4px 8px rgba(102, 126, 234, 0.2);
+  transform: translateY(-1px);
+}
+
+.compact-change-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.compact-change-header strong {
+  font-size: 13px;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.compact-teachers {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.compact-teacher {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.compact-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #333;
+}
+
+.compact-details {
+  font-size: 10px;
+  color: #666;
+}
+
+.compact-subject {
+  font-size: 9px;
+  color: #555;
+  margin-top: 2px;
+  line-height: 1.3;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.compact-arrow {
+  font-size: 24px;
+  color: #667eea;
+  font-weight: 900;
+}
+
+.compact-remove-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.compact-remove-btn:hover {
+  background: #c82333;
+  transform: scale(1.15) rotate(90deg);
+}
+
+/* Unified Schedule Viewer - Class/Student/Classroom Schedule */
+.unified-schedule-viewer {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.viewer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #2196F3;
+}
+
+.viewer-header h3 {
+  font-size: 18px;
+  font-weight: 900;
+  color: #333;
+  margin: 0;
+}
+
+.viewer-day-info {
+  font-size: 16px;
+  font-weight: 700;
+  color: #2196F3;
+}
+
+.close-btn {
+  background: #f44336;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background: #d32f2f;
+  transform: scale(1.1);
+}
+
+.viewer-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.period-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background: #f8f9fa;
+  border: 2px solid #2196F3;
+  border-radius: 6px;
+  padding: 12px 15px;
+  transition: all 0.2s ease;
+}
+
+.period-row:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
+}
+
+.period-row.has-subject {
+  background: #e8f5e8;
+  border-color: #4CAF50;
+}
+
+.period-row.empty {
+  background: #ffebee;
+  border-color: #f44336;
+}
+
+.period-row .period-number {
+  font-size: 16px;
+  font-weight: 900;
+  color: #2196F3;
+  min-width: 50px;
+  margin-right: 15px;
+  text-align: center;
+}
+
+.period-row.has-subject .period-number {
+  color: #4CAF50;
+}
+
+.period-row.empty .period-number {
+  color: #f44336;
+}
+
+.period-row .period-subject {
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+  line-height: 1.4;
+  word-break: break-word;
+  color: #333;
+  white-space: pre-line;
+  flex: 1;
+}
+
+.no-schedule {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+/* Responsive για ΜΟΝΟ μικρές οθόνες */
+@media screen and (max-width: 1400px) {
+  /* .main-window position and size are controlled via inline styles */
+  
+  .names-label,
+  .periods-label,
+  .day-label {
+    font-size: 12px;
+    min-width: 70px;
+  }
+  
+  .teacher-name-text {
+    font-size: 11px;
+  }
+  
+  .period-number-header {
+    font-size: 11px;
+  }
+  
+  .current-date {
+    font-size: 12px;
+  }
+  
+  .absence-table th,
+  .absence-table td {
+    font-size: 10px;
+    padding: 6px 4px;
+  }
+  
+  .teacher-name {
+    font-size: 11px !important;
+    width: 220px !important;
+    min-width: 220px !important;
+    max-width: 220px !important;
+  }
+  
+  .period {
+    font-size: 10px;
+    width: 42px !important;
+    min-width: 42px !important;
+    max-width: 42px !important;
+  }
+  
+  .replacement {
+    font-size: 12px !important;
+    width: 200px !important;
+    min-width: 200px !important;
+    max-width: 200px !important;
+  }
+  
+  .subject {
+    font-size: 10px !important;
+    width: 160px !important;
+    min-width: 160px !important;
+    max-width: 160px !important;
+  }
+  
+  .total {
+    font-size: 10px;
+    width: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  /* .main-window position and size are controlled via inline styles */
+  
+  .names-row,
+  .periods-header-row,
+  .header-row,
+  .schedule-row-horizontal {
+    padding: 5px 10px;
+    min-height: 32px;
+  }
+  
+  .names-label,
+  .periods-label,
+  .day-label {
+    font-size: 11px;
+    min-width: 60px;
+    margin-right: 10px;
+  }
+  
+  .teacher-name-text {
+    font-size: 10px;
+  }
+  
+  .remove-btn {
+    width: 14px;
+    height: 14px;
+    font-size: 9px;
+  }
+  
+  .period-number-header {
+    font-size: 10px;
+    padding: 4px;
+  }
+  
+  .current-date {
+    font-size: 11px;
+  }
+  
+  .date-numbers {
+    font-size: 10px;
+  }
+  
+  .period-horizontal {
+    min-height: 32px;
+  }
+  
+  .period-number {
+    font-size: 10px;
+  }
+  
+  .subject-text-horizontal {
+    font-size: 7px;
+  }
+  
+  .main-content {
+    padding: 12px;
+  }
+  
+  .absence-table {
+    font-size: 8px;
+  }
+  
+  .absence-table th,
+  .absence-table td {
+    font-size: 9px;
+    padding: 4px 3px;
+  }
+  
+  .teacher-name {
+    font-size: 9px !important;
+    width: 180px !important;
+    min-width: 180px !important;
+    max-width: 180px !important;
+  }
+  
+  .period {
+    font-size: 9px;
+    width: 36px !important;
+    min-width: 36px !important;
+    max-width: 36px !important;
+  }
+  
+  .replacement {
+    font-size: 10px !important;
+    width: 160px !important;
+    min-width: 160px !important;
+    max-width: 160px !important;
+  }
+  
+  .subject {
+    font-size: 9px !important;
+    width: 130px !important;
+    min-width: 130px !important;
+    max-width: 130px !important;
+  }
+  
+  .total {
+    font-size: 9px;
+    width: 32px !important;
+    min-width: 32px !important;
+    max-width: 32px !important;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  /* .main-window position and size are controlled via inline styles */
+  
+  .absence-table th,
+  .absence-table td {
+    font-size: 8px;
+    padding: 3px 2px;
+  }
+  
+  .teacher-name {
+    font-size: 8px !important;
+    width: 150px !important;
+    min-width: 150px !important;
+    max-width: 150px !important;
+  }
+  
+  .period {
+    font-size: 8px;
+    width: 32px !important;
+    min-width: 32px !important;
+    max-width: 32px !important;
+  }
+  
+  .replacement {
+    font-size: 9px !important;
+    width: 140px !important;
+    min-width: 140px !important;
+    max-width: 140px !important;
+  }
+  
+  .subject {
+    font-size: 8px !important;
+    width: 110px !important;
+    min-width: 110px !important;
+    max-width: 110px !important;
+  }
+  
+  .total {
+    font-size: 8px;
+    width: 28px !important;
+    min-width: 28px !important;
+    max-width: 28px !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  /* .main-window position and size are controlled via inline styles */
+  
+  .absence-table th,
+  .absence-table td {
+    font-size: 7px;
+    padding: 2px 1px;
+  }
+  
+  .teacher-name {
+    font-size: 7px !important;
+    width: 120px !important;
+    min-width: 120px !important;
+    max-width: 120px !important;
+  }
+  
+  .period {
+    font-size: 7px;
+    width: 28px !important;
+    min-width: 28px !important;
+    max-width: 28px !important;
+  }
+  
+  .replacement {
+    font-size: 8px !important;
+    width: 110px !important;
+    min-width: 110px !important;
+    max-width: 110px !important;
+  }
+  
+  .subject {
+    font-size: 7px !important;
+    width: 90px !important;
+    min-width: 90px !important;
+    max-width: 90px !important;
+  }
+  
+  .total {
+    font-size: 7px;
+    width: 24px !important;
+    min-width: 24px !important;
+    max-width: 24px !important;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  /* .main-window position and size are controlled via inline styles */
+  
+  .main-content {
+    padding: 8px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  /* .main-window position and size are controlled via inline styles */
+  
+  .main-content {
+    padding: 5px;
+  }
+  
+  .report-header h1 {
+    font-size: 16px !important;
+  }
+}
+
+/* Fullscreen mode styles */
+:fullscreen .main-window,
+:-webkit-full-screen .main-window,
+:-moz-full-screen .main-window,
+:-ms-fullscreen .main-window {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  border-radius: 0 !important;
+  border: none !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  margin: 0 !important;
+}
+
+/* Hide draggable header and resize handles in fullscreen */
+:fullscreen .draggable-header,
+:fullscreen .resize-handle,
+:-webkit-full-screen .draggable-header,
+:-webkit-full-screen .resize-handle,
+:-moz-full-screen .draggable-header,
+:-moz-full-screen .resize-handle,
+:-ms-fullscreen .draggable-header,
+:-ms-fullscreen .resize-handle {
+  display: none !important;
+}
+
+/* Expand content in fullscreen */
+:fullscreen .absence-report-display,
+:-webkit-full-screen .absence-report-display,
+:-moz-full-screen .absence-report-display,
+:-ms-fullscreen .absence-report-display {
+  height: 100vh !important;
+  overflow-y: auto !important;
+}
+
+/* Global fullscreen detection - affects all elements when any element is fullscreen */
+:root:has(:fullscreen) body,
+:root:has(:-webkit-full-screen) body,
+:root:has(:-moz-full-screen) body {
+  overflow: hidden;
+}
+
+:root:has(:fullscreen) .student-attendance-list,
+:root:has(:fullscreen) .seven-page-modal,
+:root:has(:fullscreen) .stats-modal,
+:root:has(:fullscreen) .all-classes-modal {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+  margin: 0 !important;
+  border-radius: 0 !important;
+  z-index: 10000 !important;
+  overflow-y: auto !important;
+}
+/* Mini Navigation Buttons - Own Row Below Header */
+.mini-nav-buttons {
+  display: flex;
+  gap: 3px;
+  margin: 0;
+  padding: 3px 6px;
+  background: var(--window-bg-color, rgba(248, 249, 250, 0.96));
+  border-bottom: 1px solid var(--border-color, rgba(102, 126, 234, 0.25));
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.mini-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  color: #fff;
+  border: 1px solid #45a049;
+  border-radius: 50%;
+  font-size: 9px;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.mini-btn:nth-child(1) {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  border-color: #45a049;
+}
+
+.mini-btn:nth-child(2) {
+  background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+  border-color: #1976D2;
+}
+
+.mini-btn:nth-child(3) {
+  background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+  border-color: #F57C00;
+}
+
+.mini-btn:hover {
+  transform: scale(1.2);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+}
+
+.mini-btn:active {
+  transform: scale(1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Hide mini buttons in print */
+@media print {
+  .mini-nav-buttons {
+    display: none !important;
+  }
+}

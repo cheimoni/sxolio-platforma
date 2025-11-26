@@ -1,0 +1,188 @@
+.school-clock {
+  display: block;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 15px 20px;
+  border: 2px solid #000000;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  min-width: 200px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: all 0.3s ease;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.school-clock.break-mode {
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  animation: pulse-break 2s ease-in-out infinite;
+}
+
+.school-clock.period-mode {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.school-clock.outside-hours {
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 4px 25px rgba(102, 126, 234, 0.4);
+  }
+}
+
+@keyframes pulse-break {
+  0%, 100% {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+  50% {
+    box-shadow: 0 4px 25px rgba(245, 87, 108, 0.4);
+  }
+}
+
+.clock-time {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 5px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  letter-spacing: 1px;
+  color: white;
+}
+
+.clock-date {
+  font-size: 12px;
+  text-align: center;
+  opacity: 0.9;
+  margin-bottom: 10px;
+  text-transform: capitalize;
+  color: white;
+}
+
+.clock-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.status-icon {
+  font-size: 20px;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+.status-text {
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: white;
+}
+
+.time-remaining {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #000000;
+}
+
+.remaining-label {
+  font-size: 11px;
+  opacity: 0.8;
+  margin-bottom: 3px;
+  color: white;
+}
+
+.remaining-time {
+  font-size: 18px;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 2px;
+  color: white;
+}
+
+.period-time-range {
+  font-size: 11px;
+  text-align: center;
+  margin-top: 5px;
+  opacity: 0.85;
+  font-weight: 500;
+  color: white;
+}
+
+/* Theme support */
+body.night-mode .school-clock {
+  background: #2a2a2a;
+  border-color: #000000;
+  color: #e0e0e0;
+}
+
+body.night-mode .school-clock.break-mode {
+  background: #3d2a1f;
+  border-color: #000000;
+}
+
+body.night-mode .school-clock.period-mode {
+  background: #1f3d1f;
+  border-color: #000000;
+}
+
+body.night-mode .clock-time,
+body.night-mode .clock-status,
+body.night-mode .remaining-time {
+  color: #e0e0e0;
+}
+
+body.night-mode .clock-date,
+body.night-mode .remaining-label,
+body.night-mode .period-time-range {
+  color: #b0b0b0;
+}
+
+/* Theme colors support */
+body[data-theme="green"] .school-clock.period-mode {
+  background: var(--primary-light);
+  border-color: #000000;
+}
+
+body[data-theme="green"] .school-clock.break-mode {
+  background: #fff3e0;
+  border-color: #000000;
+}
+
+body.theme-green .school-clock.period-mode,
+body.theme-gray .school-clock.period-mode,
+body.theme-purple .school-clock.period-mode,
+body.theme-orange .school-clock.period-mode,
+body.theme-teal .school-clock.period-mode,
+body.theme-pink .school-clock.period-mode,
+body.theme-indigo .school-clock.period-mode,
+body.theme-coral .school-clock.period-mode,
+body.theme-mint .school-clock.period-mode,
+body.theme-lavender .school-clock.period-mode,
+body.theme-peach .school-clock.period-mode,
+body.theme-sky .school-clock.period-mode,
+body.theme-lime .school-clock.period-mode,
+body.theme-rose .school-clock.period-mode {
+  background: var(--primary-light);
+  border-color: #000000;
+}
+

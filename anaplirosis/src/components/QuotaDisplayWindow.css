@@ -1,0 +1,304 @@
+.quota-display-window {
+  position: fixed;
+  top: 430px;
+  left: 493px;
+  width: 280px;
+  height: 300px;
+  background: white;
+  border: 2px solid #4a90e2;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  z-index: 5004;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: default;
+  box-sizing: border-box;
+  transition: none;
+}
+
+.quota-display-window.dragging {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
+  z-index: 9999 !important;
+  cursor: move !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.quota-display-window.dragging * {
+  pointer-events: none !important;
+}
+
+.quota-display-window.dragging .draggable-header {
+  pointer-events: auto !important;
+}
+
+.quota-display-window.active {
+  /* z-index controlled by inline style from useWindowLayer hook */
+}
+
+.quota-display-window.resizing {
+  user-select: none;
+}
+
+.quota-display-window.resizing * {
+  pointer-events: none;
+}
+
+.quota-display-window.resizing .resize-handle {
+  pointer-events: auto;
+}
+
+/* Resize Handles */
+.quota-display-window .resize-handle {
+  position: absolute;
+  background: transparent;
+  z-index: 10;
+}
+
+.quota-display-window .resize-handle-n {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  cursor: n-resize;
+}
+
+.quota-display-window .resize-handle-s {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  cursor: s-resize;
+}
+
+.quota-display-window .resize-handle-e {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: e-resize;
+}
+
+.quota-display-window .resize-handle-w {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: w-resize;
+}
+
+.quota-display-window .resize-handle-ne {
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  cursor: ne-resize;
+}
+
+.quota-display-window .resize-handle-nw {
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  cursor: nw-resize;
+}
+
+.quota-display-window .resize-handle-se {
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  cursor: se-resize;
+  background: rgba(74, 144, 226, 0.3);
+  border-radius: 0 0 8px 0;
+}
+
+.quota-display-window .resize-handle-se::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-bottom: 4px solid #4a90e2;
+}
+
+.quota-display-window .resize-handle-sw {
+  bottom: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  cursor: sw-resize;
+}
+
+.quota-display-window .resize-handle:hover {
+  background: rgba(74, 144, 226, 0.2);
+}
+
+.quota-header {
+  background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+  padding: 8px 12px;
+  border-bottom: 2px solid #2c5aa0;
+  cursor: move;
+  flex-shrink: 0;
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.quota-title {
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+.reset-position-btn {
+  background: #28a745;
+  border: 2px solid #28a745;
+  color: #000;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  min-height: 26px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.reset-position-btn:hover {
+  background: #155724;
+  border-color: #155724;
+  transform: scale(1.1);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+.quota-content {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px;
+  min-height: 0;
+}
+
+.no-assignments {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #666;
+  font-style: italic;
+  text-align: center;
+  padding: 20px;
+}
+
+.quota-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quota-item {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 10px;
+  transition: all 0.2s;
+}
+
+.quota-item:hover {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transform: translateY(-1px);
+}
+
+.quota-teacher-name {
+  font-weight: bold;
+  font-size: 13px;
+  color: #2c5aa0;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.quota-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.quota-stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+}
+
+.quota-label {
+  color: #666;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.quota-value {
+  font-weight: bold;
+  color: #333;
+}
+
+.quota-value.used {
+  color: #ff9800;
+}
+
+.quota-value.remaining {
+  color: #28a745;
+}
+
+.quota-stat.zero .quota-value.remaining {
+  color: #dc3545;
+}
+
+.quota-stat.weekly.met {
+  background: rgba(40, 167, 69, 0.1);
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
+.quota-stat.weekly.unmet {
+  background: rgba(255, 193, 7, 0.15);
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
+.quota-stat.weekly.unmet .quota-value {
+  color: #d97706;
+  font-weight: 900;
+}
+
+/* Scrollbar styling */
+.quota-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.quota-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.quota-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.quota-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+

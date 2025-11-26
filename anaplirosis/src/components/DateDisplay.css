@@ -1,0 +1,169 @@
+.date-display {
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid #ddd;
+  border-top-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  padding: 6px 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10000 !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-width: 120px;
+  max-width: 25vw;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.date-day {
+  font-size: 28px;
+  font-weight: 900;
+  color: #2196F3;
+  text-align: center;
+  margin-bottom: 2px;
+  line-height: 1.0;
+}
+
+.date-numbers {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  margin-bottom: 4px;
+}
+
+.date-day-num {
+  font-size: 14px;
+  font-weight: 900;
+  color: #333;
+  line-height: 1.0;
+}
+
+.date-month {
+  font-size: 9px;
+  font-weight: 600;
+  color: #666;
+  line-height: 1.0;
+}
+
+.date-year {
+  font-size: 9px;
+  font-weight: 600;
+  color: #666;
+  line-height: 1.0;
+}
+
+.date-controls {
+  display: flex;
+  justify-content: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.date-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 3px;
+  transition: background-color 0.2s;
+}
+
+.date-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.edit-btn:hover {
+  background-color: #e3f2fd;
+}
+
+.today-btn:hover {
+  background-color: #e8f5e8;
+}
+
+.close-btn:hover {
+  background-color: #ffebee;
+}
+
+.date-edit {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.date-input {
+  flex: 1;
+  padding: 2px 4px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  font-size: 10px;
+}
+
+.close-btn {
+  font-size: 10px;
+  padding: 2px 6px;
+}
+
+/* Responsive για μικρές οθόνες */
+@media screen and (max-width: 768px) {
+  .date-display {
+    min-width: 100px;
+    max-width: 30vw;
+    padding: 5px 8px;
+  }
+  
+  .date-day {
+    font-size: 24px;
+    font-weight: 900;
+  }
+  
+  .date-day-num {
+    font-size: 12px;
+  }
+  
+  .date-month,
+  .date-year {
+    font-size: 8px;
+  }
+  
+  .date-btn {
+    font-size: 10px;
+    padding: 1px 3px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .date-display {
+    min-width: 80px;
+    max-width: 35vw;
+    padding: 4px 6px;
+  }
+  
+  .date-day {
+    font-size: 20px;
+    font-weight: 900;
+  }
+  
+  .date-day-num {
+    font-size: 10px;
+  }
+  
+  .date-month,
+  .date-year {
+    font-size: 7px;
+  }
+  
+  .date-btn {
+    font-size: 9px;
+    padding: 1px 2px;
+  }
+  
+  .date-input {
+    font-size: 9px;
+  }
+}

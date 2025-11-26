@@ -1,0 +1,348 @@
+/* Login Screen */
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f0f8ff;
+  font-family: Arial, sans-serif;
+}
+
+.login-box {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.login-box input {
+  width: 200px;
+  padding: 10px;
+  margin: 10px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.login-box button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.login-box button:hover {
+  background-color: #45a049;
+}
+
+.help-text {
+  margin-top: 20px;
+  color: #666;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.user-info button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.user-info button:hover {
+  background-color: #c82333;
+}
+
+/* Student View */
+.student-view {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.grade-table-student {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 12px;
+}
+
+.grade-table-student th,
+.grade-table-student td {
+  border: 2px solid #333;
+  padding: 8px;
+  text-align: center;
+}
+
+.grade-table-student th {
+  background-color: #4CAF50;
+  color: white;
+  font-weight: bold;
+}
+
+.grade-table-student .student-name {
+  background-color: #e3f2fd;
+  font-weight: bold;
+  text-align: left !important;
+  padding-left: 10px !important;
+}
+
+.grade-table-student .exam-grade {
+  background-color: #ffe6e6;
+  font-weight: bold;
+}
+
+.grade-table-student .final-grade {
+  background-color: #e6f3ff;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Teacher View */
+.teacher-view {
+  font-family: Arial, sans-serif;
+  font-size: 11px;
+  padding: 10px;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.grade-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: 10px;
+}
+
+.grade-table th,
+.grade-table td {
+  border: 1px solid #333;
+  padding: 2px;
+  text-align: center;
+}
+
+.grade-table th {
+  background-color: #f0f0f0;
+  font-weight: bold;
+  height: 25px;
+}
+
+.student-name {
+  text-align: left !important;
+  font-size: 9px;
+  width: 120px;
+  padding-left: 4px !important;
+  background-color: #f8f9fa;
+}
+
+.grade-input {
+  width: 35px;
+  height: 20px;
+  border: none;
+  text-align: center;
+  font-size: 10px;
+  padding: 1px;
+  background: transparent;
+}
+
+.grade-input:focus {
+  background-color: #fff3cd;
+  outline: 2px solid #007bff;
+}
+
+.grade-input.exam {
+  background-color: #ffe6e6;
+  font-weight: bold;
+}
+
+.final-grade {
+  background-color: #e6f3ff;
+  font-weight: bold;
+  width: 40px;
+  font-size: 11px;
+}
+
+/* Legend */
+.legend {
+  margin-top: 15px;
+  padding: 10px;
+  font-size: 12px;
+  text-align: center;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .teacher-view {
+    font-size: 9px;
+  }
+  
+  .grade-table {
+    font-size: 8px;
+  }
+  
+  .grade-input {
+    width: 30px;
+    height: 18px;
+  }
+  
+  .student-name {
+    font-size: 8px;
+    width: 100px;
+  }
+}
+
+/* Print Styles για A4 */
+@media print {
+  .header button {
+    display: none;
+  }
+  
+  .teacher-view {
+    font-size: 8px;
+  }
+  
+  .grade-table {
+    font-size: 7px;
+  }
+  
+  .student-name {
+    font-size: 7px;
+    width: 90px;
+  }
+  
+  .grade-input {
+    width: 25px;
+    height: 15px;
+    border: 1px solid #000 !important;
+  }
+  
+  .legend {
+    font-size: 8px;
+  }
+}
+/* --- Photo Gallery Styles --- */
+.gallery-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.uploader-section {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  border: 2px solid #007bff;
+}
+
+.uploader-section h3 {
+  margin-top: 0;
+  text-align: center;
+  color: #007bff;
+}
+
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.upload-form select, .upload-form input[type="file"] {
+  width: 100%;
+  max-width: 400px;
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.upload-btn {
+  background: #28a745;
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.upload-btn:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.progress-bar {
+  width: 100%;
+  max-width: 400px;
+  height: 10px;
+  background: #e9ecef;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progress-bar-inner {
+  height: 100%;
+  background: #007bff;
+  width: 0%;
+  transition: width 0.3s ease-in-out;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.gallery-item {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  background: white;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.gallery-item-info {
+  padding: 15px;
+  font-size: 14px;
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+}

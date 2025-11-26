@@ -1,0 +1,19 @@
+{
+  "rules": {
+    "absences": {
+      ".read": true,
+      ".write": true
+    },
+    "replacements": {
+      ".read": true,
+      ".write": true,
+      "daily": {
+        ".indexOn": ["date", "timestamp"]
+      },
+      "weekly": {
+        ".indexOn": ["weekNumber", "lastUpdated"]
+      }
+    }
+  }
+}
+

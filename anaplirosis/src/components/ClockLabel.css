@@ -1,0 +1,32 @@
+.clock-popup-auto {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  min-width: 250px;
+  max-width: 300px;
+  background: white;
+  border: 2px solid #000000;
+  border-radius: 8px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  z-index: 10003;
+  animation: slideInRight 0.3s ease-out;
+  padding: 10px;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Theme support */
+body.night-mode .clock-popup-auto {
+  background: #2a2a2a;
+  border-color: #000000;
+}
+

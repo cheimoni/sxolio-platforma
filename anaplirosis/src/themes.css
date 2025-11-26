@@ -1,0 +1,447 @@
+/* ==================== THEME VARIABLES ==================== */
+
+/* Default (Blue) Theme - Απαλό μπλε */
+body {
+  --primary-color: #d4e8f7;
+  --primary-light: #f0f7fc;
+  --primary-dark: #b8d9f0;
+}
+
+/* Green Theme - Απαλό πράσινο */
+body.theme-green {
+  --primary-color: #d8f0e0;
+  --primary-light: #f0f9f3;
+  --primary-dark: #c2e5d0;
+}
+
+/* Gray Theme - Απαλό γκρι */
+body.theme-gray {
+  --primary-color: #e5e8eb;
+  --primary-light: #f5f6f8;
+  --primary-dark: #d0d4d9;
+}
+
+/* Purple Theme - Απαλό λιλά */
+body.theme-purple {
+  --primary-color: #e8dffc;
+  --primary-light: #f5f0fe;
+  --primary-dark: #d9cbf5;
+}
+
+/* Orange Theme - Απαλό πορτοκαλί */
+body.theme-orange {
+  --primary-color: #ffe8d1;
+  --primary-light: #fff5eb;
+  --primary-dark: #ffd9b8;
+}
+
+/* Teal Theme - Απαλό πετρόλ */
+body.theme-teal {
+  --primary-color: #d1f2ed;
+  --primary-light: #ebfaf8;
+  --primary-dark: #bae9e3;
+}
+
+/* Pink Theme - Απαλό ροζ */
+body.theme-pink {
+  --primary-color: #fce4f5;
+  --primary-light: #fef3fb;
+  --primary-dark: #f9d4ee;
+}
+
+/* Indigo Theme - Απαλό μωβ-μπλε */
+body.theme-indigo {
+  --primary-color: #e0d9fb;
+  --primary-light: #f2edfd;
+  --primary-dark: #cfc2f5;
+}
+
+/* Coral Theme - Απαλό κοραλί */
+body.theme-coral {
+  --primary-color: #ffd9d9;
+  --primary-light: #fff0f0;
+  --primary-dark: #ffc4c4;
+}
+
+/* Mint Theme - Απαλό μέντα */
+body.theme-mint {
+  --primary-color: #d4f3f0;
+  --primary-light: #ebfaf8;
+  --primary-dark: #c0ebe7;
+}
+
+/* Lavender Theme - Απαλό λεβάντα */
+body.theme-lavender {
+  --primary-color: #f0e8fa;
+  --primary-light: #f8f3fc;
+  --primary-dark: #e5d9f5;
+}
+
+/* Peach Theme - Απαλό ροδακινί */
+body.theme-peach {
+  --primary-color: #ffe8dd;
+  --primary-light: #fff5f0;
+  --primary-dark: #ffd9cc;
+}
+
+/* Sky Theme - Απαλό ουρανί */
+body.theme-sky {
+  --primary-color: #d9ebff;
+  --primary-light: #f0f7ff;
+  --primary-dark: #c4deff;
+}
+
+/* Lime Theme - Απαλό λαχανί */
+body.theme-lime {
+  --primary-color: #e8fad9;
+  --primary-light: #f5fceb;
+  --primary-dark: #daf5c4;
+}
+
+/* Rose Theme - Απαλό τριανταφυλλί */
+body.theme-rose {
+  --primary-color: #ffe0eb;
+  --primary-light: #fff0f5;
+  --primary-dark: #ffd1e0;
+}
+
+/* ==================== APPLY THEME COLORS ==================== */
+
+/* Main Window Header */
+body .main-window .report-header h1 {
+  color: #000;
+}
+
+/* Buttons */
+body .print-btn,
+body .reset-windows-btn,
+body .action-btn {
+  background: var(--primary-color);
+}
+
+body .print-btn:hover,
+body .reset-windows-btn:hover,
+body .action-btn:hover {
+  background: var(--primary-dark);
+}
+
+/* Teacher Schedule Card */
+body .schedule-card {
+  border-color: var(--primary-color);
+}
+
+body .schedule-header {
+  background: var(--primary-color);
+}
+
+/* Teacher Availability Card */
+body .availability-card {
+  border-color: var(--primary-color);
+}
+
+body .availability-header {
+  background: var(--primary-color);
+}
+
+/* New Window */
+body .new-window {
+  background: var(--primary-light);
+  border-color: var(--primary-color);
+}
+
+body .new-window .window-header {
+  background: var(--primary-color);
+}
+
+/* Period cells */
+body .period-cell.normal-subject {
+  background: var(--primary-light) !important;
+  border-color: var(--primary-color) !important;
+}
+
+body .period-cell.normal-subject .period-subject {
+  color: var(--primary-dark) !important;
+}
+
+/* Date Display */
+body .date-display {
+  background: var(--primary-color);
+}
+
+/* Sidebar / Teacher List */
+body .sidebar {
+  background: linear-gradient(180deg, var(--primary-light) 0%, var(--primary-color) 100%) !important;
+  border-right-color: var(--primary-color) !important;
+}
+
+body .sidebar-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+  border-bottom-color: var(--primary-color) !important;
+}
+
+body .letter-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+  color: #ff0000 !important;
+}
+
+body .teacher-item:hover {
+  background: var(--primary-light) !important;
+}
+
+/* Available teachers */
+body .available-teacher.green {
+  background: var(--primary-light) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--primary-dark) !important;
+}
+
+/* Active state */
+body .schedule-card.active,
+body .new-window.active,
+body .availability-card.active {
+  box-shadow: 0 0 20px var(--primary-color) !important;
+}
+
+/* Period row hover */
+body .new-window .period-row:hover {
+  box-shadow: 0 2px 4px var(--primary-color) !important;
+}
+
+body .new-window .period-row.has-subject {
+  background: var(--primary-light);
+  border-color: var(--primary-color);
+}
+
+/* Attendance header */
+body .attendance-header {
+  background: var(--primary-color) !important;
+}
+
+/* Stats header */
+body .stats-header {
+  background: var(--primary-color) !important;
+}
+
+/* Period buttons */
+body .period-btn.selected {
+  background-color: var(--primary-color) !important;
+}
+
+body .period-btn:hover {
+  background-color: var(--primary-light) !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* Seven Replacements Page */
+body .seven-replacements-page {
+  border-color: var(--primary-color) !important;
+}
+
+body .seven-replacements-page h2 {
+  color: var(--primary-color) !important;
+}
+
+/* Reset button */
+body .reset-position-btn {
+  background: #28a745 !important;
+  border: 2px solid #28a745 !important;
+  border-radius: 50% !important;
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  min-height: 26px !important;
+  padding: 6px 12px !important;
+  font-size: 13px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2) !important;
+}
+
+body .reset-position-btn:hover {
+  background: #155724 !important;
+  border-color: #155724 !important;
+  transform: scale(1.1) !important;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Seven Replacements Page Modal */
+body .seven-page {
+  background: var(--primary-light) !important;
+  border-color: var(--primary-color) !important;
+}
+
+body .seven-header {
+  border-bottom-color: var(--primary-color) !important;
+  color: var(--primary-dark) !important;
+}
+
+body .seven-header h2 {
+  color: var(--primary-dark) !important;
+}
+
+
+body .close-btn {
+  border-color: var(--primary-color) !important;
+  color: var(--primary-dark) !important;
+}
+
+body .seven-controls {
+  background: var(--primary-light) !important;
+  border-bottom-color: var(--primary-color) !important;
+}
+
+body .ctrl-label {
+  color: var(--primary-dark) !important;
+}
+
+body .seven-content {
+  color: var(--primary-dark) !important;
+}
+
+body .seven-card {
+  border-color: var(--primary-color) !important;
+}
+
+body .seven-card.drag-over {
+  border-color: var(--primary-dark) !important;
+  background: var(--primary-light) !important;
+}
+
+body .drag-handle {
+  color: var(--primary-color) !important;
+}
+
+body .quota-label {
+  color: var(--primary-dark) !important;
+}
+
+body .quota-input {
+  border-color: var(--primary-color) !important;
+  color: var(--primary-dark) !important;
+}
+
+body .quota-input:hover:not(:disabled) {
+  border-color: var(--primary-dark) !important;
+}
+
+body .quota-input:focus {
+  border-color: var(--primary-dark) !important;
+}
+
+body .card-quota {
+  color: var(--primary-dark) !important;
+}
+
+body .assign-btn {
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+body .tag-item {
+  border-left-color: var(--primary-color) !important;
+  background: var(--primary-light) !important;
+}
+
+/* Student Attendance List Modal */
+body .student-attendance-list {
+  background: var(--primary-light) !important;
+}
+
+body .attendance-header {
+  background: var(--primary-color) !important;
+}
+
+body .close-attendance-btn {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+body .close-attendance-btn:hover {
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+/* Replacement Stats Modal */
+body .stats-modal {
+  background: var(--primary-light) !important;
+}
+
+body .stats-header {
+  background: var(--primary-color) !important;
+  border-bottom-color: var(--primary-color) !important;
+}
+
+body .view-selector button:hover {
+  border-color: var(--primary-color) !important;
+  background: var(--primary-light) !important;
+}
+
+body .view-selector button.active {
+  background: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* Classroom Selector Modal */
+body .classroom-selector {
+  background: var(--primary-light) !important;
+}
+
+body .selector-header {
+  background: var(--primary-color) !important;
+}
+
+body .close-selector-btn {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border-color: rgba(255, 255, 255, 0.5) !important;
+}
+
+body .close-selector-btn:hover {
+  background: rgba(255, 255, 255, 0.5) !important;
+}
+
+body .selector-info strong {
+  color: var(--primary-dark) !important;
+}
+
+body .classroom-card:hover {
+  border-color: var(--primary-color) !important;
+}
+
+/* Available Classrooms Modal */
+body .available-classrooms-header {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+  border-bottom-color: var(--primary-dark) !important;
+}
+
+body .available-classrooms-header h3 {
+  color: #000 !important;
+}
+
+body .close-btn {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+body .close-btn:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+}
+
+body .classroom-item {
+  border-color: var(--primary-color) !important;
+}
+
+body .classroom-item:hover {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%) !important;
+  border-color: var(--primary-dark) !important;
+}
+
+body .classroom-icon {
+  color: var(--primary-color) !important;
+}
+
+body .classroom-item:hover .classroom-icon {
+  color: #000 !important;
+}
+
+body .classrooms-count {
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary-color) 100%) !important;
+  border-left-color: var(--primary-color) !important;
+  color: var(--primary-dark) !important;
+}

@@ -1,0 +1,679 @@
+.period-analysis-window {
+  background: var(--window-bg-color, rgba(248, 249, 250, 0.96)) !important;
+  border: var(--border-width, 2px) var(--border-style, solid) var(--border-color, rgba(102, 126, 234, 0.25)) !important;
+  border-radius: 8px;
+  padding: 12px;
+  margin: 0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  font-size: 12px;
+  width: min(487px, 35vw);
+  max-width: min(487px, 35vw);
+  position: fixed;
+  left: min(223px, 18vw);
+  bottom: 0px;
+  top: min(421px, 50vh);
+  z-index: 1000;
+  overflow: hidden;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.period-analysis-window .window-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 4px;
+  background: linear-gradient(135deg, var(--primary-color, #667eea) 0%, var(--primary-dark, #764ba2) 100%);
+  border-bottom: 1px solid var(--primary-dark, #2c5aa0);
+  cursor: default;
+  margin-bottom: 0;
+}
+
+.period-analysis-window .window-header h3 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: #000;
+}
+
+.window-id {
+  background: #28a745;
+  color: #000;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.window-content {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.analysis-controls {
+  padding: 8px 12px;
+  background: rgba(40, 167, 69, 0.1);
+  border-bottom: 1px solid #28a745;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.period-analysis-window .periods-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.period-analysis-window .periods-label {
+  font-weight: bold;
+  color: #155724;
+  font-size: 14px;
+}
+
+.period-analysis-window .periods-grid {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.period-analysis-window .period-btn {
+  padding: 6px 12px;
+  border: 2px solid #28a745;
+  border-radius: 6px;
+  background: white;
+  color: #000;
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 32px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.period-analysis-window .period-btn:hover {
+  background: #28a745;
+  color: #000;
+  transform: translateY(-1px);
+}
+
+.period-analysis-window .period-btn.selected {
+  background: #155724;
+  color: #ff0000;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.current-day-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.current-day-label {
+  font-weight: bold;
+  color: #155724;
+  font-size: 14px;
+}
+
+.current-day-value {
+  background: #28a745;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.loading-message {
+  text-align: center;
+  padding: 20px;
+  color: #155724;
+  font-style: italic;
+}
+
+.analysis-results {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+  padding: 8px;
+  background: rgba(40, 167, 69, 0.1);
+  border-radius: 4px;
+}
+
+.results-header h4 {
+  margin: 0;
+  font-size: 14px;
+  color: #155724;
+}
+
+.results-count {
+  font-size: 10px;
+  color: #155724;
+  font-weight: bold;
+}
+
+.results-list {
+  flex: 1;
+  overflow-y: auto;
+  border: 1px solid #28a745;
+  border-radius: 4px;
+  background: white;
+}
+
+.result-item {
+  padding: 8px;
+  border-bottom: 1px solid #e9ecef;
+  margin-bottom: 4px;
+}
+
+.result-item:last-child {
+  border-bottom: none;
+}
+
+.result-item.can-leave {
+  border-left: 3px solid #28a745;
+}
+
+.result-item.cannot-leave {
+  border-left: 3px solid #dc3545;
+}
+
+.teacher-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.teacher-name {
+  font-weight: bold;
+  font-size: 11px;
+  color: #000;
+}
+
+.subject {
+  font-size: 10px;
+  color: #666;
+  font-style: italic;
+}
+
+.replacement-info {
+  margin-bottom: 2px;
+}
+
+.replacements-label {
+  font-size: 14px;
+  color: #155724;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+.replacement-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 6px;
+  margin: 2px 0;
+  border-left: 3px solid #28a745;
+  background: rgba(40, 167, 69, 0.05);
+  border-radius: 3px;
+}
+
+.replacement-name {
+  font-size: 10px;
+  color: #333;
+}
+
+.replacement-hours {
+  font-size: 9px;
+  color: #666;
+  font-weight: bold;
+}
+
+.more-replacements {
+  font-size: 9px;
+  color: #666;
+  font-style: italic;
+  text-align: center;
+  margin-top: 4px;
+}
+
+.no-replacements {
+  text-align: center;
+  padding: 8px;
+}
+
+.no-replacement-text {
+  font-size: 10px;
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.reason {
+  font-size: 9px;
+  color: #666;
+  font-style: italic;
+}
+
+.legend {
+  margin-top: 15px;
+  padding: 8px;
+  background: rgba(40, 167, 69, 0.05);
+  border-radius: 4px;
+  border: 1px solid #28a745;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.legend-item:last-child {
+  margin-bottom: 0;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  margin-right: 8px;
+}
+
+.legend-item span:last-child {
+  font-size: 10px;
+  color: #155724;
+}
+
+/* Scrollbar styling */
+.window-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.window-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.window-content::-webkit-scrollbar-thumb {
+  background: #28a745;
+  border-radius: 3px;
+}
+
+.window-content::-webkit-scrollbar-thumb:hover {
+  background: #155724;
+}
+
+/* ΠΡΟΣΘΗΚΗ ΜΟΝΟ ΓΙΑ SCROLLING ΣΤΗ ΛΙΣΤΑ ΚΑΘΗΓΗΤΩΝ */
+.teachers-list {
+  max-height: 140px;
+  overflow-y: auto;
+  padding-right: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.teachers-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.teachers-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.teachers-list::-webkit-scrollbar-thumb {
+  background: #28a745;
+  border-radius: 3px;
+}
+
+.teachers-list::-webkit-scrollbar-thumb:hover {
+  background: #155724;
+}
+
+/* ΓΙΑ CLICKABLE ΚΑΘΗΓΗΤΕΣ */
+.teacher-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 8px;
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 3px;
+  font-size: 10px;
+  min-height: 32px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.teacher-item.clickable {
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid #e9ecef;
+}
+
+.teacher-item.clickable:hover {
+  background-color: rgba(40, 167, 69, 0.1);
+  border-color: #28a745;
+  transform: translateY(-1px);
+}
+
+.teacher-item.clickable:active {
+  transform: translateY(0);
+}
+
+.teacher-item .teacher-name {
+  font-weight: bold;
+  font-size: 10px;
+  color: #000;
+  flex: 1;
+  margin-right: 8px;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  line-height: 1.3;
+}
+
+.teacher-item .teacher-hours {
+  font-size: 12px;
+  color: #666;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.teacher-item .teacher-subject {
+  font-size: 12px;
+  color: #666;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.teacher-item.green {
+  border-left: 3px solid #28a745;
+  background: #f8fff8;
+}
+
+.teacher-item.yellow {
+  border-left: 3px solid #ffc107;
+  background: #fffef8;
+}
+
+.teacher-item.red {
+  border-left: 3px solid #dc3545;
+  background: #fff8f8;
+}
+
+.teacher-item.busy {
+  border-left: 3px solid #6f42c1;
+  background: #f8f7ff;
+}
+
+.teacher-item.clickable .teacher-name,
+.teacher-item.clickable .teacher-hours,
+.teacher-item.clickable .teacher-subject {
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Swap Suggestions Section */
+.swap-suggestions-section {
+  margin-top: 15px;
+  padding: 12px;
+  background: rgba(255, 193, 7, 0.1);
+  border: 2px solid #ffc107;
+  border-radius: 8px;
+}
+
+.swap-suggestions-section h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  color: #856404;
+  font-weight: bold;
+}
+
+.suggestions-description {
+  font-size: 10px;
+  color: #856404;
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.suggestions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.suggestion-card {
+  background: white;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.suggestion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #ffc107;
+}
+
+.suggestion-class {
+  font-size: 12px;
+  font-weight: bold;
+  color: #856404;
+}
+
+.suggestion-badge {
+  font-size: 9px;
+  background: #ffc107;
+  color: #856404;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-weight: bold;
+}
+
+.suggestion-badge.benefit {
+  background: #28a745;
+  color: white;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(40, 167, 69, 0);
+  }
+}
+
+.suggestion-details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.suggestion-row {
+  font-size: 10px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.suggestion-row.highlight {
+  background: rgba(255, 193, 7, 0.15);
+  padding: 4px 6px;
+  border-radius: 3px;
+  border-left: 3px solid #ffc107;
+}
+
+.suggestion-row strong {
+  color: #856404;
+  min-width: 120px;
+}
+
+.suggestion-row.available-periods {
+  background: rgba(40, 167, 69, 0.15);
+  padding: 6px 8px;
+  border-radius: 4px;
+  border-left: 3px solid #28a745;
+  font-weight: 500;
+}
+
+.periods-badge {
+  background: #28a745;
+  color: white;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: bold;
+  margin-left: 5px;
+}
+
+.teacher-link {
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.teacher-link:hover {
+  color: #0056b3;
+}
+
+.suggestion-action {
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(40, 167, 69, 0.1);
+  border-left: 3px solid #28a745;
+  border-radius: 4px;
+  font-size: 10px;
+  color: #155724;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.suggestions-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.suggestions-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.suggestions-list::-webkit-scrollbar-thumb {
+  background: #ffc107;
+  border-radius: 3px;
+}
+
+.suggestions-list::-webkit-scrollbar-thumb:hover {
+  background: #856404;
+}
+
+/* Responsive για μικρές οθόνες */
+@media screen and (max-width: 1200px) {
+  .period-analysis-window {
+    width: min(380px, 32vw);
+    max-width: min(380px, 32vw);
+    left: min(185px, 16vw);
+    padding: 10px;
+  }
+  
+  .window-header h3 {
+    font-size: 12px;
+  }
+  
+  .teacher-item .teacher-name {
+    font-size: 9px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .period-analysis-window {
+    width: min(300px, 28vw);
+    max-width: min(300px, 28vw);
+    left: min(145px, 13vw);
+    padding: 8px;
+  }
+  
+  .window-header h3 {
+    font-size: 11px;
+  }
+  
+  .period-analysis-window .period-btn {
+    font-size: 10px;
+    padding: 5px 10px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .period-analysis-window {
+    width: min(240px, 25vw);
+    max-width: min(240px, 25vw);
+    left: min(115px, 11vw);
+    padding: 6px;
+  }
+  
+  .window-header h3 {
+    font-size: 10px;
+  }
+  
+  .teacher-item .teacher-name {
+    font-size: 8px;
+  }
+  
+  .replacement-name {
+    font-size: 9px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .period-analysis-window {
+    width: min(200px, 22vw);
+    max-width: min(200px, 22vw);
+    left: min(100px, 10vw);
+    padding: 5px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .period-analysis-window {
+    width: min(160px, 20vw);
+    max-width: min(160px, 20vw);
+    left: min(90px, 9vw);
+    padding: 4px;
+  }
+  
+  .window-header h3 {
+    font-size: 9px;
+  }
+  
+  .window-id {
+    font-size: 8px;
+    padding: 2px 6px;
+  }
+}

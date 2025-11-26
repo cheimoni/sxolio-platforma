@@ -1,0 +1,287 @@
+/* ========================================
+   PHASE 2 CSS - Groups & Announcements
+   ======================================== */
+
+/* === MODAL SIZES === */
+.modal-lg {
+  max-width: 600px;
+}
+
+.modal-xl {
+  max-width: 800px;
+}
+
+/* === FORM ROW === */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+@media (max-width: 480px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* === USER SELECT LIST (for group creation) === */
+.user-select-list {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+}
+
+.user-select-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color var(--transition-fast);
+}
+
+.user-select-item:last-child {
+  border-bottom: none;
+}
+
+.user-select-item:hover {
+  background-color: var(--bg-primary);
+}
+
+.user-select-item.selected {
+  background-color: var(--sidebar-active);
+}
+
+.user-select-checkbox {
+  font-size: 16px;
+  color: var(--primary);
+}
+
+.user-select-info {
+  flex: 1;
+}
+
+.user-select-name {
+  font-size: var(--font-base);
+  font-weight: 500;
+}
+
+.user-select-role {
+  font-size: var(--font-small);
+  color: var(--text-muted);
+}
+
+/* === SELECTED USERS BADGES === */
+.selected-users {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  min-height: 32px;
+}
+
+.selected-user-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  background-color: var(--primary);
+  color: var(--text-inverse);
+  border-radius: var(--border-radius);
+  font-size: var(--font-small);
+}
+
+.selected-user-remove {
+  background: none;
+  border: none;
+  color: var(--text-inverse);
+  cursor: pointer;
+  padding: 0;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.selected-user-remove:hover {
+  opacity: 1;
+}
+
+/* === ANNOUNCEMENTS === */
+.announcements-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.announcements-filters {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.announcements-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+/* === ANNOUNCEMENT CARD === */
+.announcement-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--border-radius);
+  padding: var(--space-md);
+  cursor: pointer;
+  transition: box-shadow var(--transition-fast), border-color var(--transition-fast);
+}
+
+.announcement-card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.announcement-card.unread {
+  border-left: 3px solid var(--primary);
+  background-color: #f0fdf4;
+}
+
+.announcement-card.priority-high {
+  border-left: 3px solid var(--error);
+}
+
+.announcement-card.priority-high.unread {
+  background-color: #fef2f2;
+}
+
+.announcement-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: var(--space-sm);
+}
+
+.announcement-title-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.announcement-title {
+  font-size: var(--font-base);
+  font-weight: 600;
+  margin: 0;
+}
+
+.priority-badge {
+  color: var(--error);
+}
+
+.unread-dot {
+  width: 8px;
+  height: 8px;
+  background-color: var(--primary);
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.announcement-time {
+  font-size: var(--font-small);
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.announcement-content {
+  font-size: var(--font-base);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+  line-height: 1.5;
+}
+
+.announcement-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.announcement-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.announcement-author {
+  font-size: var(--font-small);
+  color: var(--text-muted);
+}
+
+.announcement-actions {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+/* === ANNOUNCEMENT VIEW (in modal) === */
+.announcement-view-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.announcement-view-content {
+  font-size: var(--font-base);
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+/* === EMPTY STATE === */
+.empty-state {
+  text-align: center;
+  padding: var(--space-2xl);
+  color: var(--text-muted);
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: var(--space-md);
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  font-size: var(--font-h2);
+  margin-bottom: var(--space-sm);
+  color: var(--text-primary);
+}
+
+/* === GROUP CHAT INDICATOR === */
+.group-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 2px 6px;
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #000000;
+  border-radius: var(--border-radius);
+  font-size: var(--font-small);
+  font-weight: 500;
+}
+
+/* === CHAT LIST GROUP ITEM === */
+.chat-list-item.is-group .avatar {
+  background-color: var(--info);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .announcement-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .announcement-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

@@ -1,0 +1,547 @@
+.availability-card {
+  position: fixed;
+  top: 0;
+  left: 493px;
+  width: 380px;
+  height: 421px;
+  background: var(--window-bg-color, rgba(248, 249, 250, 0.96)) !important;
+  border-top: none;
+  border-right: none;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  z-index: 5002;
+  display: flex;
+  flex-direction: column;
+  transition: none;
+  overflow: hidden;
+  border: var(--border-width, 2px) var(--border-style, solid) var(--border-color, rgba(102, 126, 234, 0.25)) !important;
+  border-radius: 8px;
+}
+
+.availability-card.dragging {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
+  z-index: 9999 !important;
+  cursor: move !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.availability-card.dragging * {
+  pointer-events: none !important;
+}
+
+.availability-card.dragging .draggable-header {
+  pointer-events: auto !important;
+}
+
+.availability-card.active {
+  /* z-index controlled by inline style from useWindowLayer hook */
+}
+
+.availability-card.resizing {
+  user-select: none;
+}
+
+.availability-card.resizing * {
+  pointer-events: none;
+}
+
+.availability-card.resizing .resize-handle {
+  pointer-events: auto;
+}
+
+/* Resize Handles */
+.availability-card .resize-handle {
+  position: absolute;
+  background: transparent;
+  z-index: 10;
+}
+
+.availability-card .resize-handle-n {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  cursor: n-resize;
+}
+
+.availability-card .resize-handle-s {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  cursor: s-resize;
+}
+
+.availability-card .resize-handle-e {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: e-resize;
+}
+
+.availability-card .resize-handle-w {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: w-resize;
+}
+
+.availability-card .resize-handle-ne {
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  cursor: ne-resize;
+}
+
+.availability-card .resize-handle-nw {
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  cursor: nw-resize;
+}
+
+.availability-card .resize-handle-se {
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  cursor: se-resize;
+  background: rgba(74, 144, 226, 0.3);
+  border-radius: 0 0 8px 0;
+}
+
+.availability-card .resize-handle-se::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-bottom: 4px solid #4a90e2;
+}
+
+.availability-card .resize-handle-sw {
+  bottom: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  cursor: sw-resize;
+}
+
+.availability-card .resize-handle:hover {
+  background: rgba(74, 144, 226, 0.2);
+}
+
+/* When sidebar is expanded - removed left property since inline styles take precedence */
+.availability-card.expanded {
+  width: 380px;
+  height: 421px;
+}
+
+.availability-header {
+  background: linear-gradient(135deg, var(--primary-color, #667eea) 0%, var(--primary-dark, #764ba2) 100%);
+  padding: 3px 4px;
+  border-bottom: 1px solid var(--primary-dark, #2c5aa0);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  align-items: flex-start;
+  flex-shrink: 0;
+}
+
+/* Reset button - transition for smooth show/hide */
+.availability-header .reset-position-btn {
+  transition: opacity 0.2s ease;
+}
+
+.availability-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #000;
+  text-align: left;
+}
+
+.availability-count {
+  display: none;
+}
+
+.availability-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 3px 2px;
+}
+
+.loading {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Day Info */
+.day-info {
+  display: none;
+}
+
+.current-day {
+  font-weight: bold;
+  font-size: 4px;
+  color: #000;
+  text-align: left;
+}
+
+/* Periods Selector */
+.periods-selector {
+  margin-bottom: 1px;
+}
+
+.periods-label {
+  font-size: 4px;
+  font-weight: bold;
+  margin-bottom: 1px;
+  color: #333;
+  text-align: left;
+  padding-left: 1px;
+}
+
+.periods-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+}
+
+.period-btn {
+  padding: 1px 2px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  border-radius: 1px;
+  font-size: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  color: #000;
+}
+
+.period-btn:hover {
+  background: #e3f2fd;
+  border-color: #2196f3;
+  color: #000;
+}
+
+.period-btn.selected {
+  background: #2196f3;
+  color: #ff0000;
+  font-weight: bold;
+  border-color: #1976d2;
+}
+
+/* Available Teachers Section */
+.available-teachers-section {
+  margin-bottom: 2px;
+  padding: 2px 3px;
+  background: #f0f8ff;
+  border-radius: 2px;
+  border: 1px solid #e3f2fd;
+}
+
+.section-title {
+  font-size: 7px;
+  font-weight: bold;
+  margin-bottom: 1px;
+  color: #1976d2;
+  text-align: left;
+}
+
+.available-teachers-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.available-teacher {
+  display: block;
+  padding: 1px 2px;
+  margin-bottom: 1px;
+  background: white;
+  border-radius: 1px;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+}
+
+.available-teacher:hover {
+  /* No movement or effects */
+}
+
+.available-teacher.green {
+  background: #E8F5E8;
+  border-color: #4CAF50;
+}
+
+.available-teacher.yellow {
+  background: #FFF8E1;
+  border-color: #FFC107;
+}
+
+.available-teacher.red {
+  background: #FFEBEE;
+  border-color: #F44336;
+}
+
+.available-teacher.orange {
+  background: #FFF3E0;
+  border-color: #FF9800;
+}
+
+.available-teacher .teacher-name {
+  font-size: 6px;
+  font-weight: 900;
+  color: #000;
+  flex: 1;
+  text-align: left;
+  padding-right: 1px;
+}
+
+.available-teacher .teacher-hours {
+  font-size: 6px;
+  font-weight: 800;
+  color: #666;
+  margin-left: 1px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.no-available {
+  text-align: center;
+  font-size: 6px;
+  color: #666;
+  font-style: italic;
+  padding: 10px;
+}
+
+.select-period-message {
+  text-align: center;
+  padding: 20px;
+  background: #f5f5f5;
+  border-radius: 6px;
+  border: 1px dashed #ccc;
+}
+
+.select-period-message p {
+  font-size: 12px;
+  color: #666;
+  font-style: italic;
+  margin: 0;
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 8px;
+  padding: 5px 6px;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.legend-color.green {
+  background: #4CAF50;
+}
+
+.legend-color.yellow {
+  background: #FFC107;
+}
+
+.legend-color.red {
+  background: #F44336;
+}
+
+.legend-color.orange {
+  background: #FF9800;
+}
+
+.teachers-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.teacher-item {
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.teacher-item.green {
+  background: #E8F5E8;
+  border-color: #4CAF50;
+}
+
+.teacher-item.yellow {
+  background: #FFF8E1;
+  border-color: #FFC107;
+}
+
+.teacher-item.red {
+  background: #FFEBEE;
+  border-color: #F44336;
+}
+
+.teacher-item.orange {
+  background: #FFF3E0;
+  border-color: #FF9800;
+}
+
+.teacher-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #000;
+  margin-bottom: 2px;
+  text-align: left;
+}
+
+.teacher-hours {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-align: left;
+}
+
+/* Scrollbar styling */
+.availability-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.availability-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.availability-content::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.availability-content::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+.legend-title {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 3px;
+  color: #333;
+  text-align: left;
+}
+
+/* Responsive για μικρές οθόνες */
+@media screen and (max-width: 1400px) {
+  .availability-card {
+    left: 455px;
+    width: 320px;
+    height: 380px;
+  }
+  
+  .availability-card.expanded {
+    left: 485px;
+    width: 320px;
+    height: 380px;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .availability-card {
+    left: 460px;
+    width: 280px;
+    height: 350px;
+  }
+  
+  .availability-card.expanded {
+    left: 490px;
+    width: 280px;
+    height: 350px;
+  }
+  
+  .availability-title {
+    font-size: 11px;
+  }
+  
+  .available-teacher .teacher-name {
+    font-size: 12px;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .availability-card {
+    left: 380px;
+    width: 235px;
+  }
+  
+  .availability-title {
+    font-size: 10px;
+  }
+  
+  .available-teacher .teacher-name {
+    font-size: 11px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .availability-card {
+    left: 320px;
+    width: 195px;
+  }
+  
+  .available-teacher {
+    padding: 1px 2px;
+  }
+  
+  .available-teacher .teacher-name {
+    font-size: 10px;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .availability-card {
+    left: 280px;
+    width: 155px;
+  }
+  
+  .available-teacher .teacher-name {
+    font-size: 9px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .availability-card {
+    left: 240px;
+    width: 135px;
+  }
+  
+  .availability-title {
+    font-size: 9px;
+  }
+  
+  .available-teacher .teacher-name {
+    font-size: 8px;
+  }
+}

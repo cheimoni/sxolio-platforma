@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cp:*)",
+      "Bash(node convert-new-teachers.js:*)",
+      "Bash(node convert-students-all.js:*)",
+      "Bash(node -e \"const fs=require(''fs''); const students=JSON.parse(fs.readFileSync(''./public/students-sindidaskalia.json'',''utf8'')); const a31=students.filter(s=>s[''Τμήμα'']===''Α31''); console.log(''Α31 students:'', a31.length); a31.slice(0,5).forEach(s=>console.log('' '',s[''ΑΜ''],s[''Επίθετο''],s[''Όνομα'']));\")",
+      "Bash(node:*)",
+      "Bash(cat:*)",
+      "Bash(/dev/null)",
+      "Bash(git checkout:*)",
+      "Bash(npm start)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(taskkill:*)",
+      "Bash(dir \"C:\\Users\\NUC\\Desktop\\anaplirosis\\public\\announcements\" /b)",
+      "Bash(powershell -Command \"Expand-Archive -Path ''C:\\Users\\NUC\\AppData\\Local\\Temp\\76f19755-c7ca-4254-bda3-6ce3511f8a5c_anakoinoseis.zip.anakoinoseis.zip'' -DestinationPath ''.\\temp_announcements'' -Force\")",
+      "Bash(firebase deploy:*)",
+      "Bash(pkill:*)",
+      "Bash(killall:*)",
+      "Bash(dir \"C:\\Users\\NUC\\Desktop\\anaplirosis\\public\" /b)",
+      "Bash(npm install:*)",
+      "Bash(npx tailwindcss:*)",
+      "Bash(ffmpeg:*)",
+      "Bash(powershell -Command:*)",
+      "Bash(dir:*)",
+      "Bash(npm run build:*)",
+      "Bash(timeout 10 bash -c \"while ! netstat -ano | findstr '':3000.*LISTENING'' > /dev/null 2>&1; do sleep 1; done; echo ''Server is running on port 3000''\")",
+      "Bash(tasklist:*)",
+      "Bash(where:*)",
+      "Bash(powershell -ExecutionPolicy Bypass -File \"C:\\Users\\NUC\\Desktop\\anaplirosis\\convert-to-html.ps1\")",
+      "Bash(powershell:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

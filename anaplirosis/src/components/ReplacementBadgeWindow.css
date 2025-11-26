@@ -1,0 +1,194 @@
+.replacement-badge-window {
+  position: fixed;
+  top: 430px;
+  left: 493px;
+  width: 140px;
+  height: 80px;
+  background: white;
+  border: 2px solid #28a745;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  z-index: 5005;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  cursor: default;
+  box-sizing: border-box;
+  transition: none;
+}
+
+.replacement-badge-window.dragging {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3) !important;
+  z-index: 9999 !important;
+  cursor: move !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+.replacement-badge-window.dragging * {
+  pointer-events: none !important;
+}
+
+.replacement-badge-window.dragging .draggable-header {
+  pointer-events: auto !important;
+}
+
+.replacement-badge-window.active {
+  /* z-index controlled by inline style from useWindowLayer hook */
+}
+
+.replacement-badge-window.resizing {
+  user-select: none;
+}
+
+.replacement-badge-window.resizing * {
+  pointer-events: none;
+}
+
+.replacement-badge-window.resizing .resize-handle {
+  pointer-events: auto;
+}
+
+/* Resize Handles */
+.replacement-badge-window .resize-handle {
+  position: absolute;
+  background: transparent;
+  z-index: 10;
+}
+
+.replacement-badge-window .resize-handle-n {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  cursor: n-resize;
+}
+
+.replacement-badge-window .resize-handle-s {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  cursor: s-resize;
+}
+
+.replacement-badge-window .resize-handle-e {
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: e-resize;
+}
+
+.replacement-badge-window .resize-handle-w {
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: w-resize;
+}
+
+.replacement-badge-window .resize-handle-ne {
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  cursor: ne-resize;
+}
+
+.replacement-badge-window .resize-handle-nw {
+  top: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  cursor: nw-resize;
+}
+
+.replacement-badge-window .resize-handle-se {
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  cursor: se-resize;
+  background: rgba(40, 167, 69, 0.3);
+  border-radius: 0 0 6px 0;
+}
+
+.replacement-badge-window .resize-handle-se::after {
+  content: '';
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-bottom: 4px solid #28a745;
+}
+
+.replacement-badge-window .resize-handle-sw {
+  bottom: 0;
+  left: 0;
+  width: 8px;
+  height: 8px;
+  cursor: sw-resize;
+}
+
+.replacement-badge-window .resize-handle:hover {
+  background: rgba(40, 167, 69, 0.2);
+}
+
+.badge-header {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  padding: 4px 8px;
+  border-bottom: 1px solid #1e7e34;
+  cursor: move;
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.badge-title {
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.3);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
+
+.badge-content {
+  flex: 1;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  font-size: 9px;
+  overflow: hidden;
+}
+
+.badge-period {
+  font-weight: bold;
+  color: #155724;
+  font-size: 10px;
+}
+
+.badge-absent {
+  color: #666;
+  font-size: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge-quota {
+  font-weight: bold;
+  color: #28a745;
+  font-size: 9px;
+  margin-top: auto;
+}
+
+.badge-quota.zero {
+  color: #dc3545;
+}
+

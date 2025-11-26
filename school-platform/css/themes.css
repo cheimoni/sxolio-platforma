@@ -1,0 +1,162 @@
+/* ==================== THEME VARIABLES ==================== */
+
+/* Default (Blue) Theme - Απαλό μπλε */
+:root {
+  --theme-primary: #93c5fd;
+  --theme-primary-dark: #60a5fa;
+  --theme-primary-light: #bfdbfe;
+  --theme-bg: #f0f6ff;
+  --theme-bg-secondary: #dbeafe;
+}
+
+/* Green Theme - Απαλό πράσινο */
+body.theme-green {
+  --theme-primary: #86efac;
+  --theme-primary-dark: #4ade80;
+  --theme-primary-light: #bbf7d0;
+  --theme-bg: #f0fdf4;
+  --theme-bg-secondary: #dcfce7;
+
+  --primary: #86efac;
+  --primary-dark: #4ade80;
+  --primary-light: #bbf7d0;
+  --bg-primary: #f0fdf4;
+  --bg-secondary: #dcfce7;
+  --sidebar-bg: #dcfce7;
+  --sidebar-hover: #bbf7d0;
+  --sidebar-active: #86efac;
+  --header-bg: #86efac;
+  --card-bg: #f0fdf4;
+  --card-border: #bbf7d0;
+  --border-color: #bbf7d0;
+  --chat-mine: #86efac;
+  --chat-other: #dcfce7;
+}
+
+/* Gray Theme - Απαλό γκρι */
+body.theme-gray {
+  --theme-primary: #e5e7eb;
+  --theme-primary-dark: #d1d5db;
+  --theme-primary-light: #f3f4f6;
+  --theme-bg: #f9fafb;
+  --theme-bg-secondary: #f3f4f6;
+
+  --primary: #e5e7eb;
+  --primary-dark: #d1d5db;
+  --primary-light: #f3f4f6;
+  --bg-primary: #f9fafb;
+  --bg-secondary: #f3f4f6;
+  --sidebar-bg: #f3f4f6;
+  --sidebar-hover: #e5e7eb;
+  --sidebar-active: #d1d5db;
+  --header-bg: #e5e7eb;
+  --card-bg: #f9fafb;
+  --card-border: #e5e7eb;
+  --border-color: #e5e7eb;
+  --chat-mine: #e5e7eb;
+  --chat-other: #f3f4f6;
+}
+
+/* Purple Theme - Απαλό λιλά */
+body.theme-purple {
+  --theme-primary: #d8b4fe;
+  --theme-primary-dark: #c084fc;
+  --theme-primary-light: #e9d5ff;
+  --theme-bg: #faf5ff;
+  --theme-bg-secondary: #f3e8ff;
+
+  --primary: #d8b4fe;
+  --primary-dark: #c084fc;
+  --primary-light: #e9d5ff;
+  --bg-primary: #faf5ff;
+  --bg-secondary: #f3e8ff;
+  --sidebar-bg: #f3e8ff;
+  --sidebar-hover: #e9d5ff;
+  --sidebar-active: #d8b4fe;
+  --header-bg: #d8b4fe;
+  --card-bg: #faf5ff;
+  --card-border: #e9d5ff;
+  --border-color: #e9d5ff;
+  --chat-mine: #d8b4fe;
+  --chat-other: #f3e8ff;
+}
+
+/* Orange Theme - Απαλό πορτοκαλί */
+body.theme-orange {
+  --theme-primary: #fed7aa;
+  --theme-primary-dark: #fdba74;
+  --theme-primary-light: #ffedd5;
+  --theme-bg: #fffbeb;
+  --theme-bg-secondary: #fef3c7;
+
+  --primary: #fed7aa;
+  --primary-dark: #fdba74;
+  --primary-light: #ffedd5;
+  --bg-primary: #fffbeb;
+  --bg-secondary: #fef3c7;
+  --sidebar-bg: #fef3c7;
+  --sidebar-hover: #ffedd5;
+  --sidebar-active: #fed7aa;
+  --header-bg: #fed7aa;
+  --card-bg: #fffbeb;
+  --card-border: #ffedd5;
+  --border-color: #ffedd5;
+  --chat-mine: #fed7aa;
+  --chat-other: #fef3c7;
+}
+
+/* Teal Theme - Απαλό πετρόλ */
+body.theme-teal {
+  --theme-primary: #5eead4;
+  --theme-primary-dark: #2dd4bf;
+  --theme-primary-light: #99f6e4;
+  --theme-bg: #f0fdfa;
+  --theme-bg-secondary: #ccfbf1;
+
+  --primary: #5eead4;
+  --primary-dark: #2dd4bf;
+  --primary-light: #99f6e4;
+  --bg-primary: #f0fdfa;
+  --bg-secondary: #ccfbf1;
+  --sidebar-bg: #ccfbf1;
+  --sidebar-hover: #99f6e4;
+  --sidebar-active: #5eead4;
+  --header-bg: #5eead4;
+  --card-bg: #f0fdfa;
+  --card-border: #99f6e4;
+  --border-color: #99f6e4;
+  --chat-mine: #5eead4;
+  --chat-other: #ccfbf1;
+}
+
+/* Pink Theme - Απαλό ροζ */
+body.theme-pink {
+  --theme-primary: #fbcfe8;
+  --theme-primary-dark: #f9a8d4;
+  --theme-primary-light: #fce7f3;
+  --theme-bg: #fdf2f8;
+  --theme-bg-secondary: #fce7f3;
+
+  --primary: #fbcfe8;
+  --primary-dark: #f9a8d4;
+  --primary-light: #fce7f3;
+  --bg-primary: #fdf2f8;
+  --bg-secondary: #fce7f3;
+  --sidebar-bg: #fce7f3;
+  --sidebar-hover: #fbcfe8;
+  --sidebar-active: #f9a8d4;
+  --header-bg: #fbcfe8;
+  --card-bg: #fdf2f8;
+  --card-border: #fce7f3;
+  --border-color: #fce7f3;
+  --chat-mine: #fbcfe8;
+  --chat-other: #fce7f3;
+}
+
+/* Apply theme classes to all themed elements */
+body[class*="theme-"] .sidebar,
+body[class*="theme-"] .header,
+body[class*="theme-"] .card,
+body[class*="theme-"] .main-content {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}

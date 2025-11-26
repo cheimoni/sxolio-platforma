@@ -1,0 +1,718 @@
+{
+  "project_metadata": {
+    "name": "Σχολική Πλατφόρμα",
+    "version": "1.0.0",
+    "last_updated": "2025-01-27",
+    "auto_update": true,
+    "description": "Πλήρης σχολική πλατφόρμα με δύο κύρια συστήματα: School Platform (web app) και Anaplirosis (React app)"
+  },
+  "project_structure": {
+    "main_systems": [
+      {
+        "name": "School Platform",
+        "path": "school-platform/",
+        "type": "Web Application",
+        "tech_stack": {
+          "frontend": "Vanilla JavaScript (ES6+)",
+          "backend": "Firebase (Firestore, Authentication, Storage)",
+          "ui": "Custom CSS με modular structure",
+          "real_time": "Firebase Firestore listeners",
+          "integrations": ["Batholokio (React app via iframe)"]
+        }
+      },
+      {
+        "name": "Anaplirosis",
+        "path": "anaplirosis/",
+        "type": "React Application",
+        "tech_stack": {
+          "framework": "React 18",
+          "state_management": "React Hooks",
+          "styling": "CSS Modules",
+          "data": "JSON files, Firebase integration"
+        }
+      },
+      {
+        "name": "Batholokio",
+        "path": "batholokio/",
+        "type": "React Application",
+        "tech_stack": {
+          "framework": "React",
+          "purpose": "Grade management system",
+          "integration": "Embedded in School Platform via iframe"
+        }
+      }
+    ]
+  },
+  "school_platform_modules": [
+    {
+      "id": 1,
+      "name": "Authentication & User Management",
+      "features": [
+        "Login με Email/Password",
+        "Εγγραφή νέου χρήστη (pending approval)",
+        "Reset Password",
+        "Auth state management",
+        "User profile management",
+        "Role-based access control",
+        "User approval system (admin)",
+        "User activation/deactivation"
+      ],
+      "file": "js/services/auth.js"
+    },
+    {
+      "id": 2,
+      "name": "Messaging System",
+      "features": [
+        "1-1 Private chat",
+        "Group chats",
+        "Real-time messaging",
+        "Unread message tracking",
+        "Conversation list",
+        "Message timestamps",
+        "Online/offline status",
+        "File attachments in messages",
+        "Message deletion",
+        "Message status (sent/delivered/read)"
+      ],
+      "file": "js/services/chat.js",
+      "collections": ["conversations", "messages"]
+    },
+    {
+      "id": 3,
+      "name": "Announcements",
+      "features": [
+        "Create announcements",
+        "Target specific users/roles",
+        "View filtered announcements",
+        "Real-time announcement updates",
+        "Edit/Delete announcements",
+        "Pin important announcements",
+        "Expiration dates"
+      ],
+      "file": "js/services/announcements.js",
+      "collection": "announcements"
+    },
+    {
+      "id": 4,
+      "name": "File Management",
+      "features": [
+        "Upload files",
+        "File categories (Διδακτικό, Διοικητικά, Έντυπα, Εγκύκλιοι, Άλλα)",
+        "Download files",
+        "Delete files",
+        "Search by category",
+        "File preview",
+        "Upload progress tracking",
+        "File metadata"
+      ],
+      "file": "js/services/files.js",
+      "collection": "files",
+      "storage": "Firebase Storage"
+    },
+    {
+      "id": 5,
+      "name": "Calendar/Events",
+      "features": [
+        "Create events",
+        "Event types (Meeting, Deadline, Event, Holiday)",
+        "Monthly calendar view",
+        "Upcoming events list",
+        "Event details",
+        "Color coding by type",
+        "Event reminders",
+        "Event participants"
+      ],
+      "file": "js/services/calendar.js",
+      "collection": "events"
+    },
+    {
+      "id": 6,
+      "name": "User Management",
+      "features": [
+        "View all users",
+        "Filter by role",
+        "Search users",
+        "Approve pending users",
+        "Edit user data",
+        "Assign roles",
+        "Assign departments",
+        "User status management"
+      ],
+      "file": "js/services/users.js",
+      "page": "js/pages/users.js"
+    },
+    {
+      "id": 7,
+      "name": "Duties (Εφημερίες)",
+      "features": [
+        "6 types of duties (Πρωινή, Διαλείμματα, Μεσημεριανό, Απογευματινή)",
+        "Weekly schedule view",
+        "Assign duties to teachers",
+        "Edit/Delete duties",
+        "Teacher-specific duty list",
+        "Calendar view",
+        "Real-time updates"
+      ],
+      "file": "js/services/duties.js",
+      "page": "js/pages/duties.js",
+      "collection": "duties",
+      "duty_types": {
+        "morning": {"label": "Πρωινή", "time": "07:30-08:15"},
+        "break1": {"label": "1ο Διάλειμμα", "time": "09:00-09:15"},
+        "break2": {"label": "2ο Διάλειμμα", "time": "10:00-10:15"},
+        "break3": {"label": "3ο Διάλειμμα", "time": "11:00-11:15"},
+        "lunch": {"label": "Μεσημεριανό", "time": "12:00-12:30"},
+        "afternoon": {"label": "Απογευματινή", "time": "13:30-14:00"}
+      }
+    },
+    {
+      "id": 8,
+      "name": "Tasks (Εργασίες)",
+      "features": [
+        "Create tasks",
+        "Task priorities (low, medium, high)",
+        "Due dates",
+        "Task categories",
+        "Assign tasks to users",
+        "Task status management",
+        "Task completion tracking",
+        "Task reminders",
+        "Filter tasks"
+      ],
+      "file": "js/services/tasks.js",
+      "page": "js/pages/tasks.js",
+      "collection": "tasks",
+      "statuses": ["pending", "in_progress", "completed", "cancelled"]
+    },
+    {
+      "id": 9,
+      "name": "Substitutions (Αντικαταστάσεις)",
+      "features": [
+        "Create substitution requests",
+        "Original/substitute teacher info",
+        "Date, period, subject, classroom",
+        "Reason and notes",
+        "Approval workflow",
+        "Status tracking",
+        "Daily substitution view",
+        "Substitution calendar"
+      ],
+      "file": "js/services/substitutions.js",
+      "page": "js/pages/substitutions.js",
+      "collection": "substitutions",
+      "statuses": ["pending", "approved", "rejected", "cancelled"]
+    },
+    {
+      "id": 10,
+      "name": "Polls (Ψηφοφορίες)",
+      "features": [
+        "Create polls",
+        "Multiple choice options",
+        "Allow multiple selections",
+        "Target audience selection",
+        "Vote on polls",
+        "Real-time results",
+        "Poll expiration",
+        "Close polls manually",
+        "Poll statistics"
+      ],
+      "file": "js/services/polls.js",
+      "page": "js/pages/polls.js",
+      "collection": "polls"
+    },
+    {
+      "id": 11,
+      "name": "Alerts (Έκτακτες Ειδοποιήσεις)",
+      "features": [
+        "6 alert types (Έκτακτη, Καιρός, Πρόγραμμα, Υγεία, Ασφάλεια, Γενική)",
+        "Priority levels (low, normal, high, critical)",
+        "Target roles",
+        "Expiration dates",
+        "Acknowledgment system",
+        "Push notifications",
+        "Alert history"
+      ],
+      "file": "js/services/alerts.js",
+      "page": "js/pages/alerts.js",
+      "collection": "alerts",
+      "alert_types": {
+        "emergency": {"icon": "🚨", "label": "Έκτακτη Ανάγκη"},
+        "weather": {"icon": "⛈️", "label": "Καιρός"},
+        "schedule": {"icon": "📅", "label": "Αλλαγή Προγράμματος"},
+        "health": {"icon": "🏥", "label": "Υγεία"},
+        "security": {"icon": "🔒", "label": "Ασφάλεια"},
+        "general": {"icon": "📢", "label": "Γενική"}
+      }
+    },
+    {
+      "id": 12,
+      "name": "Voice/Video Calls",
+      "features": [
+        "WebRTC integration",
+        "Voice calls",
+        "Video calls",
+        "Incoming call notifications",
+        "Call accept/reject",
+        "Mute/unmute",
+        "Video on/off",
+        "Call timer",
+        "Call history"
+      ],
+      "file": "js/services/voiceCall.js",
+      "component": "js/components/voiceCallUI.js",
+      "technology": "WebRTC"
+    },
+    {
+      "id": 13,
+      "name": "Dashboard",
+      "features": [
+        "Statistics cards",
+        "School clock widget",
+        "Recent messages",
+        "Upcoming events",
+        "Quick actions",
+        "Welcome message",
+        "Role-based content"
+      ],
+      "file": "js/pages/dashboard.js",
+      "component": "js/components/schoolClock.js"
+    },
+    {
+      "id": 14,
+      "name": "Admin Panel",
+      "features": [
+        "User management",
+        "Approve/reject users",
+        "Edit user roles",
+        "Platform settings",
+        "Reports & analytics",
+        "System configuration"
+      ],
+      "file": "js/pages/admin.js"
+    },
+    {
+      "id": 15,
+      "name": "Schedule (Ωράριο)",
+      "features": [
+        "Long schedule (8 periods)",
+        "Short schedule (7 periods)",
+        "Custom period times",
+        "Break durations",
+        "Schedule settings",
+        "Schedule templates",
+        "Add/Edit/Delete periods",
+        "Add/Edit/Delete breaks",
+        "Special schedule for specific dates",
+        "Reset to default schedule",
+        "Real-time period tracking",
+        "Mini clock widget",
+        "Schedule table view",
+        "Period duration calculation"
+      ],
+      "file": "js/services/schedule.js",
+      "page": "js/pages/schedule.js",
+      "collection": "scheduleSettings"
+    },
+    {
+      "id": 16,
+      "name": "Grades (Βαθμολογία)",
+      "features": [
+        "Batholokio React app integration",
+        "Full-screen grade management",
+        "Open in new window",
+        "Iframe-based integration",
+        "Loading states and error handling",
+        "Student grade tracking",
+        "Grade reports and analytics",
+        "Teacher grade entry",
+        "Grade system management"
+      ],
+      "file": "js/pages/grades.js",
+      "integration": {
+        "type": "React App (iframe)",
+        "app_name": "Batholokio",
+        "path": "../batholokio/build/index.html"
+      }
+    }
+  ],
+  "anaplirosis_modules": [
+    {
+      "id": 1,
+      "name": "Schedule Management",
+      "features": [
+        "Teacher schedule viewer",
+        "Class schedule viewer",
+        "Classroom schedule viewer",
+        "Weekly/Daily views",
+        "Schedule editing",
+        "Schedule export"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Substitution System",
+      "features": [
+        "Smart substitution assignment",
+        "Teacher availability checking",
+        "Automatic replacement suggestions",
+        "Replacement confirmation",
+        "Replacement statistics",
+        "Replacement badge window",
+        "Seven replacements page"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Teacher Management",
+      "features": [
+        "Teacher list",
+        "Teacher schedule cards",
+        "Teacher availability cards",
+        "Teacher schedule preview",
+        "Teacher schedule viewer",
+        "Teacher quota display"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Student Management",
+      "features": [
+        "Student lists per class",
+        "Student attendance tracking",
+        "Student group management",
+        "Student schedule viewer"
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Classroom Management",
+      "features": [
+        "Available classrooms",
+        "Classroom schedule",
+        "Classroom booking",
+        "Classroom selector"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Coteaching (Συνδιδασκαλία)",
+      "features": [
+        "Coteaching class management",
+        "Coteaching pair tracking",
+        "Coteaching schedule viewer",
+        "Coteaching modal",
+        "Coteaching viewer"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Smart Scheduler",
+      "features": [
+        "Automatic schedule generation",
+        "Conflict detection",
+        "Optimization algorithms",
+        "Schedule adjustments"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Analysis Tools",
+      "features": [
+        "Period analysis window",
+        "Period usage statistics",
+        "Teacher workload analysis",
+        "Quota display window",
+        "Replacement stats"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "UI Components",
+      "features": [
+        "Draggable windows",
+        "Resizable panels",
+        "Theme selector",
+        "Text settings",
+        "School clock widget",
+        "Sticky notes",
+        "Top right menu",
+        "Exit modal",
+        "Changes window",
+        "New window",
+        "Third window",
+        "Swap panel window"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "File Management",
+      "features": [
+        "HTML file manager",
+        "PDF processing",
+        "JSON data export/import",
+        "File structure management"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Firebase Integration",
+      "features": [
+        "Schedule tracking",
+        "Data synchronization",
+        "Analytics",
+        "Real-time updates"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Additional Features",
+      "features": [
+        "Daily schedule app",
+        "Unified schedule viewer",
+        "Class schedule viewer",
+        "Schedule change modal",
+        "Substitution confirm modal",
+        "Replacement badge window"
+      ]
+    }
+  ],
+  "user_roles": {
+    "admin": {
+      "name": "Admin",
+      "greek_name": "Διαχειριστής Πλατφόρμας",
+      "description": "Super Admin - Ιδιοκτήτης Πλατφόρμας",
+      "permissions": {
+        "manageUsers": true,
+        "announceToAll": true,
+        "announceToDept": true,
+        "manageGroups": true,
+        "manageFiles": true,
+        "viewAllMessages": true,
+        "manageCalendar": true,
+        "viewReports": true,
+        "manageSchools": true,
+        "managePlatform": true
+      }
+    },
+    "director": {
+      "name": "Διευθυντής",
+      "greek_name": "Διευθυντής",
+      "description": "Πλήρη δικαιώματα σχολείου",
+      "permissions": {
+        "manageUsers": true,
+        "announceToAll": true,
+        "manageGroups": true,
+        "manageFiles": true,
+        "viewAllMessages": true,
+        "manageCalendar": true,
+        "viewReports": true
+      }
+    },
+    "vice_director_a": {
+      "name": "ΒΔΑ",
+      "greek_name": "Βοηθός Διευθυντή Α'",
+      "description": "Σχεδόν πλήρη δικαιώματα",
+      "permissions": {
+        "manageUsers": true,
+        "announceToAll": true,
+        "manageGroups": true,
+        "manageFiles": true,
+        "viewAllMessages": false,
+        "manageCalendar": true,
+        "viewReports": true
+      }
+    },
+    "vice_director": {
+      "name": "ΒΔ",
+      "greek_name": "Βοηθός Διευθυντή",
+      "description": "Περιορισμένα δικαιώματα",
+      "permissions": {
+        "manageUsers": false,
+        "announceToAll": true,
+        "manageGroups": true,
+        "manageFiles": true,
+        "viewAllMessages": false,
+        "manageCalendar": true,
+        "viewReports": false
+      }
+    },
+    "teacher": {
+      "name": "Καθηγητής",
+      "greek_name": "Καθηγητής",
+      "description": "Βασικά δικαιώματα",
+      "permissions": {
+        "manageUsers": false,
+        "announceToAll": false,
+        "manageGroups": false,
+        "manageFiles": true,
+        "viewAllMessages": false,
+        "manageCalendar": false,
+        "viewReports": false
+      }
+    },
+    "dept_head": {
+      "name": "ΥΤ",
+      "greek_name": "Υπεύθυνος Τμήματος",
+      "description": "Δικαιώματα τμήματος",
+      "permissions": {
+        "manageUsers": false,
+        "announceToAll": false,
+        "announceToDept": true,
+        "manageGroups": false,
+        "manageFiles": true,
+        "viewAllMessages": false,
+        "manageCalendar": false,
+        "viewReports": false
+      }
+    },
+    "secretary": {
+      "name": "Γραμματεία",
+      "greek_name": "Γραμματεία",
+      "description": "Διοικητικά δικαιώματα",
+      "permissions": {
+        "manageUsers": false,
+        "announceToAll": true,
+        "manageGroups": false,
+        "manageFiles": false,
+        "viewAllMessages": false,
+        "manageCalendar": true,
+        "viewReports": false
+      }
+    }
+  },
+  "database_collections": [
+    "users",
+    "conversations",
+    "messages",
+    "announcements",
+    "files",
+    "events",
+    "duties",
+    "tasks",
+    "substitutions",
+    "polls",
+    "alerts",
+    "groups",
+    "scheduleSettings",
+    "notifications"
+  ],
+  "file_categories": {
+    "teaching": "Διδακτικό Υλικό",
+    "admin": "Διοικητικά",
+    "forms": "Έντυπα",
+    "circulars": "Εγκύκλιοι",
+    "other": "Άλλα"
+  },
+  "event_types": {
+    "meeting": "Meeting",
+    "deadline": "Deadline",
+    "event": "Event",
+    "holiday": "Holiday"
+  },
+  "real_time_features": [
+    "Conversations updates",
+    "Messages (new messages)",
+    "Announcements",
+    "Files (new uploads)",
+    "Events (calendar updates)",
+    "Duties (schedule changes)",
+    "Polls (vote updates)",
+    "Alerts (new alerts)",
+    "User presence (online/offline)"
+  ],
+  "ui_components": [
+    "Sidebar navigation",
+    "Header with user info",
+    "Chat windows",
+    "Modal dialogs",
+    "Toast notifications",
+    "Loading spinners",
+    "School clock widget",
+    "Voice call UI"
+  ],
+  "design_system": {
+    "primary_color": "#16a34a",
+    "background": "#f1f8f1",
+    "sidebar": "#ffffff",
+    "header": "#16a34a",
+    "default_font": "Courier New",
+    "available_fonts": 16,
+    "responsive": true
+  },
+  "technical_specs": {
+    "firebase_sdk": "9.23.0",
+    "react_version": "18.2.0",
+    "webrtc": true,
+    "browser_support": ["Chrome", "Edge", "Firefox", "Safari", "Mobile browsers"],
+    "deployment": {
+      "school_platform": "Static files (HTML/CSS/JS), Firebase hosting ready",
+      "anaplirosis": "React build process, npm run build for production"
+    }
+  },
+  "statistics": {
+    "school_platform": {
+      "major_modules": 16,
+      "individual_features": 115,
+      "user_roles": 7,
+      "database_collections": 14
+    },
+    "anaplirosis": {
+      "major_modules": 12,
+      "individual_features": 50,
+      "ui_components": 20
+    },
+    "batholokio": {
+      "major_modules": 1,
+      "individual_features": 8,
+      "integration_type": "iframe"
+    },
+    "total": {
+      "major_modules": 28,
+      "individual_features": 165,
+      "complete_system": true
+    }
+  },
+  "future_enhancements": [
+    "Push notifications (PWA)",
+    "Mobile apps",
+    "Advanced reporting",
+    "Integration with external systems",
+    "Multi-language support",
+    "Advanced search",
+    "Export/Import functionality",
+    "Backup/restore"
+  ],
+  "documentation_files": [
+    "README.md",
+    "FIREBASE_TRACKING_GUIDE.md",
+    "PDF_MERGE_GUIDE.md",
+    "CONVERSION_GUIDE.md",
+    "ANAFORA_PROJECT.md",
+    "LEITOURGIES_LIST.md",
+    "AI_INSTRUCTIONS.md",
+    "AUTO_UPDATE_SYSTEM.md"
+  ],
+  "automation_scripts": {
+    "startup": "scripts/ai_startup.js",
+    "cleanup": "scripts/ai_cleanup.js",
+    "description": "Scripts για αυτόματη φόρτωση και ενημέρωση του project_info.json"
+  },
+  "important_notes": {
+    "auto_update": "Αυτό το file ενημερώνεται αυτόματα κάθε φορά που γίνονται αλλαγές στο project",
+    "mandatory_reading": "ΟΠΟΙΟΣΔΗΠΟΤΕ AI που δουλεύει με αυτό το project ΠΡΕΠΕΙ να διαβάσει πρώτα αυτό το JSON file",
+    "version_control": "Κάθε αλλαγή στο project πρέπει να αντικατοπτρίζεται εδώ",
+    "structure_changes": "Αν προστεθούν νέα modules, features, ή collections, πρέπει να ενημερωθεί αυτό το file",
+    "auto_scripts": "Τα scripts ai_startup.js και ai_cleanup.js φορτώνουν και ενημερώνουν αυτόματα αυτό το file",
+    "latest_changes": [
+      {
+        "timestamp": "2025-01-27T00:00:00.000Z",
+        "note": "Προστέθηκε νέο module Grades (Βαθμολογία) με ενσωμάτωση Batholokio React app μέσω iframe. Ενημερώθηκε το Schedule module με επιπλέον λειτουργίες (add/edit/delete periods, special schedules, reset to defaults)"
+      },
+      {
+        "timestamp": "2025-01-13T00:00:00.000Z",
+        "note": "Δημιουργήθηκε auto-update system με scripts ai_startup.js και ai_cleanup.js για αυτόματη φόρτωση και ενημέρωση του project_info.json"
+      }
+    ]
+  }
+}
+

@@ -1,0 +1,264 @@
+/* ========================================
+   LAYOUT - Sidebar, Header, Main
+   ======================================== */
+
+/* App Container */
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+}
+
+/* === SIDEBAR === */
+.sidebar {
+  width: var(--sidebar-width);
+  height: 100vh;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 100;
+}
+
+.sidebar-header {
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-logo {
+  font-size: var(--font-h1);
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: var(--space-md);
+  overflow-y: auto;
+}
+
+.sidebar-section {
+  margin-bottom: var(--space-lg);
+}
+
+.sidebar-section-title {
+  font-size: var(--font-small);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: var(--space-sm);
+  padding: 0 var(--space-sm);
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--border-radius);
+  color: var(--sidebar-text);
+  font-size: var(--font-small);
+  transition: background-color var(--transition-fast);
+}
+
+.sidebar-item:hover {
+  background-color: var(--sidebar-hover);
+}
+
+.sidebar-item.active {
+  background-color: var(--sidebar-active);
+  color: var(--primary);
+  font-weight: 500;
+}
+
+.sidebar-item-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(var(--primary-rgb, 147, 197, 253), 0.15);
+  font-size: 12px;
+  transition: all var(--transition-fast);
+}
+
+.sidebar-item:hover .sidebar-item-icon {
+  background: rgba(var(--primary-rgb, 147, 197, 253), 0.2);
+  transform: scale(1.05);
+}
+
+.sidebar-item.active .sidebar-item-icon {
+  background: rgba(var(--primary-rgb, 147, 197, 253), 0.25);
+  color: var(--primary);
+}
+
+.sidebar-item-badge {
+  margin-left: auto;
+  background-color: var(--error);
+  color: var(--text-inverse);
+  font-size: var(--font-small);
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  padding: var(--space-md);
+  border-top: 1px solid var(--border-color);
+}
+
+/* === MAIN CONTENT === */
+.main-wrapper {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* === HEADER === */
+.header {
+  height: var(--header-height);
+  background-color: var(--header-bg);
+  color: var(--header-text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-lg);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.header-title {
+  font-size: var(--font-h1);
+  font-weight: 600;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.header-search {
+  position: relative;
+}
+
+.header-search input {
+  padding: var(--space-sm) var(--space-md);
+  padding-left: 32px;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: var(--border-radius);
+  background-color: rgba(255,255,255,0.9);
+  font-size: var(--font-base);
+  width: 200px;
+  color: #000000;
+}
+
+.header-search input:focus {
+  outline: none;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.header-icon-btn {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all var(--transition-fast);
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 12px;
+}
+
+.header-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.header-notification-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  background-color: var(--error);
+  color: #000000;
+  font-size: 9px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  cursor: pointer;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--border-radius);
+}
+
+.header-user:hover {
+  background-color: rgba(0,0,0,0.1);
+}
+
+.header-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: var(--font-base);
+  color: var(--primary);
+}
+
+/* === MAIN CONTENT AREA === */
+.main-content {
+  flex: 1;
+  padding: var(--space-lg);
+  overflow-y: auto;
+  background-color: var(--bg-primary);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--transition);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .main-wrapper {
+    margin-left: 0;
+  }
+}

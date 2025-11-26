@@ -1,0 +1,543 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--app-font-family, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif);
+  font-size: var(--app-font-size, 14px);
+  color: var(--app-text-color, #000000);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: #f5f7fa;
+}
+
+/* Apply font settings to all elements */
+body * {
+  font-family: inherit !important;
+}
+
+body *:not(.preserve-color):not(.preserve-color *) {
+  color: inherit !important;
+}
+
+/* Override specific elements that need different sizes */
+body h1 {
+  font-size: calc(var(--app-font-size, 14px) * 2) !important;
+}
+
+body h2 {
+  font-size: calc(var(--app-font-size, 14px) * 1.75) !important;
+}
+
+body h3 {
+  font-size: calc(var(--app-font-size, 14px) * 1.5) !important;
+}
+
+body h4 {
+  font-size: calc(var(--app-font-size, 14px) * 1.25) !important;
+}
+
+body h5, body h6 {
+  font-size: calc(var(--app-font-size, 14px) * 1.1) !important;
+}
+
+body p, body div, body span, body td, body th, body li, body label, body button, body input, body select, body textarea {
+  font-size: var(--app-font-size, 14px) !important;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+/* Global styles for Greek text */
+body {
+  font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+  text-rendering: optimizeLegibility;
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Night Mode / Dark Theme */
+body.night-mode {
+  background: #1a1a1a;
+  color: #e0e0e0;
+}
+
+/* MainWindow excluded from theme - stays default */
+body.night-mode .absence-report-display,
+body.night-mode .section {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border-color: #404040;
+}
+
+body.night-mode h2,
+body.night-mode h3 {
+  color: #ffffff;
+}
+
+body.night-mode table {
+  background: #2a2a2a;
+  border-color: #404040;
+}
+
+body.night-mode th {
+  background: #1f1f1f;
+  color: #e0e0e0;
+  border-color: #404040;
+}
+
+body.night-mode td {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border-color: #404040;
+}
+
+body.night-mode .teacher-name-container {
+  background: #333333;
+  border-color: #505050;
+}
+
+body.night-mode .summary-section {
+  background: #1f1f1f;
+  border-color: #404040;
+}
+
+body.night-mode .summary-label {
+  color: #b0b0b0;
+}
+
+body.night-mode .summary-value {
+  color: #ffffff;
+}
+
+body.night-mode .print-btn {
+  background: #3a3a3a;
+  color: #e0e0e0;
+  border-color: #505050;
+}
+
+body.night-mode .print-btn:hover {
+  background: #4a4a4a;
+}
+
+body.night-mode .night-mode-btn {
+  background: #ffa500 !important;
+  color: #000000 !important;
+}
+
+body.night-mode .night-mode-btn:hover {
+  background: #ff8c00 !important;
+}
+
+/* Night Mode - Seven Replacements Page (Πράσινο θέμα) */
+body.night-mode .seven-page {
+  background: #1a2e1a;
+  border-color: #2d4a2d;
+}
+
+body.night-mode .seven-header {
+  background: #1f3d1f;
+  border-color: #2d4a2d;
+  color: #e0e0e0;
+}
+
+body.night-mode .seven-legend {
+  color: #90ee90;
+}
+
+
+body.night-mode .close-btn {
+  background: #2a2a2a;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+body.night-mode .seven-controls {
+  background: rgba(45, 74, 45, 0.3);
+  border-color: #2d4a2d;
+}
+
+body.night-mode .ctrl-label {
+  color: #90ee90;
+}
+
+body.night-mode .seven-controls select,
+body.night-mode .seven-controls input {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border-color: #404040;
+}
+
+body.night-mode .seven-card {
+  background: #2a2a2a;
+  border-color: #3d6a3d;
+}
+
+body.night-mode .card-name {
+  color: #e0e0e0;
+}
+
+body.night-mode .card-quota {
+  background: rgba(45, 74, 45, 0.3);
+  color: #90ee90;
+}
+
+body.night-mode .card-quota.zero {
+  background: rgba(139, 0, 0, 0.3);
+  color: #ff6b6b;
+}
+
+body.night-mode .assign-btn {
+  background: #2d5a2d;
+  color: #e0e0e0;
+  border-color: #3d6a3d;
+}
+
+body.night-mode .assign-btn:hover {
+  background: #3d6a3d;
+}
+
+body.night-mode .assign-btn:disabled {
+  background: #1a1a1a;
+  color: #666666;
+}
+
+body.night-mode .quota-input,
+body.night-mode .weekly-input {
+  background: #1a1a1a;
+  color: #e0e0e0;
+  border-color: #404040;
+}
+
+body.night-mode .tag-item {
+  background: rgba(45, 74, 45, 0.3);
+  color: #e0e0e0;
+}
+
+body.night-mode .remove-tag {
+  background: #8b0000;
+  color: #ffffff;
+}
+
+body.night-mode .no-tags {
+  color: #666666;
+}
+
+/* Night Mode - Lesson Swap Window */
+body.night-mode .lesson-swap-window {
+  background: #2a2a2a;
+  border-color: #3d6a3d;
+}
+
+body.night-mode .lesson-swap-header {
+  background: linear-gradient(135deg, #1f3d1f 0%, #2d5a2d 100%);
+}
+
+body.night-mode .lesson-swap-controls {
+  background: #1f1f1f;
+  border-color: #404040;
+}
+
+body.night-mode .day-selector select {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border-color: #3d6a3d;
+}
+
+body.night-mode .lesson-swap-instructions {
+  background: #1a2e3d;
+  color: #90c5ee;
+  border-color: #2d4a5d;
+}
+
+body.night-mode .schedule-grid th {
+  background: linear-gradient(135deg, #1f3d1f 0%, #2d5a2d 100%);
+  border-color: #3d6a3d;
+}
+
+body.night-mode .schedule-grid td {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border-color: #404040;
+}
+
+body.night-mode .schedule-grid td.teacher-name {
+  background: #1f1f1f;
+  border-color: #3d6a3d;
+}
+
+body.night-mode .lesson-cell.has-lesson {
+  background: #2a2a2a;
+}
+
+body.night-mode .lesson-cell.has-lesson:hover {
+  background: #1f3d1f;
+}
+
+body.night-mode .lesson-cell.empty-lesson {
+  background: #1a1a1a;
+  color: #666666;
+}
+
+body.night-mode .lesson-cell.drag-over {
+  background: #2d5a2d !important;
+}
+
+/* Night Mode - All Other Windows */
+body.night-mode .changes-window,
+body.night-mode .new-window,
+body.night-mode .period-analysis-window,
+body.night-mode .availability-card {
+  background: #2a2a2a;
+  border-color: #404040;
+}
+
+body.night-mode .changes-header,
+body.night-mode .period-analysis-header {
+  background: #1f1f1f;
+  border-color: #404040;
+  color: #e0e0e0;
+}
+
+body.night-mode .period-row {
+  background: #2a2a2a;
+  border-color: #404040;
+}
+
+body.night-mode .period-row:hover {
+  background: #333333;
+}
+
+body.night-mode .available-teacher {
+  background: #2a2a2a;
+  border-color: #404040;
+}
+
+body.night-mode .available-teacher:hover {
+  background: #333333;
+}
+
+body.night-mode .available-teacher.green {
+  background: #1f3d1f;
+  border-color: #2d5a2d;
+}
+
+body.night-mode .available-teacher.yellow {
+  background: #3d3d1f;
+  border-color: #5a5a2d;
+}
+
+body.night-mode .available-teacher.red {
+  background: #3d1f1f;
+  border-color: #5a2d2d;
+}
+
+body.night-mode .teacher-hours {
+  color: #b0b0b0;
+}
+
+body.night-mode .section-title {
+  color: #e0e0e0;
+}
+
+/* Night Mode - Input fields globally */
+body.night-mode input[type="text"],
+body.night-mode input[type="date"],
+body.night-mode input[type="number"],
+body.night-mode select,
+body.night-mode textarea {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  border-color: #404040;
+}
+
+body.night-mode input[type="text"]:focus,
+body.night-mode input[type="date"]:focus,
+body.night-mode input[type="number"]:focus,
+body.night-mode select:focus,
+body.night-mode textarea:focus {
+  border-color: #667eea;
+  background: #333333;
+}
+
+/* Night Mode - All other components and containers */
+body.night-mode .App,
+body.night-mode .app-container,
+body.night-mode .date-display,
+body.night-mode .teacher-list,
+body.night-mode .sidebar,
+body.night-mode .teacher-schedule-card,
+body.night-mode .teacher-schedule-preview,
+body.night-mode .teacher-schedule-viewer,
+body.night-mode .coteaching-viewer,
+body.night-mode .third-window,
+body.night-mode .html-file-manager {
+  background: #2a2a2a !important;
+  color: #e0e0e0 !important;
+}
+
+/* Night Mode - Sidebar specific styles */
+body.night-mode .sidebar {
+  background: linear-gradient(180deg, #2a2a2a 0%, #1f1f1f 100%) !important;
+  border-right-color: #404040 !important;
+}
+
+body.night-mode .sidebar-header {
+  background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%) !important;
+  border-bottom-color: #404040 !important;
+}
+
+body.night-mode .sidebar-header h3,
+body.night-mode .teacher-count {
+  color: #e0e0e0 !important;
+}
+
+body.night-mode .letter-header {
+  background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%) !important;
+  color: #e0e0e0 !important;
+}
+
+body.night-mode .teacher-item {
+  color: #e0e0e0 !important;
+}
+
+body.night-mode .teacher-item:hover {
+  background: #333333 !important;
+}
+
+/* Night Mode - All headers */
+body.night-mode .window-header,
+body.night-mode .card-header,
+body.night-mode .viewer-header,
+body.night-mode h1,
+body.night-mode h4,
+body.night-mode h5,
+body.night-mode h6 {
+  color: #e0e0e0 !important;
+  background: #1f1f1f !important;
+}
+
+/* Night Mode - All buttons (except special ones) */
+body.night-mode button:not(.night-mode-btn):not(.lesson-swap-main-btn):not(.back-btn):not(.assign-btn):not(.print-btn) {
+  background: #3a3a3a !important;
+  color: #e0e0e0 !important;
+}
+
+/* Night Mode - All lists and items */
+body.night-mode .list-item,
+body.night-mode .teacher-item,
+body.night-mode .schedule-item,
+body.night-mode .period-item,
+body.night-mode .card {
+  background: #2a2a2a !important;
+  color: #e0e0e0 !important;
+  border-color: #404040 !important;
+}
+
+/* Night Mode - Scrollbars */
+body.night-mode ::-webkit-scrollbar {
+  background: #1a1a1a;
+}
+
+body.night-mode ::-webkit-scrollbar-thumb {
+  background: #404040;
+}
+
+body.night-mode ::-webkit-scrollbar-thumb:hover {
+  background: #505050;
+}
+
+/* Focus styles for accessibility */
+*:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+}
+
+/* Remove default button styles */
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* Exception for period buttons */
+.period-btn {
+  padding: 3px 5px !important;
+  margin: 0 !important;
+}
+
+/* Input styles */
+input, textarea {
+  font-family: inherit;
+}
+
+/* Selection styles */
+::selection {
+  background: rgba(102, 126, 234, 0.2);
+  color: inherit;
+}
+
+::-moz-selection {
+  background: rgba(102, 126, 234, 0.2);
+  color: inherit;
+}
+
+/* Night mode for suggestions panel */
+body.night-mode .suggestions-panel {
+  background: #2a3a2a !important;
+  border-color: #17a2b8 !important;
+}
+
+body.night-mode .suggestions-header {
+  background: linear-gradient(135deg, #155a66 0%, #0f4652 100%) !important;
+  border-color: #0f4652 !important;
+}
+
+body.night-mode .suggestion-item {
+  background: #333 !important;
+  border-color: #17a2b8 !important;
+}
+
+body.night-mode .suggestion-item:hover {
+  background: #3d5a5a !important;
+}
+
+body.night-mode .suggestion-description {
+  color: #e0e0e0 !important;
+}
+
+body.night-mode .suggestion-benefit {
+  color: #4dd0e1 !important;
+}
+
+body.night-mode .no-suggestions {
+  color: #999 !important;
+}
+
+body.night-mode .period-check-btn {
+  background: #155a66 !important;
+  border-color: #155a66 !important;
+}
+
+body.night-mode .period-check-btn:hover:not(:disabled) {
+  background: #0f4652 !important;
+}
+
+body.night-mode .period-check-btn:disabled {
+  background: #444 !important;
+  opacity: 0.4 !important;
+}

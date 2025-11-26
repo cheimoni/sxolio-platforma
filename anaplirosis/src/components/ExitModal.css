@@ -1,0 +1,118 @@
+.exit-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.exit-modal {
+  background: var(--window-bg-color, rgba(248, 249, 250, 0.96)) !important;
+  border: var(--border-width, 2px) var(--border-style, solid) var(--border-color, rgba(102, 126, 234, 0.25)) !important;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  animation: slideUp 0.3s ease;
+  opacity: 1;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.exit-modal h2 {
+  margin: 0 0 15px 0;
+  color: #000;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.exit-modal p {
+  margin: 0 0 15px 0;
+  color: #333;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.exit-modal .warning-text {
+  background: rgba(255, 193, 7, 0.2);
+  border: 2px solid #ffc107;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px 0 25px 0;
+  color: #856404;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.exit-modal-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.exit-modal-buttons button {
+  padding: 12px 30px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.exit-modal-cancel {
+  background: var(--primary-color, #f0f0f0);
+  color: #000;
+  border: 2px solid var(--primary-dark, #4a90e2);
+}
+
+.exit-modal-cancel:hover {
+  background: var(--primary-dark, #e0e0e0);
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.exit-modal-confirm {
+  background: #dc3545;
+  color: white;
+  border: 2px solid #bd2130;
+}
+
+.exit-modal-confirm:hover {
+  background: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.4);
+}
+
+.exit-modal-confirm:active,
+.exit-modal-cancel:active {
+  transform: translateY(0);
+}
