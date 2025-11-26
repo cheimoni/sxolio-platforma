@@ -12,6 +12,11 @@ dist/
 .env.local
 .env.*.local
 
+# Firebase Configuration Files (contain secrets)
+school-platform/js/config/firebase-schedule.js
+school-platform/js/config/firebase.js
+**/firebase-config.js
+
 # IDE
 .vscode/
 .idea/

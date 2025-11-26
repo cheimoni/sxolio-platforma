@@ -13,6 +13,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
+    <!-- Firebase Configuration (loaded from external file for security) -->
+    <script src="js/config/firebase-schedule.js"></script>
+
     <style>
         :root {
             /* Theme Colors - Using school platform palette */
@@ -793,19 +796,11 @@
         const { useState, useEffect } = React;
 
         // === FIREBASE CONFIGURATION ===
-        const firebaseConfig = {
-            apiKey: "AIzaSyAnKzEkMrWcCkpJhgVeDSw_cJGUgHBep5M",
-            authDomain: "platformalas.firebaseapp.com",
-            projectId: "platformalas",
-            storageBucket: "platformalas.firebasestorage.app",
-            messagingSenderId: "486304725952",
-            appId: "1:486304725952:web:eacfc49431f408122ae625",
-            measurementId: "G-81Y4KNS1YN"
-        };
+        // Configuration is now loaded from js/config/firebase-schedule.js
 
         // Initialize Firebase
         if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
+            firebase.initializeApp(firebaseScheduleConfig);
         }
         const db = firebase.firestore();
 
